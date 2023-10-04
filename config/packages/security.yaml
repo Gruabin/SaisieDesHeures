@@ -1,40 +1,27 @@
+# config/packages/security.yaml
 security:
-    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
-
-
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         users_in_memory: { memory: null }
-        my_provider:
-            entity: {class: App\Entity\User, property: uuid}
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: my_provider
-            access_denied_handler: App\Security\AccessDeniedHandler
-            custom_authenticators:
-               - App\Security\AzureAuthenticator
-            logout: true
+            provider: users_in_memory
 
-      # activate different ways to authenticate
-      # https://symfony.com/doc/current/security.html#firewalls-authentication
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
 
-      # https://symfony.com/doc/current/security/impersonating_user.html
-      # switch_user: true
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
 
-  # Easy way to control access for large sections of your site
-  # Note: Only the *first* access control that matches will be used
-
-    # role_hierarchy:
-    #     ROLE_ADMIN:       ROLE_USER
-    #     ROLE_SUPER_ADMIN: ROLE_ADMIN
-
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
     access_control:
-     - { path: ^/connect/azure, role: PUBLIC_ACCESS }
-     - { path: ^/access-denied, roles: PUBLIC_ACCESS }
-     - { path: ^/, roles: ROLE_USER }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }

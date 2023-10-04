@@ -18,11 +18,11 @@ class AzureController extends AbstractController
     #[Route('/connect/azure', name: 'connect_azure')]
     public function connectAction(ClientRegistry $clientRegistry)
     {
-        return $clientRegistry
-        ->getClient('azure')
-        ->redirect([
-            'openid', 'profile', 'email'
-        ], []);
+        // return $clientRegistry
+        // ->getClient('azure')
+        // ->redirect([
+        //     'openid', 'profile', 'email'
+        // ], []);
             
     }
 
@@ -33,28 +33,28 @@ class AzureController extends AbstractController
     #[Route('/connect/azure/check', name: 'connect_azure_check', schemes:['http'])]
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
-        if (!$this->getUser()) {
-            return new JsonResponse(array('status' => false, 'message' => "User not found!"));
-        } else {
-            return $this->redirectToRoute('home');
-        }
+        // if (!$this->getUser()) {
+        //     return new JsonResponse(array('status' => false, 'message' => "User not found!"));
+        // } else {
+        //     return $this->redirectToRoute('home');
+        // }
 
     }
 
     #[Route('/logout', name: 'disconnect_azure')]
     public function logout(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        // Effacer les informations d'authentification
-        $authenticationUtils->clearAuthenticationToken();
+        // // Effacer les informations d'authentification
+        // $authenticationUtils->clearAuthenticationToken();
         
-        // Rediriger vers la page d'accueil ou la page de connexion
-        return $this->redirectToRoute('home');
+        // // Rediriger vers la page d'accueil ou la page de connexion
+        // return $this->redirectToRoute('home');
     }
 
     #[Route('/access-denied', name: 'access_denied')]
     public function accessDenied()
     {   
         // Rediriger vers la page d'erreur
-        return $this->render('no_access.html.twig',[]);
+        // return $this->render('no_access.html.twig',[]);
     }
 }

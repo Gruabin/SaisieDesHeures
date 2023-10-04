@@ -41,7 +41,7 @@ class AzureAuthenticator extends OAuth2Authenticator implements AuthenticationEn
      */
     public function supports(Request $request): ?bool
     {
-        return $request->attributes->get('_route') === 'connect_azure_check';
+        // return $request->attributes->get('_route') === 'connect_azure_check';
     }
 
     /**
@@ -51,29 +51,29 @@ class AzureAuthenticator extends OAuth2Authenticator implements AuthenticationEn
      */
     public function authenticate(Request $request): Passport
     {
-        $client = $this->clientRegistry->getClient('azure');
-        $accessToken = $this->fetchAccessToken($client);
+        // $client = $this->clientRegistry->getClient('azure');
+        // $accessToken = $this->fetchAccessToken($client);
 
-        return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
-                /** @var AzureUser $AzureUser */
-                $AzureUser = $client->fetchUserFromToken($accessToken);
-                // 1) have they logged in with Azure before? Easy!
-                $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['uuid' => $AzureUser->getId()]);
-                if ($existingUser) {
-                    return $existingUser;
-                }
-                $user = new User();
-                $user->setUuid($AzureUser->getId());
-                $user->setNom($AzureUser->claim('family_name'));
-                $user->setPrenom($AzureUser->claim('given_name'));
-                $user->setEmail(strtolower($AzureUser->claim('upn')));
-                $user->setRoles(array('ROLE_USER'));
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
-                return $user;
-            })
-        );
+        // return new SelfValidatingPassport(
+        //     new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
+        //         /** @var AzureUser $AzureUser */
+        //         $AzureUser = $client->fetchUserFromToken($accessToken);
+        //         // 1) have they logged in with Azure before? Easy!
+        //         $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['uuid' => $AzureUser->getId()]);
+        //         if ($existingUser) {
+        //             return $existingUser;
+        //         }
+        //         $user = new User();
+        //         $user->setUuid($AzureUser->getId());
+        //         $user->setNom($AzureUser->claim('family_name'));
+        //         $user->setPrenom($AzureUser->claim('given_name'));
+        //         $user->setEmail(strtolower($AzureUser->claim('upn')));
+        //         $user->setRoles(array('ROLE_USER'));
+        //         $this->entityManager->persist($user);
+        //         $this->entityManager->flush();
+        //         return $user;
+        //     })
+        // );
     }
 
     /**
@@ -85,8 +85,8 @@ class AzureAuthenticator extends OAuth2Authenticator implements AuthenticationEn
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('home');
-        return new RedirectResponse($targetUrl);
+        // $targetUrl = $this->router->generate('home');
+        // return new RedirectResponse($targetUrl);
     }
 
     /**
@@ -97,9 +97,9 @@ class AzureAuthenticator extends OAuth2Authenticator implements AuthenticationEn
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $message = strtr($exception->getMessageKey(), $exception->getMessageData());
+        // $message = strtr($exception->getMessageKey(), $exception->getMessageData());
 
-        return new Response($message, Response::HTTP_FORBIDDEN);
+        // return new Response($message, Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -111,10 +111,10 @@ class AzureAuthenticator extends OAuth2Authenticator implements AuthenticationEn
      */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
-        return new RedirectResponse(
-            '/connect/azure',
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        // return new RedirectResponse(
+        //     '/connect/azure',
+        //     Response::HTTP_TEMPORARY_REDIRECT
+        // );
     }
 
 }
