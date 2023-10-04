@@ -1,0 +1,69 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "loading.scss";
+
+$gruau-red: #e83a38;
+$gruau-dark-blue: #005179;
+$gruau-light-blue: #00bbee;
+$gruau-green: #42b284;
+
+@font-face {
+    font-family: "Handel Gothic";
+    src: url("../fonts/HandelGothic.ttf");
+  }
+  
+
+h1{
+    font-family: Handel Gothic,Verdana,sans-serif;
+}
+
+/**
+ * Animation de surlignage sur le lien de la page actuelle
+ */
+
+.surlineAnimation {
+	display: inline-block;
+	padding-bottom: 3px;
+}
+.surlineAnimation:after {
+	content: '';
+	display: block;
+	margin: auto;
+	height: 2px;
+	animation: underline 3s infinite;
+}
+
+@keyframes underline {
+  0% { width: 10%; background-color: $gruau-light-blue;}
+  50% {width: 60%; background-color: $gruau-light-blue;}
+  100% {width: 90%; background-color: transparent;}
+}
+
+.hoverelement > a{
+  position: relative;
+  color: white;
+  text-decoration: none;
+}
+
+.hoverelement > a:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  margin-bottom: -2px;
+  background-color: $gruau-light-blue;
+  visibility: hidden;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+}
+
+.hoverelement > a:hover:before {
+  visibility: visible;
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
+}
