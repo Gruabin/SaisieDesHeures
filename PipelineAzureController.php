@@ -30,7 +30,7 @@ class AzureController extends AbstractController
      * Cette fonction permet de savoir si l'authentification à réussi
      * Ex: Après vous être connecté ci-dessus, vous serez rediriger sur cette route qui vous redirigera à son tour vers la route home
      */
-    #[Route('/connect/azure/check', name: 'connect_azure_check', schemes:['http'])]
+    #[Route('/connect/azure/check', name: 'connect_azure_check', schemes:['https'])]
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
         if (!$this->getUser()) {
