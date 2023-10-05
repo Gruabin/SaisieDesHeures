@@ -11,13 +11,13 @@ variables:
   azureSubscription: 'app-azuredevops-groupegruau-pipelines-tst'
 
   # Web app name
-  webAppName: 'app-tst-saisie-heures'
+  webAppName: 'app-gruau-tst-Saisie-Heures'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
   # Environment name
-  environmentName: 'app-tst-saisie-heures'
+  environmentName: 'app-gruau-tst-Saisie-Heures'
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
