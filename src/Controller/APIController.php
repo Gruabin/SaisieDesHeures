@@ -45,6 +45,39 @@ class APIController extends AbstractController
         return $response;
     }
 
+        //READ
+        #[Route('/api/get/employe2/', name: 'api_get2', methods: ['GET'])]
+        public function get2( EmployeRepository $employeRepo): Response
+        {
+            // Récupérer l'employé correspondant à l'ID depuis la base de données
+            $employe = $employeRepo->findAll();
+    
+            // Vérifier si l'employé existe
+            if (!$employe) {
+                return new Response('Employe non trouvé.', Response::HTTP_NOT_FOUND);
+            }
+    
+            // Convertir l'objet Employe en tableau associatif
+            foreach ($employe as $key => $value) {
+                # code...
+                $employeData[$key] = [
+                    'id' => $value->getId(),
+                    'nom' => $value->getNom(),
+                    'prenom' => $value->getPrenom(),
+                    'age' => $value->getAge(),
+                    'email' => $value->getEmail(),
+                ];
+            }
+    
+            // Convertir les données en format JSON
+            $jsonData = json_encode($employeData);
+            // Retourner une réponse avec les données de l'employé au format JSON
+            $response = new Response($jsonData);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setStatusCode(Response::HTTP_OK);
+            return $response;
+        }
+
     #[Route('/api/post/employe', name: 'api_post', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
