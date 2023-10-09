@@ -1,47 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Saisie des temps
+{% block title %}Saisie des temps 
 {% endblock %}
 
 {% block body %}
     <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-    <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">POC saisie temps!</h1>
+    <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">POC saisie temps !</h1>
     <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col justify-center items-center space-x-2">
             <div class="my-3" id="divType">
-                <label for="selectTemps">Type d'heures :</label>
-                <select class="" name="type" id="type">
+                <label for="selectTemps"><b>Type d'heures :</b></label>
+                <select class="mx-3" name="type" id="type">
                     <option value="-1">-- Sélectionner un type d'heure --</option>
                     {% for type in types %}
                         <option value="{{ type.id }}">{{ type.nomType }}</option>
                     {% endfor %}
                 </select>
-                <div class="" id="info"></div>
+                <div class="mx-3" id="infoType"></div>
             </div>
-            <div class="my-3 hidden" id="divOrdre">
-                <label for="ordre">Ordre :</label>
-                <input type="text" name="ordre" id="ordre"></div>
-            <div class="my-3 hidden" id="divTache">
-                <label for="tache">Tâche :</label>
-                <select class="" name="tache" id="tache">
+            <div class="my-3 hidden flex flex-row" id="divOrdre">
+                <label class="mx-3" for="ordre">Ordre :</label>
+                <input class="mx-3" type="text" name="ordre" id="ordre">
+                <p class="mx-3" id="infoType"></p>
+            </div>
+            <div class="my-3 hidden flex flex-row" id="divTache">
+                <label class="mx-3" for="tache">Tâche :</label>
+                <select class=" mx-3" name="tache" id="tache">
                     <option value="-1">-- Sélectionner une tâche --</option>
-                    <option value="0">test</option>
-                    <option value="1">test</option>
+                    {% for tache in taches %}
+                        <option value="{{ tache.id }}">{{ tache.id }}</option>
+                    {% endfor %}
                 </select>
+                <p class="mx-3" id="infoTache"></p>
             </div>
-            <div class="my-3 hidden" id="divOperation">
-                <label for="operation">Opération :</label>
-                <input type="text" name="operation" id="operation">
+            <div class="my-3 hidden flex flex-row" id="divOperation">
+                <label class="mx-3" for="operation">Opération :</label>
+                <input class="mx-3" type="text" name="operation" id="operation">
+                <p class="mx-3" id="infoOperation"></p>
             </div>
-            <div class="my-3 hidden" id="divActivite">
-                <label for="activite">Activité :</label>
-                <input type="text" name="activite" id="activite">
+            <div class="my-3 hidden flex flex-row" id="divActivite">
+                <label class="mx-3" for="activite">Activité :</label>
+                <input class="mx-3" type="text" name="activite" id="activite">
+                <p class="mx-3" id="infoActivite"></p>
             </div>
         </div>
     </div>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-        {{ encore_entry_script_tags('temps') }}
-    {% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('temps') }}
+{% endblock %}
 
 {% endblock %}

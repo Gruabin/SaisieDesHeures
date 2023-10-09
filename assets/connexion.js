@@ -72,9 +72,8 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
     document.getElementById("informationEmploye2").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     // Récupérer l'input et vérifier si l'employé existe dans le tableau
-    var input = document.getElementById("inputEmploye2");
-    if (employeTable.find((e) => e.id === parseInt(input.value))) { // Si l'employé existe, afficher ses informations
-        const employeTrouve = employeTable.find((e) => e.id === parseInt(input.value));
+    if (employeTable.find((e) => e.id === parseInt(this.value))) { // Si l'employé existe, afficher ses informations
+        const employeTrouve = employeTable.find((e) => e.id === parseInt(this.value));
         document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         document.getElementById("informationEmploye2").innerText = employeTrouve.nom + " " + employeTrouve.prenom;
     } else { // Si l'employé n'existe pas, afficher un message d'erreur

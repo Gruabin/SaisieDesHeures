@@ -47,7 +47,7 @@ class APIController extends AbstractController
 
         //READ
         #[Route('/api/get/employe2/', name: 'api_get2', methods: ['GET'])]
-        public function get2( EmployeRepository $employeRepo): Response
+        public function get2(EmployeRepository $employeRepo): Response
         {
             // Récupérer l'employé correspondant à l'ID depuis la base de données
             $employe = $employeRepo->findAll();
@@ -59,7 +59,6 @@ class APIController extends AbstractController
     
             // Convertir l'objet Employe en tableau associatif
             foreach ($employe as $key => $value) {
-                # code...
                 $employeData[$key] = [
                     'id' => $value->getId(),
                     'nom' => $value->getNom(),
