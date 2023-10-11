@@ -33,7 +33,7 @@
         "symfony/twig-bundle": "6.*",
         "symfony/uid": "6.*",
         "symfony/validator": "6.*",
-        "symfony/webpack-encore-bundle": "^1.14",
+        "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "6.*",
         "thenetworg/oauth2-azure": "^2.1",
         "twig/extra-bundle": "^2.12|^3.0",

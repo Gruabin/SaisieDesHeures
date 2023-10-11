@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class APIController extends AbstractController
 {
-    //READ
+    //*READ
     #[Route('/api/get/employe/{id}', name: 'api_get', methods: ['GET'])]
     public function get(int $id, EmployeRepository $employeRepo): Response
     {
@@ -45,45 +45,46 @@ class APIController extends AbstractController
         return $response;
     }
 
-        //READ
-        #[Route('/api/get/employe2/', name: 'api_get2', methods: ['GET'])]
-        public function get2(EmployeRepository $employeRepo): Response
-        {
-            // Récupérer l'employé correspondant à l'ID depuis la base de données
-            $employe = $employeRepo->findAll();
-    
-            // Vérifier si l'employé existe
-            if (!$employe) {
-                return new Response('Employe non trouvé.', Response::HTTP_NOT_FOUND);
-            }
-    
-            // Convertir l'objet Employe en tableau associatif
-            foreach ($employe as $key => $value) {
-                $employeData[$key] = [
-                    'id' => $value->getId(),
-                    'nom' => $value->getNom(),
-                    'prenom' => $value->getPrenom(),
-                    'age' => $value->getAge(),
-                    'email' => $value->getEmail(),
-                ];
-            }
-    
-            // Convertir les données en format JSON
-            $jsonData = json_encode($employeData);
-            // Retourner une réponse avec les données de l'employé au format JSON
-            $response = new Response($jsonData);
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setStatusCode(Response::HTTP_OK);
-            return $response;
+    //*READ
+    #[Route('/api/get/employe2/', name: 'api_get2', methods: ['GET'])]
+    public function get2(EmployeRepository $employeRepo): Response
+    {
+        // Récupérer l'employé correspondant à l'ID depuis la base de données
+        $employe = $employeRepo->findAll();
+
+        // Vérifier si l'employé existe
+        if (!$employe) {
+            return new Response('Employe non trouvé.', Response::HTTP_NOT_FOUND);
         }
 
+        // Convertir l'objet Employe en tableau associatif
+        foreach ($employe as $key => $value) {
+            $employeData[$key] = [
+                'id' => $value->getId(),
+                'nom' => $value->getNom(),
+                'prenom' => $value->getPrenom(),
+                'age' => $value->getAge(),
+                'email' => $value->getEmail(),
+            ];
+        }
+
+        // Convertir les données en format JSON
+        $jsonData = json_encode($employeData);
+        // Retourner une réponse avec les données de l'employé au format JSON
+        $response = new Response($jsonData);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(Response::HTTP_OK);
+        return $response;
+    }
+    
+    //* POST
     #[Route('/api/post/employe', name: 'api_post', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true);
 
-        if($data === null) {
+        if ($data === null) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
         }
 
@@ -104,7 +105,7 @@ class APIController extends AbstractController
         return new Response('Employe créé avec succès.', Response::HTTP_CREATED);
     }
 
-    //UPDATE
+    //*UPDATE
     #[Route('/api/put/employe', name: 'api_put', methods: ['PUT'])]
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -139,7 +140,7 @@ class APIController extends AbstractController
         return new Response('Employe mis à jour avec succès.', Response::HTTP_OK);
     }
 
-    //DELETE
+    //*DELETE
     #[Route('/api/delete/employe', name: 'api_delete', methods: ['DELETE'])]
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
