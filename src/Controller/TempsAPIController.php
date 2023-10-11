@@ -15,7 +15,7 @@ class TempsAPIController extends AbstractController
 {
 
     //READ
-    #[Route('/api/get/tache/', name: 'api_get_tache', methods: ['GET'])]
+    #[Route('/api/get/tache/{id}', name: 'api_get_tache', methods: ['GET'])]
     public function get2(TacheRepository $tacheRepo): Response
     {
         // Récupérer la tache correspondante à l'ID depuis la base de données
