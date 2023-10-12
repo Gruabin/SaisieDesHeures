@@ -15,7 +15,7 @@ class APIController extends AbstractController
 {
     //*READ
     #[Route('/api/get/employe/{id}', name: 'api_get', methods: ['GET'])]
-    public function get(int $id, EmployeRepository $employeRepo): Response
+    public function get(string $id, EmployeRepository $employeRepo): Response
     {
         // Récupérer l'employé correspondant à l'ID depuis la base de données
         $employe = $employeRepo->findOneBy(['id' => $id]);
@@ -28,10 +28,8 @@ class APIController extends AbstractController
         // Convertir l'objet Employe en tableau associatif
         $employeData = [
             'id' => $employe->getId(),
-            'nom' => $employe->getNom(),
-            'prenom' => $employe->getPrenom(),
-            'age' => $employe->getAge(),
-            'email' => $employe->getEmail(),
+            'nom' => $employe->getNomEmploye(),
+            'centreDeChargeId' => $employe->getCentreDeCharge(),
         ];
 
         // Convertir les données en format JSON
@@ -46,25 +44,20 @@ class APIController extends AbstractController
     }
 
     //*READ
-    #[Route('/api/get/employe2/', name: 'api_get2', methods: ['GET'])]
-    public function get2(EmployeRepository $employeRepo): Response
+    #[Route('/api/get/employe2/{id}', name: 'api_get2', methods: ['GET'])]
+    public function get2(string $id, EmployeRepository $employeRepo): Response
     {
         // Récupérer l'employé correspondant à l'ID depuis la base de données
-        $employe = $employeRepo->findAll();
-
-        // Vérifier si l'employé existe
-        if (!$employe) {
-            return new Response('Employe non trouvé.', Response::HTTP_NOT_FOUND);
-        }
-
+        $qb = $employeRepo->createQueryBuilder('e');
+        $qb->where($qb->expr()->like('e.id', ':premiersCaracteres'))
+            ->setParameter('premiersCaracteres', $id . '%');
+        $employe = $qb->getQuery()->getResult();
         // Convertir l'objet Employe en tableau associatif
-        foreach ($employe as $key => $value) {
+        foreach ($employe as $key => $unEmploye) {
             $employeData[$key] = [
-                'id' => $value->getId(),
-                'nom' => $value->getNom(),
-                'prenom' => $value->getPrenom(),
-                'age' => $value->getAge(),
-                'email' => $value->getEmail(),
+                'id' => $unEmploye->getId(),
+                'nom' => $unEmploye->getNomEmploye(),
+                'centreDeChargeId' => $unEmploye->getCentreDeCharge(),
             ];
         }
 
@@ -92,10 +85,10 @@ class APIController extends AbstractController
         $employe = new Employe();
 
         // Remplir les propriétés de l'entité avec les données reçues
-        $employe->setNom($data['nom']);
-        $employe->setPrenom($data['prenom']);
-        $employe->setAge($data['age']);
-        $employe->setEmail($data['email']);
+        $employe->setId($data['id']);
+        $employe->setNomEmploye($data['nom']);
+        $employe->setCentreDeCharge($data['centreDeChargeId']);
+
 
         // Enregistrer l'employé dans la base de données
         $entityManager->persist($employe);
@@ -129,9 +122,8 @@ class APIController extends AbstractController
 
         // Mettre à jour les propriétés de l'employé avec les nouvelles données
         $employe->setNom($data['nom']);
-        $employe->setPrenom($data['prenom']);
-        $employe->setAge($data['age']);
-        $employe->setEmail($data['email']);
+        $employe->setNomEmploye($data['nom']);
+        $employe->setCentreDeCharge($data['centreDeChargeId']);
 
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();

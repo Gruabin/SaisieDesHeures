@@ -9,71 +9,46 @@ use Doctrine\ORM\Mapping as ORM;
 class Employe
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(length: 255)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $nom_employe = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    #[ORM\ManyToOne(inversedBy: 'employes')]
+    private ?CentreDeCharge $centre_de_charge = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $age = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
-
-    public function getNom(): ?string
+    public function setId(string $id): static
     {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
+        $this->id = $id;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getNomEmploye(): ?string
     {
-        return $this->prenom;
+        return $this->nom_employe;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setNomEmploye(string $nom_employe): static
     {
-        $this->prenom = $prenom;
+        $this->nom_employe = $nom_employe;
 
         return $this;
     }
 
-    public function getAge(): ?string
+    public function getCentreDeCharge(): ?centreDeCharge
     {
-        return $this->age;
+        return $this->centre_de_charge;
     }
 
-    public function setAge(string $age): static
+    public function setCentreDeCharge(?centreDeCharge $centre_de_charge): static
     {
-        $this->age = $age;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+        $this->centre_de_charge = $centre_de_charge;
 
         return $this;
     }
