@@ -103,7 +103,6 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
             }).then(function (employe) {
                 employe.forEach((unEmploye) => {
                     var employeObjet = {};
-                    console.log(unEmploye);
                     employeObjet.id = unEmploye.id;
                     employeObjet.nom = unEmploye.nom;
                     employeTable.push(employeObjet);
