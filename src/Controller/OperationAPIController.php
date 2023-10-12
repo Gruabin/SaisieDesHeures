@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OperationAPIController extends AbstractController
 {
-    //READ
+    //*READ
     #[Route('/api/get/operation', name: 'api_get_operation', methods: ['GET'])]
     public function get(OperationRepository $operationRepo): Response
     {
