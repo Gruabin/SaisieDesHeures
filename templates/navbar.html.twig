@@ -5,7 +5,7 @@
 		</a>
 		<div class="flex md:order-2 w-56 justify-end max-sm:justify-center items-center max-sm:mt-1">
 			<a href="#" class="text-white bg-transparent hover:bg-gruau-light-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center cursor-pointer border-gruau-light-blue border">Documentation</a>
-			{% if user.roles[0] is defined %}
+			{# {% if user.roles[0] is defined %}
 					<button data-collapse-toggle="mobile-menu-2" type="button" class="inline-flex items-center p-2 text-sm text-white rounded-lg lg:hidden focus:outline-none" aria-controls="mobile-menu-2" aria-expanded="false">
 						<span class="sr-only">Open main menu</span>
 						<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -36,14 +36,14 @@
 						</ul>
 					</div>
 				</div>
-			{% endif %}
+			{% endif %} #}
 		</div>
 		<div class="items-center justify-between w-full md:flex md:w-auto">
 			<h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
 		</div>
 	</div>
 </nav>
-{% if user.roles[0] is defined %}
+{# {% if user.roles[0] is defined %}
 	<nav class="bg-gruau-dark-blue bg-opacity-90 border-b border-gruau-dark-blue shadow-xl">
 		<div class="max-w-screen-xl px-4 py-3 mx-auto text-center hidden items-center w-full lg:flex lg:w-auto lg:order-1 justify-center " id="mobile-menu-2">
 			<div class="flex items-center justify-center">
@@ -89,4 +89,4 @@
 window.open("https://login.microsoftonline.com/common/oauth2/logout", '_blank');
 });
 	</script>
-{% endif %}
+{% endif %} #}

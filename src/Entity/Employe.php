@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\EmployeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
-class Employe
+class Employe implements UserInterface
 {
     #[ORM\Id]
     #[ORM\Column(length: 255)]
@@ -17,6 +18,21 @@ class Employe
 
     #[ORM\ManyToOne(inversedBy: 'employes')]
     private ?CentreDeCharge $centre_de_charge = null;
+
+    public function getRoles() : array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials() : string
+    {
+        return "";
+    }
+
+    public function getUserIdentifier() : string
+    {
+        return $this->id;
+    }
 
     public function getId(): ?string
     {

@@ -53,6 +53,7 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
     if (this.value == "") {
         document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         document.getElementById("informationEmploye2").innerText = "Information employé";
+        document.getElementById("btnConnexion").classList.add('btn-disabled');
         return;
     }
 
@@ -65,6 +66,7 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
         fetch(url).then(function (response) {
             document.getElementById("informationEmploye2").innerText = "";
             document.getElementById("informationEmploye2").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("btnConnexion").classList.add('btn-disabled');
 
             if (response.ok) {
                 return response.json();
@@ -74,6 +76,7 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
         }).then(function (employe) {
             document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye2").innerText = employe.nom;
+            document.getElementById("btnConnexion").classList.remove('btn-disabled');
         }).catch(function (error) {
             document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye2").innerText = error.message;
@@ -91,6 +94,7 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
             fetch(url).then(function (response) {
                 document.getElementById("informationEmploye2").innerText = "";
                 document.getElementById("informationEmploye2").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                document.getElementById("btnConnexion").classList.add('btn-disabled');
                 a = true;
 
                 if (response.ok) {
@@ -98,7 +102,8 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
                 } else {
                     document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye2").innerText = "Aucun employé correspondant";
-                    throw new Error("Employé non trouvé");
+                document.getElementById("btnConnexion").classList.add('btn-disabled');
+                throw new Error("Employé non trouvé");
                 }
             }).then(function (employe) {
                 employe.forEach((unEmploye) => {
@@ -120,14 +125,53 @@ document.getElementById("inputEmploye2").addEventListener("input", function () {
             const employeTrouve = employeTable.find((e) => e.id === this.value);
             document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye2").innerText = employeTrouve.nom;
+            document.getElementById("btnConnexion").classList.remove('btn-disabled');
+            
         } else {
             if (a) {
                 document.getElementById("informationEmploye2").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 document.getElementById("informationEmploye2").innerText = "Employé inexistant";
-            } else {
+                document.getElementById("btnConnexion").classList.add('btn-disabled');
+        } else {
                 document.getElementById("informationEmploye2").innerText = "";
                 document.getElementById("informationEmploye2").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-            }
+                document.getElementById("btnConnexion").classList.add('btn-disabled');
+        }
         }
     }
 });
+
+document.getElementById("btnConnexion").addEventListener("click", function () {
+    if(!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {
+        // Récupérez l'ID de l'utilisateur depuis le champ input
+        const idEmploye = document.getElementById("inputEmploye2").value;
+
+        // Créez un objet JSON avec l'ID de l'utilisateur
+        const data = {
+            id: idEmploye,
+        };
+
+        // Envoyez la requête AJAX
+        fetch("/api/post/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // // Si la requête a réussi, redirigez l'utilisateur vers la page sécurisée
+                // if (data.success) {
+                //     window.location.href = "/home_page";
+                // } else {
+                //     // Afficher un message d'erreur
+                //     alert(data.message);
+                // }
+            })
+            .catch((error) => {
+                // Afficher un message d'erreur
+                // alert(error);
+            });
+    }
+})
