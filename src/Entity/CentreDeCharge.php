@@ -20,9 +20,13 @@ class CentreDeCharge
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: Employe::class)]
     private Collection $employes;
 
+    #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: DetailHeures::class)]
+    private Collection $detailHeures;
+
     public function __construct()
     {
         $this->employes = new ArrayCollection();
+        $this->detailHeures = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -73,6 +77,36 @@ class CentreDeCharge
             // set the owning side to null (unless already changed)
             if ($employe->getCentreDeCharge() === $this) {
                 $employe->setCentreDeCharge(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DetailHeures>
+     */
+    public function getDetailHeures(): Collection
+    {
+        return $this->detailHeures;
+    }
+
+    public function addDetailHeure(DetailHeures $detailHeure): static
+    {
+        if (!$this->detailHeures->contains($detailHeure)) {
+            $this->detailHeures->add($detailHeure);
+            $detailHeure->setCentreDeCharge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailHeure(DetailHeures $detailHeure): static
+    {
+        if ($this->detailHeures->removeElement($detailHeure)) {
+            // set the owning side to null (unless already changed)
+            if ($detailHeure->getCentreDeCharge() === $this) {
+                $detailHeure->setCentreDeCharge(null);
             }
         }
 
