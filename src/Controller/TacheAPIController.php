@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Employe;
 use App\Entity\Tache;
 use App\Repository\TacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,12 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class TempsAPIController extends AbstractController
+class TacheAPIController extends AbstractController
 {
-
-    //READ
-    #[Route('/api/get/tache/{id}', name: 'api_get_tache', methods: ['GET'])]
-    public function get2(TacheRepository $tacheRepo): Response
+    //*READ
+    #[Route('/api/get/tache/', name: 'api_get_tache', methods: ['GET'])]
+    public function get(TacheRepository $tacheRepo): Response
     {
         // Récupérer la tache correspondante à l'ID depuis la base de données
         $tache = $tacheRepo->findAll();
@@ -101,7 +99,7 @@ class TempsAPIController extends AbstractController
         return new Response('Tache mis à jour avec succès.', Response::HTTP_OK);
     }
 
-    
+
     //*DELETE
     #[Route('/api/delete/tache', name: 'api_delete_tache', methods: ['DELETE'])]
     public function delete(Request $request, EntityManagerInterface $entityManager): Response

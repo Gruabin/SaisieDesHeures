@@ -87,9 +87,3 @@ document.getElementById("tache").addEventListener("change", function () {
         document.getElementById("infoTache").innerText = "Tache non trouvé";
     }
 });
-
-//     document.getElementById("info").innerText = "";
-//     document.getElementById("info").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-
-// document.getElementById("info").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-//             document.getElementById("info").innerText = "test";
