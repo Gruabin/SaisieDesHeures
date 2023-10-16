@@ -6,14 +6,13 @@ use App\Entity\Employe;
 use App\Repository\EmployeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class APIController extends AbstractController
 {
-    //*READ
+    // *READ
     #[Route('/api/get/employe/{id}', name: 'api_get', methods: ['GET'])]
     public function get(string $id, EmployeRepository $employeRepo): Response
     {
@@ -43,14 +42,14 @@ class APIController extends AbstractController
         return $response;
     }
 
-    //*READ
+    // *READ
     #[Route('/api/get/employe2/{id}', name: 'api_get2', methods: ['GET'])]
     public function get2(string $id, EmployeRepository $employeRepo): Response
     {
         // Récupérer l'employé correspondant à l'ID depuis la base de données
         $qb = $employeRepo->createQueryBuilder('e');
         $qb->where($qb->expr()->like('e.id', ':premiersCaracteres'))
-            ->setParameter('premiersCaracteres', $id . '%');
+            ->setParameter('premiersCaracteres', $id.'%');
         $employe = $qb->getQuery()->getResult();
         // Convertir l'objet Employe en tableau associatif
         foreach ($employe as $key => $unEmploye) {
@@ -67,17 +66,18 @@ class APIController extends AbstractController
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
         $response->setStatusCode(Response::HTTP_OK);
+
         return $response;
     }
-    
-    //* POST
+
+    // * POST
     #[Route('/api/post/employe', name: 'api_post', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true);
 
-        if ($data === null) {
+        if (null === $data) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
         }
 
@@ -89,7 +89,6 @@ class APIController extends AbstractController
         $employe->setNomEmploye($data['nom']);
         $employe->setCentreDeCharge($data['centreDeChargeId']);
 
-
         // Enregistrer l'employé dans la base de données
         $entityManager->persist($employe);
         $entityManager->flush();
@@ -98,7 +97,7 @@ class APIController extends AbstractController
         return new Response('Employe créé avec succès.', Response::HTTP_CREATED);
     }
 
-    //*UPDATE
+    // *UPDATE
     #[Route('/api/put/employe', name: 'api_put', methods: ['PUT'])]
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -132,7 +131,7 @@ class APIController extends AbstractController
         return new Response('Employe mis à jour avec succès.', Response::HTTP_OK);
     }
 
-    //*DELETE
+    // *DELETE
     #[Route('/api/delete/employe', name: 'api_delete', methods: ['DELETE'])]
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {

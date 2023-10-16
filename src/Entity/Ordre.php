@@ -36,6 +36,7 @@ class Ordre
 
         return $this;
     }
+
     public function getDescriptionOrdre(): ?string
     {
         return $this->description_ordre;

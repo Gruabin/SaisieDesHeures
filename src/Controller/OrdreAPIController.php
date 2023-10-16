@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Entity\Ordre;
 use App\Repository\OrdreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OrdreAPIController extends AbstractController
 {
-    //READ
+    // READ
     #[Route('/api/get/ordre/{id}', name: 'api_get_ordre', methods: ['GET'])]
     public function get2(OrdreRepository $ordreRepo): Response
     {
@@ -38,17 +38,18 @@ class OrdreAPIController extends AbstractController
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
         $response->setStatusCode(Response::HTTP_OK);
+
         return $response;
     }
 
-    //* POST
+    // * POST
     #[Route('/api/post/ordre', name: 'api_post_ordre', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true);
 
-        if ($data === null) {
+        if (null === $data) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
         }
 
@@ -67,7 +68,7 @@ class OrdreAPIController extends AbstractController
         return new Response('Ordre créé avec succès.', Response::HTTP_CREATED);
     }
 
-    //*UPDATE
+    // *UPDATE
     #[Route('/api/put/ordre', name: 'api_put_ordre', methods: ['PUT'])]
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -99,8 +100,7 @@ class OrdreAPIController extends AbstractController
         return new Response('Ordre mis à jour avec succès.', Response::HTTP_OK);
     }
 
-    
-    //*DELETE
+    // *DELETE
     #[Route('/api/delete/ordre', name: 'api_delete_ordre', methods: ['DELETE'])]
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {

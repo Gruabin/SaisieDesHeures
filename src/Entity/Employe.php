@@ -19,17 +19,17 @@ class Employe implements UserInterface
     #[ORM\ManyToOne(inversedBy: 'employes')]
     private ?CentreDeCharge $centre_de_charge = null;
 
-    public function getRoles() : array
+    public function getRoles(): array
     {
         return ['ROLE_USER'];
     }
 
-    public function eraseCredentials() : string
+    public function eraseCredentials(): string
     {
-        return "";
+        return '';
     }
 
-    public function getUserIdentifier() : string
+    public function getUserIdentifier(): string
     {
         return $this->id;
     }
@@ -38,6 +38,7 @@ class Employe implements UserInterface
     {
         return $this->id;
     }
+
     public function setId(string $id): static
     {
         $this->id = $id;

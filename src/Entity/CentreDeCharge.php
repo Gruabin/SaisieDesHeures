@@ -40,7 +40,7 @@ class CentreDeCharge
 
         return $this;
     }
-    
+
     public function getDescriptionCDG(): ?string
     {
         return $this->description_CDG;

@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Entity\Operation;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OperationAPIController extends AbstractController
 {
-    //*READ
+    // *READ
     #[Route('/api/get/operation', name: 'api_get_operation', methods: ['GET'])]
     public function get(OperationRepository $operationRepo): Response
     {
@@ -38,17 +38,18 @@ class OperationAPIController extends AbstractController
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
         $response->setStatusCode(Response::HTTP_OK);
+
         return $response;
     }
 
-    //* POST
+    // * POST
     #[Route('/api/post/operation', name: 'api_post_operation', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true);
 
-        if ($data === null) {
+        if (null === $data) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
         }
 
@@ -66,7 +67,7 @@ class OperationAPIController extends AbstractController
         return new Response('Operation créé avec succès.', Response::HTTP_CREATED);
     }
 
-    //*UPDATE
+    // *UPDATE
     #[Route('/api/put/operation', name: 'api_put_operation', methods: ['PUT'])]
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -98,8 +99,7 @@ class OperationAPIController extends AbstractController
         return new Response('Operation mis à jour avec succès.', Response::HTTP_OK);
     }
 
-
-    //*DELETE
+    // *DELETE
     #[Route('/api/delete/operation', name: 'api_delete_operation', methods: ['DELETE'])]
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
