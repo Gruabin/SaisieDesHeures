@@ -26,6 +26,7 @@ yarn-error.log
 !/public/fichiers/resume/.gitignore
 ###> pdf ###
 
-###< vscode ###
+###< IDE ###
 /.vscode
-###> vscode ###
+.idea
+###> IDE ###
