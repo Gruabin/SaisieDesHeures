@@ -26,6 +26,11 @@ yarn-error.log
 !/public/fichiers/resume/.gitignore
 ###> pdf ###
 
+###> Global ###
+*.lock
+*.log
+###> Global ###
+
 ###< IDE ###
 /.vscode
 .idea
