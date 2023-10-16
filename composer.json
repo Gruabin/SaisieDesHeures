@@ -40,6 +40,7 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.35",
         "symfony/debug-bundle": "6.*",
         "symfony/maker-bundle": "^1.38",
         "symfony/stopwatch": "6.*",
