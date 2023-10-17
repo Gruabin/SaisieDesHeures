@@ -22,19 +22,19 @@ class DetailHeures
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?typeHeures $type_heures = null;
+    private ?TypeHeures $type_heures = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?ordre $ordre = null;
+    private ?Ordre $Ordre = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?operation $operation = null;
+    private ?Operation $operation = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?tache $tache = null;
+    private ?Tache $tache = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?activite $activite = null;
+    private ?Activite $activite = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     private ?centreDeCharge $centre_de_charge = null;
@@ -68,60 +68,60 @@ class DetailHeures
         return $this;
     }
 
-    public function getTypeHeures(): ?typeHeures
+    public function getTypeHeures(): ?TypeHeures
     {
         return $this->type_heures;
     }
 
-    public function setTypeHeures(?typeHeures $type_heures): static
+    public function setTypeHeures(?TypeHeures $type_heures): static
     {
         $this->type_heures = $type_heures;
 
         return $this;
     }
 
-    public function getOrdre(): ?ordre
+    public function getOrdre(): ?Ordre
     {
         return $this->ordre;
     }
 
-    public function setOrdre(?ordre $ordre): static
+    public function setOrdre(?Ordre $ordre): static
     {
         $this->ordre = $ordre;
 
         return $this;
     }
 
-    public function getOperation(): ?operation
+    public function getOperation(): ?Operation
     {
         return $this->operation;
     }
 
-    public function setOperation(?operation $operation): static
+    public function setOperation(?Operation $operation): static
     {
         $this->operation = $operation;
 
         return $this;
     }
 
-    public function getTache(): ?tache
+    public function getTache(): ?Tache
     {
         return $this->tache;
     }
 
-    public function setTache(?tache $tache): static
+    public function setTache(?Tache $tache): static
     {
         $this->tache = $tache;
 
         return $this;
     }
 
-    public function getActivite(): ?activite
+    public function getActivite(): ?Activite
     {
         return $this->activite;
     }
 
-    public function setActivite(?activite $activite): static
+    public function setActivite(?Activite $activite): static
     {
         $this->activite = $activite;
 
