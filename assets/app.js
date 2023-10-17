@@ -16,93 +16,97 @@ require('@fortawesome/fontawesome-free/js/solid.min.js');
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  function loader() {
-    document.querySelector('main').classList.remove('invisible');
-    document.querySelector('header').classList.remove('invisible');
-    document.querySelector('footer').classList.remove('invisible');
-    const form = document.querySelectorAll('form');
-    const loader = document.querySelector('#loader');
-    loader.style.display = 'none';
-  
-    try {
-      form.forEach(element => {
-        element.addEventListener('submit', function () {
-          // Afficher le div de chargement
-          loader.style.display = 'block';
-          document.querySelector('main').classList.add('invisible');
-          document.querySelector('header').classList.add('invisible');
-          document.querySelector('footer').classList.add('invisible');
-        });
-      });
-  
-    } catch (error) {
-    }
-    let aBalises = document.querySelectorAll('a');
-  
-      aBalises.forEach(element => {
-        if (!element.classList.contains('supprimer') && element.getAttribute("href") !== '#' && !element.classList.contains('noLoading') && element.getAttribute("href") !== '#') {
-          element.addEventListener('click', loading);
+    let couleur;
+    let couleurTexte;
+
+    function loader() {
+        document.querySelector('main').classList.remove('invisible');
+        document.querySelector('header').classList.remove('invisible');
+        document.querySelector('footer').classList.remove('invisible');
+        const form = document.querySelectorAll('form');
+        const loader = document.querySelector('#loader');
+        loader.style.display = 'none';
+
+        try {
+            form.forEach(element => {
+                element.addEventListener('submit', function () {
+                    // Afficher le div de chargement
+                    loader.style.display = 'block';
+                    document.querySelector('main').classList.add('invisible');
+                    document.querySelector('header').classList.add('invisible');
+                    document.querySelector('footer').classList.add('invisible');
+                });
+            });
+
+        } catch (error) {
         }
-      });
-  
-    function loading() {
-      loader.style.display = 'block';
-  
-      document.querySelector('main').classList.add('invisible');
-      document.querySelector('header').classList.add('invisible');
-      document.querySelector('footer').classList.add('invisible');
+        let aBalises = document.querySelectorAll('a');
+
+        aBalises.forEach(element => {
+            if (!element.classList.contains('supprimer') && element.getAttribute("href") !== '#' && !element.classList.contains('noLoading') && element.getAttribute("href") !== '#') {
+                element.addEventListener('click', loading);
+            }
+        });
+
+        function loading() {
+            loader.style.display = 'block';
+
+            document.querySelector('main').classList.add('invisible');
+            document.querySelector('header').classList.add('invisible');
+            document.querySelector('footer').classList.add('invisible');
+        }
+
+        document.addEventListener('keyup', fkey)
+
+        function fkey(e) {
+
+            if (e.keyCode === 116) {
+                loader.style.display = 'block';
+
+                document.querySelector('main').classList.add('invisible');
+                document.querySelector('header').classList.add('invisible');
+                document.querySelector('footer').classList.add('invisible');
+            }
+        }
+
     }
-  
-    document.addEventListener('keyup', fkey)
-  
-    function fkey(e) {
-  
-      if (e.keyCode == 116) {
-        loader.style.display = 'block';
-  
-        document.querySelector('main').classList.add('invisible');
-        document.querySelector('header').classList.add('invisible');
-        document.querySelector('footer').classList.add('invisible');
-      }
-  }
-  
-  }
-  
-  window.addEventListener("load", loader);
-  window.addEventListener('pageshow', loader);
-  
-  function lettreCouleur(lettre) {
-    // Conversion de la lettre en nombre (valeur ASCII)
-    var valeurAscii = lettre.charCodeAt(0);
 
-    // Ajout d'une constante pour décaler les couleurs
-    valeurAscii += 300;
+    window.addEventListener("load", loader);
+    window.addEventListener('pageshow', loader);
 
-    // Calcul des composantes RGB en fonction de la valeur ASCII
-    var r = (valeurAscii * 3) % 256;
-    var g = (valeurAscii * 5) % 256;
-    var b = (valeurAscii * 7) % 256;
+    function lettreCouleur(lettre) {
+        // Conversion de la lettre en nombre (valeur ASCII)
+        let valeurAscii = lettre.charCodeAt(0);
 
-    // Conversion des composantes RGB en une couleur hexadécimale
-    var couleur = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        // Ajout d'une constante pour décaler les couleurs
+        valeurAscii += 300;
 
-    // Calcul de la luminosité perçue
-    var luminosite = Math.round(((r * 299) + (g * 587) + (b * 114)) / 1000);
+        // Calcul des composantes RGB en fonction de la valeur ASCII
+        const r = (valeurAscii * 3) % 256;
+        const g = (valeurAscii * 5) % 256;
+        const b = (valeurAscii * 7) % 256;
 
-    // Détermination de la couleur du texte en fonction de la luminosité
-    var couleurTexte = (luminosite > 125) ? 'black' : 'white';
+        // Conversion des composantes RGB en une couleur hexadécimale
+        const couleur = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 
-    return [couleur, couleurTexte];
-}
+        // Calcul de la luminosité perçue
+        const luminosite = Math.round(((r * 299) + (g * 587) + (b * 114)) / 1000);
 
-if(document.getElementById('couleurLettre') !== undefined){
-  // Utilisation des fonctions
-  var lettre = document.getElementById('couleurLettre');
-  var [couleur, couleurTexte] = lettreCouleur(lettre.innerHTML);
+        // Détermination de la couleur du texte en fonction de la luminosité
+        const couleurTexte = (luminosite > 125) ? 'black' : 'white';
 
-  lettre.style.color = couleurTexte;
-  lettre.parentElement.style.backgroundColor = couleur;
-}
+        return [couleur, couleurTexte];
+    }
 
-  });
-  
+    if (document.getElementById('couleurLettre') !== undefined) {
+        // Utilisation des fonctions
+        const lettre = document.getElementById('couleurLettre');
+
+        if (lettre !== null) {
+            const [couleur, couleurTexte] = lettreCouleur(lettre.innerHTML);
+            lettre.style.color = couleurTexte;
+            lettre.parentElement.style.backgroundColor = couleur;
+        }
+    }
+
+});
