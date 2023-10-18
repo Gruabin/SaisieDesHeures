@@ -58,12 +58,12 @@ class Employe implements UserInterface
         return $this;
     }
 
-    public function getCentreDeCharge(): ?centreDeCharge
+    public function getCentreDeCharge(): ?CentreDeCharge
     {
         return $this->centre_de_charge;
     }
 
-    public function setCentreDeCharge(?centreDeCharge $centre_de_charge): static
+    public function setCentreDeCharge(?CentreDeCharge $centre_de_charge): static
     {
         $this->centre_de_charge = $centre_de_charge;
 

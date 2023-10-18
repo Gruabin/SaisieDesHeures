@@ -20,10 +20,14 @@ document.getElementById("inputEmploye").addEventListener("input", function () { 
         } else {
             throw new Error("Employé non trouvé");
         }
-    }).then(function (employe) { // Supprimer les classes de chargement et afficher les informations de l'employé
+    }).then(function (employe) {
+        // Supprimer les classes de chargement et afficher les informations de l'employé
         document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         document.getElementById("informationEmploye").innerText = employe.nom;
-    }).catch(function (error) { // Supprimer les classes de chargement et afficher l'erreur
+        // Active le bouton connection
+        document.getElementById("btnConnexion").classList.remove('btn-disabled');
+    }).catch(function (error) {
+        // Supprimer les classes de chargement et afficher l'erreur
         document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         document.getElementById("informationEmploye").innerText = error.message;
     });
@@ -142,11 +146,13 @@ if (inputEmploye2 !== null) {
 document.getElementById("btnConnexion").addEventListener("click", function () {
     if (!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {
         // Récupérez l'ID de l'utilisateur depuis le champ input
-        const idEmploye = document.getElementById("inputEmploye2").value;
+        const idEmploye = document.getElementById("inputEmploye").value;
+        const token = document.getElementById("loginToken").value;
 
         // Créez un objet JSON avec l'ID de l'utilisateur
         const data = {
             id: idEmploye,
+            token: token
         };
 
         // Envoyez la requête AJAX
@@ -159,17 +165,12 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
         })
             .then((response) => response.json())
             .then((data) => {
-                // // Si la requête a réussi, redirigez l'utilisateur vers la page sécurisée
-                // if (data.success) {
-                //     window.location.href = "/home_page";
-                // } else {
-                //     // Afficher un message d'erreur
-                //     alert(data.message);
-                // }
+                // Si la requête a réussi, redirigez l'utilisateur vers la page sécurisée
+                window.location.href = "/temps";
             })
             .catch((error) => {
                 // Afficher un message d'erreur
-                // alert(error);
+                alert(error);
             });
     }
 })

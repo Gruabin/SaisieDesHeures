@@ -16,23 +16,33 @@ class ConnexionAPIController extends AbstractController
     #[Route('/api/post/login', name: 'api_post_login', methods: ['POST'])]
     public function loginUser(Request $request, EntityManagerInterface $entityManager, EmployeRepository $employeRepo): Response
     {
-        // Récupérez l'ID de l'utilisateur depuis les données de la requête
+        // Récupérez le token de l'utilisateur depuis les données de la requête
         $data = json_decode($request->getContent(), true);
-        $userId = $data['id'];
+        $token = $data['token'];
 
-        // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
-        // Assurez-vous d'adapter cette logique à votre propre système
-        $user = $employeRepo->findOneBy(['id' => $userId]);
-        if ($user) {
-            // Connexion de l'utilisateur
-            $tokenStorage = $this->container->get('security.token_storage');
-            $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-            $tokenStorage->setToken($token);
+        if ($this->isCsrfTokenValid('loginToken', $token)) {
+            // Récupérez l'ID de l'utilisateur depuis les données de la requête
+            $userId = $data['id'];
 
-            return $this->redirectToRoute('home_page'); // Redirection vers la page sécurisée
-        } else {
-            return $this->json(['message' => 'ID invalide'], Response::HTTP_BAD_REQUEST);
+            // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
+            // Assurez-vous d'adapter cette logique à votre propre système
+            $user = $employeRepo->findOneBy(['id' => $userId]);
+
+            if ($user) {
+                // Connexion de l'utilisateur
+                $tokenStorage = $this->container->get('security.token_storage');
+                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+                $tokenStorage->setToken($token);
+
+                $this->addFlash('success', 'Connexion réussie');
+
+                return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
+            }
         }
+
+        $this->addFlash('error', 'Connexion échouée');
+
+        return $this->json(['message' => 'ID invalide'], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/home', name: 'home_page', methods: ['GET'])]

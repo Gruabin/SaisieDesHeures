@@ -14,7 +14,7 @@ class IndexController extends AbstractController
     public function index(): Response
     {
         // Rendre la vue 'index/index.html.twig' en passant les variables 'controller_name' et 'user'
-        return $this->render('index/index.html.twig', [
+        return $this->render('login.html.twig', [
             'controller_name' => 'IndexController',
             'user' => $this->getUser(),
         ]);
@@ -24,7 +24,7 @@ class IndexController extends AbstractController
     public function temps(TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo): Response
     {
         // Rendre la vue 'temps/temps.html.twig' en passant les variables 'types', 'taches' et 'user'
-        return $this->render('temps/temps.html.twig', [
+        return $this->render('temps.html.twig', [
             'types' => $typeRepo->findAll(),
             'taches' => $tacheRepo->findAll(),
             'user' => $this->getUser(),
