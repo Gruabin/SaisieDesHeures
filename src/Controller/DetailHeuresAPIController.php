@@ -38,7 +38,7 @@ class DetailHeuresAPIController extends AbstractController
             ];
         }
         // Convertir les données en format JSON
-        $jsonData = json_encode($detailHeuresData);
+        $jsonData = json_encode($detailHeuresData, JSON_THROW_ON_ERROR);
         // Retourner une réponse avec les données des détails des heures au format JSON
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
@@ -52,14 +52,14 @@ class DetailHeuresAPIController extends AbstractController
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (null === $data) {
             return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
         }
 
         // Valider les données entrantes
-        $tempsMainOeuvre = isset($data['temps_main_oeuvre']) ? $data['temps_main_oeuvre'] : null;
-        $typeHeures = isset($data['type_heures']) ? $data['type_heures'] : null;
+        $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
+        $typeHeures = $data['type_heures'] ?? null;
 
         if (null === $tempsMainOeuvre || null === $typeHeures) {
             return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
@@ -106,7 +106,7 @@ class DetailHeuresAPIController extends AbstractController
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête PUT
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
             return new Response('ID manquant dans les données JSON.', Response::HTTP_BAD_REQUEST);
@@ -149,7 +149,7 @@ class DetailHeuresAPIController extends AbstractController
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête DELETE
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
             return new Response('ID manquant dans les données JSON.', Response::HTTP_BAD_REQUEST);

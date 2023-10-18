@@ -32,7 +32,7 @@ class APIController extends AbstractController
         ];
 
         // Convertir les données en format JSON
-        $jsonData = json_encode($employeData);
+        $jsonData = json_encode($employeData, JSON_THROW_ON_ERROR);
 
         // Retourner une réponse avec les données de l'employé au format JSON
         $response = new Response($jsonData);
@@ -61,7 +61,7 @@ class APIController extends AbstractController
         }
 
         // Convertir les données en format JSON
-        $jsonData = json_encode($employeData);
+        $jsonData = json_encode($employeData, JSON_THROW_ON_ERROR);
         // Retourner une réponse avec les données de l'employé au format JSON
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
@@ -75,7 +75,7 @@ class APIController extends AbstractController
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $data) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
@@ -102,7 +102,7 @@ class APIController extends AbstractController
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête PUT
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
@@ -136,7 +136,7 @@ class APIController extends AbstractController
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête DELETE
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {

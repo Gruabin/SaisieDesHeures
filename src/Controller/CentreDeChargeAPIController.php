@@ -30,7 +30,7 @@ class CentreDeChargeAPIController extends AbstractController
             ];
         }
         // Convertir les données en format JSON
-        $jsonData = json_encode($centreDeChargeData);
+        $jsonData = json_encode($centreDeChargeData, JSON_THROW_ON_ERROR);
         // Retourner une réponse avec les données du centre de charge au format JSON
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
@@ -44,7 +44,7 @@ class CentreDeChargeAPIController extends AbstractController
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (null === $data) {
             return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
         }
@@ -66,7 +66,7 @@ class CentreDeChargeAPIController extends AbstractController
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête PUT
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
             return new Response('ID manquant dans les données JSON.', Response::HTTP_BAD_REQUEST);
@@ -92,7 +92,7 @@ class CentreDeChargeAPIController extends AbstractController
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête DELETE
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
             return new Response('ID manquant dans les données JSON.', Response::HTTP_BAD_REQUEST);

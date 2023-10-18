@@ -8,8 +8,8 @@
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="template">
-		<link rel="manifest" href="{{asset('manifest/manifest.webmanifest')}}">
-		<link rel="icon" href="{{asset("images/favicon.ico")}}"/>
+		<link rel="manifest" href="{{ asset('manifest/manifest.webmanifest') }}">
+		<link rel="icon" href="{{ asset("images/favicon.ico") }}"/>
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
@@ -27,19 +27,19 @@
 		{% for message in app.flashes('success') %}
 			<div class="notification is-success">
 				<button class="delete"></button>
-				{{message}}
+				{{ message }}
 			</div>
 		{% endfor %}
 		{% for message in app.flashes('error') %}
 			<div class="notification is-danger">
 				<button class="delete"></button>
-				{{message}}
+				{{ message }}
 			</div>
 		{% endfor %}
 		<div id="loader">
-			<img class="scale-down-tl" src="{{asset("images/logo-symbole-haut.svg")}}">
+			<img class="scale-down-tl" src="{{ asset("images/logo-symbole-haut.svg") }}">
 			Chargement
-			<img class="scale-down-br" src="{{asset("images/gruau-symbole-bas.svg")}}">
+			<img class="scale-down-br" src="{{ asset("images/gruau-symbole-bas.svg") }}">
 		</div>
 		<main class="invisible">
 			{% block body %}{% endblock %}

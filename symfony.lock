@@ -113,6 +113,18 @@
     "nikic/php-parser": {
         "version": "v4.13.2"
     },
+    "phpstan/phpstan": {
+        "version": "1.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "f10b8054de1a94a3b9e8806a6453fd5c98491c44"
+        },
+        "files": [
+            "./phpstan.dist.neon"
+        ]
+    },
     "psr/cache": {
         "version": "3.0.0"
     },

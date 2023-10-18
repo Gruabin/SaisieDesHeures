@@ -33,7 +33,7 @@ class OperationAPIController extends AbstractController
         }
 
         // Convertir les données en format JSON
-        $jsonData = json_encode($operationData);
+        $jsonData = json_encode($operationData, JSON_THROW_ON_ERROR);
         // Retourner une réponse avec les données de l'operation au format JSON
         $response = new Response($jsonData);
         $response->headers->set('Content-Type', 'application/json');
@@ -47,7 +47,7 @@ class OperationAPIController extends AbstractController
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $data) {
             return new Response('Aucune donnée soumises.', Response::HTTP_BAD_REQUEST);
@@ -72,7 +72,7 @@ class OperationAPIController extends AbstractController
     public function put(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête PUT
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {
@@ -104,7 +104,7 @@ class OperationAPIController extends AbstractController
     public function delete(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête DELETE
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         // Vérifier si l'ID est présent dans les données JSON
         if (!isset($data['id'])) {

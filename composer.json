@@ -16,6 +16,7 @@
         "knplabs/knp-paginator-bundle": "^6.0",
         "knpuniversity/oauth2-client-bundle": "^2.12",
         "scienta/doctrine-json-functions": "^5.2",
+        "phpstan/phpstan": "*",
         "symfony/asset": "6.*",
         "symfony/console": "6.*",
         "symfony/dotenv": "6.*",
@@ -40,7 +41,9 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "friendsoftwig/twigcs": "^6.2",
         "friendsofphp/php-cs-fixer": "^3.35",
+        "rector/rector": "*",
         "symfony/debug-bundle": "6.*",
         "symfony/maker-bundle": "^1.38",
         "symfony/stopwatch": "6.*",

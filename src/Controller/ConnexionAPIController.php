@@ -17,7 +17,7 @@ class ConnexionAPIController extends AbstractController
     public function loginUser(Request $request, EntityManagerInterface $entityManager, EmployeRepository $employeRepo): Response
     {
         // Récupérez le token de l'utilisateur depuis les données de la requête
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
 
         if ($this->isCsrfTokenValid('loginToken', $token)) {

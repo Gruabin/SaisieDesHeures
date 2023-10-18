@@ -40,6 +40,21 @@ Pour utiliser l'application en localhost vous avez juste à suivre les étapes s
    ```
 7. Vous pouvez maintenant accéder à l'application via l'url `http://localhost:8000`
 
+# Linter
+Aide pour executer les linters
+```shell
+php vendor/bin/php-cs-fixer fix
+```
+
+```shell
+php vendor/bin/rector process src
+```
+
+```shell
+php vendor/bin/twigcs templates
+```
+
+
 # TIPS
 
 Si vous êtes en localhost et que vous avez un problème de type 'openSSL' modifier le fichier 'CurlFactory' se situant: vendor\guzzlehttp\guzzle\src\Handler\CurlFactory.php
