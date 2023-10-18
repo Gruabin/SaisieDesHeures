@@ -54,6 +54,12 @@ php vendor/bin/rector process src
 php vendor/bin/twigcs templates
 ```
 
+```shell
+php vendor/bin/php-cs-fixer fix
+php vendor/bin/rector process src
+php vendor/bin/twigcs templates
+```
+
 
 # TIPS
 

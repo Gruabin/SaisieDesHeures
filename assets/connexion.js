@@ -145,6 +145,8 @@ if (inputEmploye2 !== null) {
 }
 document.getElementById("btnConnexion").addEventListener("click", function () {
     if (!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {
+        document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
         // Récupérez l'ID de l'utilisateur depuis le champ input
         const idEmploye = document.getElementById("inputEmploye").value;
         const token = document.getElementById("loginToken").value;
