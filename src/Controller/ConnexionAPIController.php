@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class ConnexionAPIController extends AbstractController
 {
     // READ
-    #[Route('/api/post/login', name: 'api_post_login', methods: ['POST'])]
+    #[Route('/api/post/connexion', name: 'api_post_connexion', methods: ['POST'])]
     public function loginUser(Request $request, EntityManagerInterface $entityManager, EmployeRepository $employeRepo): Response
     {
         // Récupérez le token de l'utilisateur depuis les données de la requête
@@ -42,7 +42,9 @@ class ConnexionAPIController extends AbstractController
 
         $this->addFlash('error', 'Connexion échouée');
 
-        return $this->json(['message' => 'ID invalide'], Response::HTTP_BAD_REQUEST);
+        $message = $this->renderView('alert.html.twig');
+
+        return $this->json(['message' => $message], Response::HTTP_NOT_FOUND);
     }
 
     #[Route('/home', name: 'home_page', methods: ['GET'])]

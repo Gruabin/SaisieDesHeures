@@ -14,7 +14,7 @@ class IndexController extends AbstractController
     public function index(): Response
     {
         // Rendre la vue 'index/index.html.twig' en passant les variables 'controller_name' et 'user'
-        return $this->render('login.html.twig', [
+        return $this->render('connexion.html.twig', [
             'controller_name' => 'IndexController',
             'user' => $this->getUser(),
         ]);

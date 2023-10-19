@@ -16,10 +16,6 @@
         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
         <button class="btn btn-primary btn-outline mt-5 btn-disabled" id="btnConnexion">Connexion</button>
     </div>
-    <div class="text-center">
-        <a class="btn btn-info btn-outline" href="{{ path('temps') }}">
-            page saisie des temps</a>
-    </div>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
         {{ encore_entry_script_tags('connexion') }}

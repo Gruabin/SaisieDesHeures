@@ -24,7 +24,9 @@
         {% include "navbar.html.twig" %}
     {% endblock %}
 </header>
-{% include "alert.html.twig" %}
+<section id="boxAlertMessage">
+    {% include "alert.html.twig" %}
+</section>
 <div id="loader">
     <img class="scale-down-tl" src="{{ asset("images/logo-symbole-haut.svg") }}">
     Chargement

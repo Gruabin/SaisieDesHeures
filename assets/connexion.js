@@ -30,6 +30,7 @@ document.getElementById("inputEmploye").addEventListener("input", function () { 
         // Supprimer les classes de chargement et afficher l'erreur
         document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         document.getElementById("informationEmploye").innerText = error.message;
+        document.getElementById("btnConnexion").classList.add('btn-disabled');
     });
 });
 
@@ -158,17 +159,27 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
         };
 
         // Envoyez la requête AJAX
-        fetch("/api/post/login", {
+        fetch("/api/post/connexion", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                // Si la requête a réussi, redirigez l'utilisateur vers la page sécurisée
-                window.location.href = "/temps";
+            .then((response) => {
+                if (response.status === 404) {
+                    // Gérer le cas où la réponse est un statut 404
+                    return response.json().then((errorData) => {
+                        document.getElementById("boxAlertMessage").innerHTML = errorData.message;
+                        document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                    });
+                } else if (response.status === 200) {
+                    // Rediriger l'utilisateur en cas de succès
+                    window.location.href = "/temps";
+                } else {
+                    // Gérer d'autres statuts d'erreur ici
+                    throw new Error("Réponse inattendue du serveur");
+                }
             })
             .catch((error) => {
                 // Afficher un message d'erreur
