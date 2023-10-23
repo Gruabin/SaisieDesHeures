@@ -1,40 +1,59 @@
 
-
-document.getElementById("type").addEventListener("change", function () {
-    switch (parseInt(this.value)) {
+function formChange() {
+    switch (parseInt(document.getElementById("type").value)) {
         case 0:
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 1:
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            if (parseInt(document.getElementById("tache").value) === 111) {
+                document.getElementById("divCentreCharge").classList.remove("hidden");
+            }
+            document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 2:
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 3:
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.remove("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         default:
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divSaisiTemps").classList.add("hidden");
             break;
     }
+}
+
+document.getElementById("type").addEventListener("change", function () {
+    formChange.call(this);
 });
 
+document.getElementById("tache").addEventListener("change", function () {
+    formChange.call(this);
+});
 
 
 // Tableau pour stocker les taches
@@ -62,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () { // Construire l'URL 
     }).catch(function (error) {
         console.log(error);
     });
-    
+
     // Désactiver l'input "infoTache"
     document.getElementById("tache").disabled = true;
 });
