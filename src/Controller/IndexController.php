@@ -23,12 +23,18 @@ class IndexController extends AbstractController
     #[Route('/temps', name: 'temps')]
     public function temps(TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo): Response
     {
-
-
         // Rendre la vue 'temps/temps.html.twig' en passant les variables 'types', 'taches' et 'user'
         return $this->render('temps.html.twig', [
             'types' => $typeRepo->findAll(),
             'taches' => $tacheRepo->findAll(),
+            'user' => $this->getUser(),
+        ]);
+    }
+
+    #[Route('/historique', name: 'historique')]
+    public function historique(): Response
+    {
+        return $this->render('historique.html.twig', [
             'user' => $this->getUser(),
         ]);
     }
