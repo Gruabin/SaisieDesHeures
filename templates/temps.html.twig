@@ -28,14 +28,20 @@
                     {% for type in types %}
                         {% set total = 0 %}
                         {% for heures in type.detailHeures %}
-                            {% set total = heures.tempsMainOeuvre %}
+                            {% set total = total + heures.tempsMainOeuvre %}
                         {% endfor %}
                         {% if total > 0 %}
                             {{ total }} heures
                         {% endif %}
                     {% endfor %}
                     </span>
-                    <a class="btn btn-primary btn-outline mt-5" id="btnConsulterDetails" href="{{ path('historique') }}">
+                </div>
+            </div>
+
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <a class="btn btn-primary btn-outline mt-5" id="btnConsulterDetails"
+                       href="{{ path('historique') }}">
                         Consulter le détails
                     </a>
                 </div>
@@ -91,6 +97,20 @@
                 <input class="mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
                 <p class="mx-3" id="infoSaisiTemps"></p>
             </div>
+        </div>
+        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+            <div id="informationSaisiHeures"></div>
+        </div>
+        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+            <button class="btn btn-primary btn-outline mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
+                Retour
+            </button>
+            <button class="btn btn-primary btn-outline mt-5" id="btnEnregistrerQuitter">
+                Enregistrer et quitter
+            </button>
+            <button class="btn btn-primary btn-outline mt-5" id="btnEnregistrerContinue">
+                Enregistrer et continuer
+            </button>
         </div>
     </div>
     {% block javascripts %}

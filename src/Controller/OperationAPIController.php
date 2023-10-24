@@ -128,4 +128,5 @@ class OperationAPIController extends AbstractController
         // Retourner une réponse indiquant que l'opération a été supprimé avec succès
         return new Response('Operation supprimé avec succès.', Response::HTTP_OK);
     }
+
 }

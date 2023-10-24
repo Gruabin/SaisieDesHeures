@@ -1,4 +1,3 @@
-
 function formChange() {
     switch (parseInt(document.getElementById("type").value)) {
         case 0:
@@ -47,21 +46,77 @@ function formChange() {
     }
 }
 
+async function formSubmit() {
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+    const type_heures = document.getElementById("type").value;
+    const ordre = document.getElementById("ordre").value;
+    const tache = document.getElementById("tache").value;
+    const operation = document.getElementById("operation").value;
+    const activite = document.getElementById("activite").value;
+    const centre_de_charge = document.getElementById("centrecharge").value;
+    const temps_main_oeuvre = document.getElementById("saisitemps").value;
+
+    const data = {
+        'type_heures': type_heures,
+        'ordre': ordre,
+        'tache': tache,
+        'operation': operation,
+        'activite': activite,
+        'centre_de_charge': centre_de_charge,
+        'temps_main_oeuvre': temps_main_oeuvre
+    }
+
+    const response = await fetch("/api/post/detail_heures", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    if (response.status === 201) {
+        response.text().then((text) => {
+            alert(text);
+        });
+        return true
+    }
+    if (response.status !== 201) {
+        alert("Réponse inattendue du serveur");
+        return false
+    }
+    throw new Error("Réponse inattendue du serveur");
+}
+
 document.getElementById("type").addEventListener("change", function () {
-    formChange.call(this);
-});
+    formChange();
+})
 
 document.getElementById("tache").addEventListener("change", function () {
-    formChange.call(this);
-});
+    formChange();
+})
+
+document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
+    const state = await formSubmit();
+    if (state){
+        window.location.href = '/api/post/deconnexion';
+    }
+})
+
+document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
+    const state = await formSubmit();
+    if (state){
+        window.location.href = '/temps';
+    }
+})
 
 
 // Tableau pour stocker les taches
-var tacheTable = [];
+let tacheTable = [];
 
 // Lorsque le DOM est chargé
 document.addEventListener("DOMContentLoaded", function () { // Construire l'URL pour la requête fetch
-    var url = "api/get/tache/";
+    const url = "api/get/tache/";
 
     // Effectuer la requête fetch
     fetch(url).then(function (response) { // Vérifier si la réponse est OK
@@ -73,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () { // Construire l'URL 
     }).then(function (tache) { // Parcourir les taches et les ajouter au tableau
         tache.forEach((uneTache) => {
             document.getElementById("tache").disabled = false;
-            var tacheObjet = {};
+            let tacheObjet = {};
             tacheObjet.id = uneTache.id;
             tacheObjet.nom = uneTache.nom;
             tacheTable.push(tacheObjet);

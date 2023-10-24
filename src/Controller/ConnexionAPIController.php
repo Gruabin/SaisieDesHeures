@@ -47,6 +47,17 @@ class ConnexionAPIController extends AbstractController
         return $this->json(['message' => $message], Response::HTTP_NOT_FOUND);
     }
 
+    #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]
+    public function logoutUser(): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $tokenStorage = $this->container->get('security.token_storage');
+        $tokenStorage->setToken(null);
+
+        $this->addFlash('success', 'Déconnexion réussie');
+
+        return $this->redirectToRoute('home');
+    }
+
     #[Route('/home', name: 'home_page', methods: ['GET'])]
     public function securedPage(): Response
     {

@@ -3,15 +3,46 @@
 namespace App\Controller;
 
 use App\Entity\DetailHeures;
+use App\Entity\TypeHeures;
+use App\Repository\ActiviteRepository;
+use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
+use App\Repository\OperationRepository;
+use App\Repository\OrdreRepository;
+use App\Repository\TacheRepository;
+use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property TypeHeuresRepository     $typeHeuresRepository
+ * @property OrdreRepository          $ordreRepository
+ * @property ActiviteRepository       $activiteRepository
+ * @property CentreDeChargeRepository $centreDeChargeRepository
+ * @property OperationRepository      $operationRepository
+ * @property TacheRepository          $tacheRepository
+ */
 class DetailHeuresAPIController extends AbstractController
 {
+    public function __construct(
+        ActiviteRepository $activiteRepository,
+        CentreDeChargeRepository $centreDeChargeRepository,
+        OperationRepository $operationRepository,
+        OrdreRepository $ordreRepository,
+        TacheRepository $tacheRepository,
+        TypeHeuresRepository $typeHeuresRepository
+    ) {
+        $this->typeHeuresRepository = $typeHeuresRepository;
+        $this->ordreRepository = $ordreRepository;
+        $this->activiteRepository = $activiteRepository;
+        $this->centreDeChargeRepository = $centreDeChargeRepository;
+        $this->operationRepository = $operationRepository;
+        $this->tacheRepository = $tacheRepository;
+    }
+
     // * READ
     #[Route('/api/get/detail_heures', name: 'api_get_detail_heures', methods: ['GET'])]
     public function get(DetailHeuresRepository $detailHeuresRepo): Response
@@ -61,37 +92,12 @@ class DetailHeuresAPIController extends AbstractController
         $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
         $typeHeures = $data['type_heures'] ?? null;
 
+        $typeHeures = $this->typeHeuresRepository->find($typeHeures);
+
         if (null === $tempsMainOeuvre || null === $typeHeures) {
             return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
         }
-
-        // Créer une nouvelle instance de l'entité DetailHeures
-        $detailHeures = new DetailHeures();
-
-        // Remplir les propriétés de l'entité avec les données reçues
-        $now = new \DateTime();
-        $heure = \DateTime::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d H:i:s'));
-        $heure->setTimezone(new \DateTimeZone('Europe/Paris'));
-
-        $detailHeures->setDate($heure);
-        $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
-        $detailHeures->setTypeHeures($typeHeures);
-
-        if (isset($data['ordre'])) {
-            $detailHeures->setOrdre($data['ordre']);
-        }
-        if (isset($data['operation'])) {
-            $detailHeures->setOperation($data['operation']);
-        }
-        if (isset($data['tache'])) {
-            $detailHeures->setTache($data['tache']);
-        }
-        if (isset($data['activite'])) {
-            $detailHeures->setActivite($data['activite']);
-        }
-        if (isset($data['centre_de_charge'])) {
-            $detailHeures->setCentreDeCharge($data['centre_de_charge']);
-        }
+        $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $data);
 
         // Enregistrer les détails des heures dans la base de données
         $entityManager->persist($detailHeures);
@@ -167,5 +173,53 @@ class DetailHeuresAPIController extends AbstractController
 
         // Retourner une réponse indiquant que les détails des heures ont été supprimés avec succès
         return new Response('Détails des heures supprimés avec succès.', Response::HTTP_OK);
+    }
+
+    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, array $data): DetailHeures
+    {
+        // Créer une nouvelle instance de l'entité DetailHeures
+        $detailHeures = new DetailHeures();
+
+        // Remplir les propriétés de l'entité avec les données reçues
+        $now = new \DateTime();
+        $heure = \DateTime::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d H:i:s'));
+        $heure->setTimezone(new \DateTimeZone('Europe/Paris'));
+
+        $detailHeures->setDate($heure);
+        $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
+        $detailHeures->setTypeHeures($typeHeures);
+
+        if (!empty($ordre)) {
+            $ordre = $this->ordreRepository->find($data['ordre'] ?? null);
+            if (!empty($ordre)) {
+                $detailHeures->setOrdre($ordre);
+            }
+        }
+        if (!empty($operation)) {
+            $operation = $this->operationRepository->find($data['operation'] ?? 0);
+            if (!empty($operation)) {
+                $detailHeures->setOperation($operation);
+            }
+        }
+        if (!empty($tache)) {
+            $tache = $this->tacheRepository->find($data['tache'] ?? null);
+            if (!empty($tache)) {
+                $detailHeures->setTache($tache);
+            }
+        }
+        if (!empty($activite)) {
+            $activite = $this->activiteRepository->find($data['activite'] ?? null);
+            if (!empty($activite)) {
+                $detailHeures->setActivite($activite);
+            }
+        }
+        if (!empty($centre_de_charge)) {
+            $centre_de_charge = $this->centreDeChargeRepository->find($data['centre_de_charge'] ?? null);
+            if (!empty($centre_de_charge)) {
+                $detailHeures->setCentreDeCharge($centre_de_charge);
+            }
+        }
+
+        return $detailHeures;
     }
 }
