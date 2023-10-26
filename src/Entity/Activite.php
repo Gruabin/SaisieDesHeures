@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ActiviteRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ActiviteRepository::class)]
@@ -16,14 +14,14 @@ class Activite
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $description_activite = null;
+    private ?string $descriptionActivite = null;
 
     #[ORM\OneToMany(mappedBy: 'activite', targetEntity: DetailHeures::class)]
-    private Collection $detailHeures;
+    private ?DetailHeures $detailHeures;
 
     public function __construct()
     {
-        $this->detailHeures = new ArrayCollection();
+        $this->detailHeures = new DetailHeures();
     }
 
     public function getId(): ?int
@@ -33,20 +31,17 @@ class Activite
 
     public function getDescriptionActivite(): ?string
     {
-        return $this->description_activite;
+        return $this->descriptionActivite;
     }
 
-    public function setDescriptionActivite(string $description_activite): static
+    public function setDescriptionActivite(string $descriptionActivite): static
     {
-        $this->description_activite = $description_activite;
+        $this->descriptionActivite = $descriptionActivite;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, DetailHeures>
-     */
-    public function getDetailHeures(): Collection
+    public function getDetailHeures(): DetailHeures
     {
         return $this->detailHeures;
     }

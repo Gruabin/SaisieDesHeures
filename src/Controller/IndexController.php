@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,20 +22,22 @@ class IndexController extends AbstractController
     }
 
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepository, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository): Response
     {
         // Rendre la vue 'temps/temps.html.twig' en passant les variables 'types', 'taches' et 'user'
         return $this->render('temps.html.twig', [
-            'types' => $typeRepo->findAll(),
-            'taches' => $tacheRepo->findAll(),
+            'details' => $detailHeuresRepository->findAll(),
+            'types' => $typeHeuresRepository->findAll(),
+            'taches' => $tacheRepository->findAll(),
             'user' => $this->getUser(),
         ]);
     }
 
     #[Route('/historique', name: 'historique')]
-    public function historique(): Response
+    public function historique(DetailHeuresRepository $detailHeuresRepository): Response
     {
         return $this->render('historique.html.twig', [
+            'details' => $detailHeuresRepository->findAll(),
             'user' => $this->getUser(),
         ]);
     }

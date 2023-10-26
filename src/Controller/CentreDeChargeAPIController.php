@@ -26,7 +26,7 @@ class CentreDeChargeAPIController extends AbstractController
         foreach ($centreDeCharge as $key => $value) {
             $centreDeChargeData[$key] = [
                 'id' => $value->getId(),
-                'nom' => $value->getDescriptionCDG(),
+                'nom' => $value->getDescriptionCdg(),
             ];
         }
         // Convertir les données en format JSON
@@ -52,7 +52,7 @@ class CentreDeChargeAPIController extends AbstractController
         $centreDeCharge = new CentreDeCharge();
         // Remplir les propriétés de l'entité avec les données reçues
         $centreDeCharge->setId($data['id']);
-        $centreDeCharge->setDescriptionCDG($data['nom']);
+        $centreDeCharge->setDescriptionCdg($data['nom']);
         // Enregistrer le centre de charge dans la base de données
         $entityManager->persist($centreDeCharge);
         $entityManager->flush();
@@ -79,7 +79,7 @@ class CentreDeChargeAPIController extends AbstractController
             return new Response('Centre de charge non trouvé.', Response::HTTP_NOT_FOUND);
         }
         // Mettre à jour les propriétés du centre de charge avec les nouvelles données
-        $centreDeCharge->setDescriptionCDG($data['nom']);
+        $centreDeCharge->setDescriptionCdg($data['nom']);
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 

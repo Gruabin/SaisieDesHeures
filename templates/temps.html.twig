@@ -25,19 +25,16 @@
                 <div class="m-2"><b>Temps journalier</b></div>
                 <div class="m-2">
                     <span>
-                    {% for type in types %}
                         {% set total = 0 %}
-                        {% for heures in type.detailHeures %}
+                        {% for heures in details %}
                             {% set total = total + heures.tempsMainOeuvre %}
                         {% endfor %}
                         {% if total > 0 %}
                             {{ total }} heures
                         {% endif %}
-                    {% endfor %}
                     </span>
                 </div>
             </div>
-
             <div class="m-2 flex-1">
                 <div class="m-2">
                     <a class="btn btn-primary btn-outline mt-5" id="btnConsulterDetails"

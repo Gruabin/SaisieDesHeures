@@ -103,6 +103,8 @@ class DetailHeuresAPIController extends AbstractController
         $entityManager->persist($detailHeures);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Détails des heures créés avec succès.');
+
         // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
         return new Response('Détails des heures créés avec succès.', Response::HTTP_CREATED);
     }
@@ -187,36 +189,36 @@ class DetailHeuresAPIController extends AbstractController
 
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
-        $detailHeures->setTypeHeures($typeHeures);
+        $detailHeures->addTypeHeure($typeHeures);
 
         if (!empty($ordre)) {
             $ordre = $this->ordreRepository->find($data['ordre'] ?? null);
             if (!empty($ordre)) {
-                $detailHeures->setOrdre($ordre);
+                $detailHeures->addOrdre($ordre);
             }
         }
         if (!empty($operation)) {
             $operation = $this->operationRepository->find($data['operation'] ?? 0);
             if (!empty($operation)) {
-                $detailHeures->setOperation($operation);
+                $detailHeures->addOperation($operation);
             }
         }
         if (!empty($tache)) {
             $tache = $this->tacheRepository->find($data['tache'] ?? null);
             if (!empty($tache)) {
-                $detailHeures->setTache($tache);
+                $detailHeures->addTache($tache);
             }
         }
         if (!empty($activite)) {
             $activite = $this->activiteRepository->find($data['activite'] ?? null);
             if (!empty($activite)) {
-                $detailHeures->setActivite($activite);
+                $detailHeures->addActivite($activite);
             }
         }
         if (!empty($centre_de_charge)) {
             $centre_de_charge = $this->centreDeChargeRepository->find($data['centre_de_charge'] ?? null);
             if (!empty($centre_de_charge)) {
-                $detailHeures->setCentreDeCharge($centre_de_charge);
+                $detailHeures->addCentreDeCharge($centre_de_charge);
             }
         }
 

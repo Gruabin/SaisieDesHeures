@@ -76,9 +76,6 @@ async function formSubmit() {
     })
     document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     if (response.status === 201) {
-        response.text().then((text) => {
-            alert(text);
-        });
         return true
     }
     if (response.status !== 201) {
@@ -99,14 +96,14 @@ document.getElementById("tache").addEventListener("change", function () {
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state){
-        window.location.href = '/api/post/deconnexion';
+        //window.location.href = '/api/post/deconnexion';
     }
 })
 
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state){
-        window.location.href = '/temps';
+        //window.location.href = '/temps';
     }
 })
 
