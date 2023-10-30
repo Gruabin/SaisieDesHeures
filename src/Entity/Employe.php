@@ -17,12 +17,7 @@ class Employe implements UserInterface
     private ?string $nomEmploye = null;
 
     #[ORM\ManyToOne(targetEntity: CentreDeCharge::class, inversedBy: 'employes')]
-    private $centreDeCharge;
-
-    public function __construct()
-    {
-        $this->centreDeCharge = new CentreDeCharge();
-    }
+    private ?\App\Entity\CentreDeCharge $centreDeCharge = null;
 
     public function getRoles(): array
     {

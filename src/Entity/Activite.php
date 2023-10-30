@@ -19,11 +19,6 @@ class Activite
     #[ORM\OneToMany(mappedBy: 'activite', targetEntity: DetailHeures::class)]
     private ?DetailHeures $detailHeures;
 
-    public function __construct()
-    {
-        $this->detailHeures = new DetailHeures();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

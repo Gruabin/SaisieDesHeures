@@ -15,17 +15,11 @@ class CentreDeCharge
     #[ORM\Column(length: 255)]
     private ?string $descriptionCdg = null;
 
-    #[ORM\OneToMany(mappedBy: 'centreDeCharges', targetEntity: Employe::class)]
+    #[ORM\OneToMany(mappedBy: 'centreDeCharge', targetEntity: Employe::class)]
     private $employes;
 
-    #[ORM\OneToMany(mappedBy: 'centreDeCharges', targetEntity: DetailHeures::class)]
+    #[ORM\OneToMany(mappedBy: 'centreDeCharge', targetEntity: DetailHeures::class)]
     private $detailHeures;
-
-    public function __construct()
-    {
-        $this->employes = new Employe();
-        $this->detailHeures = new DetailHeures();
-    }
 
     public function getId(): ?string
     {

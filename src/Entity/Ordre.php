@@ -18,11 +18,6 @@ class Ordre
     #[ORM\OneToMany(mappedBy: 'ordre', targetEntity: DetailHeures::class)]
     private $detailHeures;
 
-    public function __construct()
-    {
-        $this->detailHeures = new DetailHeures();
-    }
-
     public function getId(): ?string
     {
         return $this->id;

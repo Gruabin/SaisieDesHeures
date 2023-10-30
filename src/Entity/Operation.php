@@ -19,11 +19,6 @@ class Operation
     #[ORM\OneToMany(mappedBy: 'operation', targetEntity: DetailHeures::class)]
     private $detailHeures;
 
-    public function __construct()
-    {
-        $this->detailHeures = new DetailHeures();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

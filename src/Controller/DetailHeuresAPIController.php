@@ -190,7 +190,7 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->addTypeHeure($typeHeures);
-
+        dd($typeHeures);
         if (!empty($ordre)) {
             $ordre = $this->ordreRepository->find($data['ordre'] ?? null);
             if (!empty($ordre)) {

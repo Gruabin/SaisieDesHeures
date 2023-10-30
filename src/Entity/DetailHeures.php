@@ -83,6 +83,13 @@ class DetailHeures
         return $this->typeHeures;
     }
 
+    public function setTypeHeures(string $typeHeures): static
+    {
+        $this->typeHeures = $typeHeures;
+
+        return $this;
+    }
+
     public function addTypeHeure(TypeHeures $typeHeure): static
     {
         if (!$this->typeHeures->contains($typeHeure)) {

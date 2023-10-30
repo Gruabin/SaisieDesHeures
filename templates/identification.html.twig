@@ -5,16 +5,16 @@
 
 {% block body %}
     <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md text-center">
-        <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">Connexion</h1>
+        <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">Identification</h1>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-row justify-center items-center space-x-2">
-            <label for="inputEmploye">Id employé:
+            <label for="inputEmploye">Code employé
             </label>
             <input type="text" maxlength="9" name="employe" id="inputEmploye">
             <p id="informationEmploye">Information employé</p>
         </div>
         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
-        <button class="btn btn-primary btn-outline mt-5 btn-disabled" id="btnConnexion">Connexion</button>
+        <button class="btn btn-primary btn-outline mt-5 btn-disabled" id="btnConnexion">Continuer</button>
     </div>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
