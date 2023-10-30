@@ -189,38 +189,12 @@ class DetailHeuresAPIController extends AbstractController
 
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
-        $detailHeures->addTypeHeure($typeHeures);
-        dd($typeHeures);
-        if (!empty($ordre)) {
-            $ordre = $this->ordreRepository->find($data['ordre'] ?? null);
-            if (!empty($ordre)) {
-                $detailHeures->addOrdre($ordre);
-            }
-        }
-        if (!empty($operation)) {
-            $operation = $this->operationRepository->find($data['operation'] ?? 0);
-            if (!empty($operation)) {
-                $detailHeures->addOperation($operation);
-            }
-        }
-        if (!empty($tache)) {
-            $tache = $this->tacheRepository->find($data['tache'] ?? null);
-            if (!empty($tache)) {
-                $detailHeures->addTache($tache);
-            }
-        }
-        if (!empty($activite)) {
-            $activite = $this->activiteRepository->find($data['activite'] ?? null);
-            if (!empty($activite)) {
-                $detailHeures->addActivite($activite);
-            }
-        }
-        if (!empty($centre_de_charge)) {
-            $centre_de_charge = $this->centreDeChargeRepository->find($data['centre_de_charge'] ?? null);
-            if (!empty($centre_de_charge)) {
-                $detailHeures->addCentreDeCharge($centre_de_charge);
-            }
-        }
+        $detailHeures->setTypeHeure($typeHeures);
+        $detailHeures->setOrdre($data['ordre']);
+        $detailHeures->setOperation($data['operation']);
+        $detailHeures->setTache($data['tache']);
+        $detailHeures->setActivite($data['activite']);
+        $detailHeures->setCentreDeCharge($data['centre_de_charge']);
 
         return $detailHeures;
     }

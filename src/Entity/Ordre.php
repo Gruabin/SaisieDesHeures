@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrdreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdreRepository::class)]
@@ -13,10 +15,15 @@ class Ordre
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $descriptionOrdre = null;
+    private ?string $description_ordre = null;
 
     #[ORM\OneToMany(mappedBy: 'ordre', targetEntity: DetailHeures::class)]
-    private $detailHeures;
+    private Collection $detailHeures;
+
+    public function __construct()
+    {
+        $this->detailHeures = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -32,17 +39,20 @@ class Ordre
 
     public function getDescriptionOrdre(): ?string
     {
-        return $this->descriptionOrdre;
+        return $this->description_ordre;
     }
 
-    public function setDescriptionOrdre(string $descriptionOrdre): static
+    public function setDescriptionOrdre(string $description_ordre): static
     {
-        $this->descriptionOrdre = $descriptionOrdre;
+        $this->description_ordre = $description_ordre;
 
         return $this;
     }
 
-    public function getDetailHeures(): ?DetailHeures
+    /**
+     * @return Collection<int, DetailHeures>
+     */
+    public function getDetailHeures(): Collection
     {
         return $this->detailHeures;
     }

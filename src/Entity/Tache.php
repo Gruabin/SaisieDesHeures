@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TacheRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TacheRepository::class)]
@@ -14,10 +16,15 @@ class Tache
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nomTache = null;
+    private ?string $nom_tache = null;
 
     #[ORM\OneToMany(mappedBy: 'tache', targetEntity: DetailHeures::class)]
-    private $detailHeures;
+    private Collection $detailHeures;
+
+    public function __construct()
+    {
+        $this->detailHeures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -33,17 +40,20 @@ class Tache
 
     public function getNomTache(): ?string
     {
-        return $this->nomTache;
+        return $this->nom_tache;
     }
 
-    public function setNomTache(string $nomTache): static
+    public function setNomTache(string $nom_tache): static
     {
-        $this->nomTache = $nomTache;
+        $this->nom_tache = $nom_tache;
 
         return $this;
     }
 
-    public function getDetailHeures(): ?DetailHeures
+    /**
+     * @return Collection<int, DetailHeures>
+     */
+    public function getDetailHeures(): Collection
     {
         return $this->detailHeures;
     }

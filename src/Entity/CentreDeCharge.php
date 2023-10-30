@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CentreDeChargeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CentreDeChargeRepository::class)]
@@ -13,13 +15,19 @@ class CentreDeCharge
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $descriptionCdg = null;
+    private ?string $description_CDG = null;
 
-    #[ORM\OneToMany(mappedBy: 'centreDeCharge', targetEntity: Employe::class)]
-    private $employes;
+    #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: Employe::class)]
+    private Collection $employes;
 
-    #[ORM\OneToMany(mappedBy: 'centreDeCharge', targetEntity: DetailHeures::class)]
-    private $detailHeures;
+    #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: DetailHeures::class)]
+    private Collection $detailHeures;
+
+    public function __construct()
+    {
+        $this->employes = new ArrayCollection();
+        $this->detailHeures = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -33,19 +41,22 @@ class CentreDeCharge
         return $this;
     }
 
-    public function getDescriptionCdg(): ?string
+    public function getDescriptionCDG(): ?string
     {
-        return $this->descriptionCdg;
+        return $this->description_CDG;
     }
 
-    public function setDescriptionCdg(string $descriptionCdg): static
+    public function setDescriptionCDG(string $description_CDG): static
     {
-        $this->descriptionCdg = $descriptionCdg;
+        $this->description_CDG = $description_CDG;
 
         return $this;
     }
 
-    public function getEmployes(): ?Employe
+    /**
+     * @return Collection<int, Employe>
+     */
+    public function getEmployes(): Collection
     {
         return $this->employes;
     }
@@ -72,7 +83,10 @@ class CentreDeCharge
         return $this;
     }
 
-    public function getDetailHeures(): ?DetailHeures
+    /**
+     * @return Collection<int, DetailHeures>
+     */
+    public function getDetailHeures(): Collection
     {
         return $this->detailHeures;
     }
@@ -81,7 +95,7 @@ class CentreDeCharge
     {
         if (!$this->detailHeures->contains($detailHeure)) {
             $this->detailHeures->add($detailHeure);
-            $detailHeure->addCentreDeCharge($this);
+            $detailHeure->setCentreDeCharge($this);
         }
 
         return $this;
@@ -90,7 +104,10 @@ class CentreDeCharge
     public function removeDetailHeure(DetailHeures $detailHeure): static
     {
         if ($this->detailHeures->removeElement($detailHeure)) {
-            $detailHeure->removeCentreDeCharge($this);
+            // set the owning side to null (unless already changed)
+            if ($detailHeure->getCentreDeCharge() === $this) {
+                $detailHeure->setCentreDeCharge(null);
+            }
         }
 
         return $this;

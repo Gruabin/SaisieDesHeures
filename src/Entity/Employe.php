@@ -14,10 +14,10 @@ class Employe implements UserInterface
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nomEmploye = null;
+    private ?string $nom_employe = null;
 
-    #[ORM\ManyToOne(targetEntity: CentreDeCharge::class, inversedBy: 'employes')]
-    private ?\App\Entity\CentreDeCharge $centreDeCharge = null;
+    #[ORM\ManyToOne(inversedBy: 'employes')]
+    private ?CentreDeCharge $centre_de_charge = null;
 
     public function getRoles(): array
     {
@@ -48,24 +48,24 @@ class Employe implements UserInterface
 
     public function getNomEmploye(): ?string
     {
-        return $this->nomEmploye;
+        return $this->nom_employe;
     }
 
-    public function setNomEmploye(string $nomEmploye): static
+    public function setNomEmploye(string $nom_employe): static
     {
-        $this->nomEmploye = $nomEmploye;
+        $this->nom_employe = $nom_employe;
 
         return $this;
     }
 
     public function getCentreDeCharge(): ?CentreDeCharge
     {
-        return $this->centreDeCharge;
+        return $this->centre_de_charge;
     }
 
-    public function setCentreDeCharge(?CentreDeCharge $centreDeCharge): static
+    public function setCentreDeCharge(?CentreDeCharge $centre_de_charge): static
     {
-        $this->centreDeCharge = $centreDeCharge;
+        $this->centre_de_charge = $centre_de_charge;
 
         return $this;
     }

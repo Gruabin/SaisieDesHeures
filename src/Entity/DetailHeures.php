@@ -18,36 +18,26 @@ class DetailHeures
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
-    private ?string $tempsMainOeuvre = null;
+    private ?string $temps_main_oeuvre = null;
 
-    #[ORM\ManyToOne(targetEntity: TypeHeures::class, inversedBy: 'detailHeures')]
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     #[ORM\JoinColumn(nullable: false)]
-    private $typeHeures;
+    private ?TypeHeures $type_heures = null;
 
-    #[ORM\ManyToOne(targetEntity: Ordre::class, inversedBy: 'detailHeures')]
-    private $ordre;
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    private ?Ordre $Ordre = null;
 
-    #[ORM\ManyToOne(targetEntity: Operation::class, inversedBy: 'detailHeures')]
-    private $operation;
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    private ?Operation $operation = null;
 
-    #[ORM\ManyToOne(targetEntity: Tache::class, inversedBy: 'detailHeures')]
-    private $tache;
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    private ?Tache $tache = null;
 
-    #[ORM\ManyToOne(targetEntity: Activite::class, inversedBy: 'detailHeures')]
-    private $activite;
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    private ?Activite $activite = null;
 
-    #[ORM\ManyToOne(targetEntity: CentreDeCharge::class, inversedBy: 'detailHeures')]
-    private $centreDeCharge;
-
-    public function __construct()
-    {
-        $this->typeHeures = new TypeHeures();
-        $this->ordre = new Ordre();
-        $this->operation = new Operation();
-        $this->tache = new Tache();
-        $this->activite = new Activite();
-        $this->centreDeCharge = new CentreDeCharge();
-    }
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    private ?CentreDeCharge $centre_de_charge = null;
 
     public function getId(): ?int
     {
@@ -68,43 +58,24 @@ class DetailHeures
 
     public function getTempsMainOeuvre(): ?string
     {
-        return $this->tempsMainOeuvre;
+        return $this->temps_main_oeuvre;
     }
 
-    public function setTempsMainOeuvre(string $tempsMainOeuvre): static
+    public function setTempsMainOeuvre(string $temps_main_oeuvre): static
     {
-        $this->tempsMainOeuvre = $tempsMainOeuvre;
+        $this->temps_main_oeuvre = $temps_main_oeuvre;
 
         return $this;
     }
 
     public function getTypeHeures(): ?TypeHeures
     {
-        return $this->typeHeures;
+        return $this->type_heures;
     }
 
-    public function setTypeHeures(string $typeHeures): static
+    public function setTypeHeures(?TypeHeures $type_heures): static
     {
-        $this->typeHeures = $typeHeures;
-
-        return $this;
-    }
-
-    public function addTypeHeure(TypeHeures $typeHeure): static
-    {
-        if (!$this->typeHeures->contains($typeHeure)) {
-            $this->typeHeures->add($typeHeure);
-            $typeHeure->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTypeHeure(TypeHeures $typeHeure): static
-    {
-        if ($this->typeHeures->removeElement($typeHeure)) {
-            $typeHeure->removeDetailHeure($this);
-        }
+        $this->type_heures = $type_heures;
 
         return $this;
     }
@@ -114,21 +85,9 @@ class DetailHeures
         return $this->ordre;
     }
 
-    public function addOrdre(Ordre $ordre): static
+    public function setOrdre(?Ordre $ordre): static
     {
-        if (!$this->ordre->contains($ordre)) {
-            $this->ordre->add($ordre);
-            $ordre->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrdre(Ordre $ordre): static
-    {
-        if ($this->ordre->removeElement($ordre)) {
-            $ordre->removeDetailHeure($this);
-        }
+        $this->ordre = $ordre;
 
         return $this;
     }
@@ -138,21 +97,9 @@ class DetailHeures
         return $this->operation;
     }
 
-    public function addOperation(Operation $operation): static
+    public function setOperation(?Operation $operation): static
     {
-        if (!$this->operation->contains($operation)) {
-            $this->operation->add($operation);
-            $operation->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOperation(Operation $operation): static
-    {
-        if ($this->operation->removeElement($operation)) {
-            $operation->removeDetailHeure($this);
-        }
+        $this->operation = $operation;
 
         return $this;
     }
@@ -162,21 +109,9 @@ class DetailHeures
         return $this->tache;
     }
 
-    public function addTache(Tache $tache): static
+    public function setTache(?Tache $tache): static
     {
-        if (!$this->tache->contains($tache)) {
-            $this->tache->add($tache);
-            $tache->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTache(Tache $tache): static
-    {
-        if ($this->tache->removeElement($tache)) {
-            $tache->removeDetailHeure($this);
-        }
+        $this->tache = $tache;
 
         return $this;
     }
@@ -186,45 +121,21 @@ class DetailHeures
         return $this->activite;
     }
 
-    public function addActivite(Activite $activite): static
+    public function setActivite(?Activite $activite): static
     {
-        if (!$this->activite->contains($activite)) {
-            $this->activite->add($activite);
-            $activite->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActivite(Activite $activite): static
-    {
-        if ($this->activite->removeElement($activite)) {
-            $activite->removeDetailHeure($this);
-        }
+        $this->activite = $activite;
 
         return $this;
     }
 
     public function getCentreDeCharge(): ?CentreDeCharge
     {
-        return $this->centreDeCharge;
+        return $this->centre_de_charge;
     }
 
-    public function addCentreDeCharge(CentreDeCharge $centreDeCharge): static
+    public function setCentreDeCharge(?CentreDeCharge $centre_de_charge): static
     {
-        if (!$this->centreDeCharge->contains($centreDeCharge)) {
-            $this->centreDeCharge->add($centreDeCharge);
-            $centreDeCharge->addDetailHeure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCentreDeCharge(CentreDeCharge $centreDeCharge): static
-    {
-        if ($this->centreDeCharge->removeElement($centreDeCharge)) {
-            $centreDeCharge->removeDetailHeure($this);
-        }
+        $this->centre_de_charge = $centre_de_charge;
 
         return $this;
     }
