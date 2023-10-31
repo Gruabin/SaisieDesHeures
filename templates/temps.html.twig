@@ -37,7 +37,7 @@
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
-                    <a class="btn btn-primary btn-outline mt-5" id="btnConsulterDetails"
+                    <a class="btn btn-primary mt-5" id="btnConsulterDetails"
                        href="{{ path('historique') }}">
                         Consulter le détails
                     </a>
@@ -100,13 +100,13 @@
         </div>
         <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
         <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
-            <a class="btn btn-primary btn-outline mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
+            <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
                 Quitter
             </a>
-            <button class="btn btn-primary btn-outline mt-5" id="btnEnregistrerQuitter">
+            <button class="btn btn-primary mt-5" id="btnEnregistrerQuitter">
                 Enregistrer et quitter
             </button>
-            <button class="btn btn-primary btn-outline mt-5" id="btnEnregistrerContinue" >
+            <button class="btn btn-primary mt-5" id="btnEnregistrerContinue" >
                 Enregistrer et continuer
             </button>
         </div>

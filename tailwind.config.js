@@ -21,6 +21,22 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    themes: ["light"],
+    themes: [{
+      mytheme: {
+        "primary": "#005179",
+        "primary-content": "#ffffff",
+        "secondary": "#00bbee",
+        "accent": "#e83a38",
+        "neutral": "#42b284",
+        "base-100": "#ffffff",
+        "info": "#00bbee",
+        "success": "#42b284",
+        "warning": "#fbbd23",
+        "error": "#e83a38",
+      },
+    },
+      "light",
+      "cupcake",
+    ],
   }
 }
