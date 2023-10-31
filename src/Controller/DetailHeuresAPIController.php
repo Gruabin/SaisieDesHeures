@@ -2,20 +2,26 @@
 
 namespace App\Controller;
 
-use App\Entity\DetailHeures;
+use DateTime;
+use App\Entity\Ordre;
+use App\Entity\Tache;
+use App\Entity\Activite;
+use App\Entity\Operation;
 use App\Entity\TypeHeures;
-use App\Repository\ActiviteRepository;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\OperationRepository;
+use App\Entity\DetailHeures;
+use App\Entity\CentreDeCharge;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
+use App\Repository\ActiviteRepository;
+use App\Repository\OperationRepository;
 use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
@@ -82,28 +88,31 @@ class DetailHeuresAPIController extends AbstractController
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager): Response
     {
+        
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $token = $data['token'];
         if (null === $data) {
             return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
         }
+        if ($this->isCsrfTokenValid('saisieToken', $token)) {
+            // Valider les données entrantes
+            $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
+            $typeHeures = $data['type_heures'] ?? null;
 
-        // Valider les données entrantes
-        $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
-        $typeHeures = $data['type_heures'] ?? null;
+            $typeHeures = $this->typeHeuresRepository->find($typeHeures);
 
-        $typeHeures = $this->typeHeuresRepository->find($typeHeures);
+            if (null === $tempsMainOeuvre || null === $typeHeures) {
+                return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
+            }
+            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $data);
 
-        if (null === $tempsMainOeuvre || null === $typeHeures) {
-            return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
+            // Enregistrer les détails des heures dans la base de données
+            $entityManager->persist($detailHeures);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Détails des heures créés avec succès.');
         }
-        $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $data);
-
-        // Enregistrer les détails des heures dans la base de données
-        $entityManager->persist($detailHeures);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Détails des heures créés avec succès.');
 
         // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
         return new Response('Détails des heures créés avec succès.', Response::HTTP_CREATED);
@@ -130,19 +139,19 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setTempsMainOeuvre($data['temps_main_oeuvre']);
         $detailHeures->setTypeHeures($data['type_heures']);
 
-        if (isset($data['ordre'])) {
+        if (isset($data['ordre']) || $data['ordre'] != "") {
             $detailHeures->setOrdre($data['ordre']);
         }
-        if (isset($data['operation'])) {
+        if (isset($data['operation']) || $data['operation'] != "") {
             $detailHeures->setOperation($data['operation']);
         }
-        if (isset($data['tache'])) {
+        if (isset($data['tache']) || $data['tache'] != "") {
             $detailHeures->setTache($data['tache']);
         }
-        if (isset($data['activite'])) {
+        if (isset($data['activite']) || $data['activite'] != "") {
             $detailHeures->setActivite($data['activite']);
         }
-        if (isset($data['centre_de_charge'])) {
+        if (isset($data['centre_de_charge']) || $data['centre_de_charge'] != "") {
             $detailHeures->setCentreDeCharge($data['centre_de_charge']);
         }
         // Enregistrer les modifications dans la base de données
@@ -189,12 +198,38 @@ class DetailHeuresAPIController extends AbstractController
 
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
-        $detailHeures->setTypeHeure($typeHeures);
-        $detailHeures->setOrdre($data['ordre']);
-        $detailHeures->setOperation($data['operation']);
-        $detailHeures->setTache($data['tache']);
-        $detailHeures->setActivite($data['activite']);
-        $detailHeures->setCentreDeCharge($data['centre_de_charge']);
+        $detailHeures->setTypeHeures($typeHeures);
+
+        if (isset($data['ordre'])) {
+            $ordre = $this->ordreRepository->find($data['ordre']);
+            $detailHeures->setOrdre($ordre);
+        } else {
+            $detailHeures->setOrdre(null);
+        }
+        if (isset($data['operation'])) {
+            $operation = $this->operationRepository->find($data['operation']);
+            $detailHeures->setOperation($operation);
+        } else {
+            $detailHeures->setOperation(null);
+        }
+        if (isset($data['tache'])) {
+            $tache = $this->tacheRepository->find($data['tache']);
+            $detailHeures->setTache($tache);
+        } else {
+            $detailHeures->setTache(null);
+        }
+        if (isset($data['activite'])) {
+            $activite = $this->activiteRepository->find($data['activite']);
+            $detailHeures->setActivite($activite);
+        } else {
+            $detailHeures->setActivite(null);
+        }
+        if (isset($data['centre_de_charge'])) {
+            $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
+            $detailHeures->setCentreDeCharge($centreDeCharge);
+        } else {
+            $detailHeures->setCentreDeCharge(null);
+        }
 
         return $detailHeures;
     }

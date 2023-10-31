@@ -56,17 +56,28 @@ async function formSubmit() {
     const activite = document.getElementById("activite").value;
     const centre_de_charge = document.getElementById("centrecharge").value;
     const temps_main_oeuvre = document.getElementById("saisitemps").value;
-
+    const token = document.getElementById("saisieToken").value;
     const data = {
         'type_heures': type_heures,
-        'ordre': ordre,
-        'tache': tache,
-        'operation': operation,
-        'activite': activite,
-        'centre_de_charge': centre_de_charge,
-        'temps_main_oeuvre': temps_main_oeuvre
+        'temps_main_oeuvre': temps_main_oeuvre,
+        'token': token
     }
-
+    if (ordre !== "") {
+        data.ordre = ordre;
+    }
+    if (tache !== "") {
+        data.tache = tache;
+    }
+    if (operation !== "") {
+        data.operation = operation;
+    }
+    if (activite !== "") {
+        data.activite = activite;
+    }
+    if (centre_de_charge !== "") {
+        data.centre_de_charge = centre_de_charge;
+    }
+    console.log(data);
     const response = await fetch("/api/post/detail_heures", {
         method: "POST",
         headers: {
@@ -95,14 +106,14 @@ document.getElementById("tache").addEventListener("change", function () {
 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     const state = await formSubmit();
-    if (state){
+    if (state) {
         //window.location.href = '/api/post/deconnexion';
     }
 })
 
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     const state = await formSubmit();
-    if (state){
+    if (state) {
         //window.location.href = '/temps';
     }
 })

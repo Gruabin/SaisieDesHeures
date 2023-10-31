@@ -25,7 +25,7 @@ class DetailHeures
     private ?TypeHeures $type_heures = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?Ordre $Ordre = null;
+    private ?Ordre $ordre = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     private ?Operation $operation = null;

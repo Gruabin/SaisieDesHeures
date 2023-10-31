@@ -98,6 +98,7 @@
         <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
             <div id="informationSaisiHeures"></div>
         </div>
+        <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
         <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
             <a class="btn btn-primary btn-outline mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
                 Quitter
