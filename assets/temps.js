@@ -107,14 +107,14 @@ document.getElementById("tache").addEventListener("change", function () {
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
-        //window.location.href = '/api/post/deconnexion';
+        window.location.href = '/api/post/deconnexion';
     }
 })
 
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
-        //window.location.href = '/temps';
+        window.location.href = '/temps';
     }
 })
 

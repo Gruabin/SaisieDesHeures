@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\DetailHeures;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use DoctrineExtensions\Query\Mysql;
 /**
  * @extends ServiceEntityRepository<DetailHeures>
  *
@@ -21,20 +21,20 @@ class DetailHeuresRepository extends ServiceEntityRepository
         parent::__construct($registry, DetailHeures::class);
     }
 
-    //    /**
-    //     * @return DetailHeures[] Returns an array of DetailHeures objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+       /**
+        * @return DetailHeures[] retourne tout les detailheures sur la journée actuelle
+        */
+       public function findAllToday(): array
+       {
+           $dateHier = strtotime('-1 days');
+           return $this->createQueryBuilder('d')
+                ->where('d.date > :date')
+                ->setParameter('date', date('Y-m-d', $dateHier))
+                ->orderBy('d.date', 'ASC')
+                ->getQuery()
+                ->getResult()
+           ;
+       }
 
     //    public function findOneBySomeField($value): ?DetailHeures
     //    {

@@ -37,7 +37,7 @@ class IndexController extends AbstractController
     public function historique(DetailHeuresRepository $detailHeuresRepository): Response
     {
         return $this->render('historique.html.twig', [
-            'details' => $detailHeuresRepository->findAll(),
+            'details' => $detailHeuresRepository->findAllToday(),
             'user' => $this->getUser(),
         ]);
     }

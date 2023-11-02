@@ -23,7 +23,6 @@ class ConnexionAPIController extends AbstractController
         if ($this->isCsrfTokenValid('loginToken', $token)) {
             // Récupérez l'ID de l'utilisateur depuis les données de la requête
             $userId = $data['id'];
-
             // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
             // Assurez-vous d'adapter cette logique à votre propre système
             $user = $employeRepo->findOneBy(['id' => $userId]);
@@ -33,8 +32,6 @@ class ConnexionAPIController extends AbstractController
                 $tokenStorage = $this->container->get('security.token_storage');
                 $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
                 $tokenStorage->setToken($token);
-
-                $this->addFlash('success', 'Connexion réussie');
 
                 return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
             }
@@ -52,8 +49,6 @@ class ConnexionAPIController extends AbstractController
     {
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);
-
-        $this->addFlash('success', 'Déconnexion réussie');
 
         return $this->redirectToRoute('home');
     }

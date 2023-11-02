@@ -15,6 +15,11 @@ doctrine:
         #server_version: '13'
     orm:
         dql: 
+            datetime_functions:
+                DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year
             string_functions:
                 JSON_GET_TEXT: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetText
         auto_generate_proxy_classes: true
