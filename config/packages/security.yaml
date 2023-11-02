@@ -15,11 +15,9 @@ security:
         main:
             lazy: true
             provider: my_custom_provider
-            form_login:
-                login_path: login
-                check_path: login
+            custom_authenticator: App\Security\AuthSecurity
             logout:
-                path: logout
+                path: api_post_deconnexion
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -30,4 +28,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/home, roles: ROLE_ADMIN }
+        - { path: ^/temps, roles: ROLE_USER }
+
+

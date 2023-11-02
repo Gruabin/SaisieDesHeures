@@ -17,6 +17,7 @@ use App\Repository\OperationRepository;
 use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\DetailHeuresRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,7 +87,7 @@ class DetailHeuresAPIController extends AbstractController
 
     // * POST
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
-    public function post(Request $request, EntityManagerInterface $entityManager): Response
+    public function post(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         
         // Récupérer les données JSON envoyées dans la requête POST
@@ -105,7 +106,7 @@ class DetailHeuresAPIController extends AbstractController
             if (null === $tempsMainOeuvre || null === $typeHeures) {
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
-            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $data);
+            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
 
             // Enregistrer les détails des heures dans la base de données
             $entityManager->persist($detailHeures);
@@ -186,7 +187,7 @@ class DetailHeuresAPIController extends AbstractController
         return new Response('Détails des heures supprimés avec succès.', Response::HTTP_OK);
     }
 
-    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, array $data): DetailHeures
+    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data): DetailHeures
     {
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
@@ -199,7 +200,7 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->setTypeHeures($typeHeures);
-
+        $detailHeures->setEmploye($security->getUser());
         if (isset($data['ordre'])) {
             $ordre = $this->ordreRepository->find($data['ordre']);
             $detailHeures->setOrdre($ordre);

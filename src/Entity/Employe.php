@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EmployeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -18,6 +20,14 @@ class Employe implements UserInterface
 
     #[ORM\ManyToOne(inversedBy: 'employes')]
     private ?CentreDeCharge $centre_de_charge = null;
+
+    #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
+    private Collection $detailHeures;
+
+    public function __construct()
+    {
+        $this->detailHeures = new ArrayCollection();
+    }
 
     public function getRoles(): array
     {
@@ -66,6 +76,36 @@ class Employe implements UserInterface
     public function setCentreDeCharge(?CentreDeCharge $centre_de_charge): static
     {
         $this->centre_de_charge = $centre_de_charge;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DetailHeures>
+     */
+    public function getDetailHeures(): Collection
+    {
+        return $this->detailHeures;
+    }
+
+    public function addDetailheure(DetailHeures $detailheure): static
+    {
+        if (!$this->detailHeures->contains($detailheure)) {
+            $this->detailHeures->add($detailheure);
+            $detailheure->setEmploye($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailheure(DetailHeures $detailheure): static
+    {
+        if ($this->detailHeures->removeElement($detailheure)) {
+            // set the owning side to null (unless already changed)
+            if ($detailheure->getEmploye() === $this) {
+                $detailheure->setEmploye(null);
+            }
+        }
 
         return $this;
     }

@@ -39,6 +39,10 @@ class DetailHeures
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     private ?CentreDeCharge $centre_de_charge = null;
 
+    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Employe $employe = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +140,18 @@ class DetailHeures
     public function setCentreDeCharge(?CentreDeCharge $centre_de_charge): static
     {
         $this->centre_de_charge = $centre_de_charge;
+
+        return $this;
+    }
+
+    public function getEmploye(): ?Employe
+    {
+        return $this->employe;
+    }
+
+    public function setEmploye(?Employe $employe): static
+    {
+        $this->employe = $employe;
 
         return $this;
     }

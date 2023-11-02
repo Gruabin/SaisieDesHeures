@@ -40,7 +40,9 @@
                     <span>
                         {% set total = 0 %}
                         {% for heures in details %}
-                            {% set total = total + heures.tempsMainOeuvre %}
+                            {% if heures.employe.id == user.id %}                            
+                                {% set total = total + heures.tempsMainOeuvre %}
+                            {% endif %}
                         {% endfor %}
                         {% if total > 0 %}
                             {{ total }}
