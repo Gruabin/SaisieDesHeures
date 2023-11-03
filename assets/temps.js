@@ -74,7 +74,7 @@ async function formSubmit() {
     if (activite !== "") {
         data.activite = activite;
     }
-    if (centre_de_charge !== "") {
+    if (centre_de_charge !== "-1") {
         data.centre_de_charge = centre_de_charge;
     }
     console.log(data);

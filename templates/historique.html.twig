@@ -98,12 +98,12 @@
                             </td>
                             <td class="text-center">
                                 {% if (heures.tache is not empty) %}
-                                    {{ heures.tache.nomTache }}
+                                    {{ heures.tache.id }} - {{ heures.tache.nomTache }}
                                 {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if (heures.centreDeCharge is not empty) %}
-                                    {{ heures.descriptionCDG }}
+                                    {{ heures.centreDeCharge.id}} - {{ heures.centreDeCharge.descriptionCDG }}
                                 {% endif %}
                             </td>
                         <td class="text-center">{{ heures.tempsMainOeuvre }}

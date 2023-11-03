@@ -6,12 +6,14 @@ use DateTime;
 use App\Entity\Ordre;
 use App\Entity\Tache;
 use App\Entity\Activite;
+use DetailHeuresService;
 use App\Entity\Operation;
 use App\Entity\TypeHeures;
 use App\Entity\DetailHeures;
 use App\Entity\CentreDeCharge;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
+use App\Service\DetailHeureService;
 use App\Repository\ActiviteRepository;
 use App\Repository\OperationRepository;
 use App\Repository\TypeHeuresRepository;
@@ -87,7 +89,7 @@ class DetailHeuresAPIController extends AbstractController
 
     // * POST
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
-    public function post(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function post(Request $request, EntityManagerInterface $entityManager, Security $security, DetailHeureService $detailHeureService): Response
     {
         
         // Récupérer les données JSON envoyées dans la requête POST
@@ -111,7 +113,7 @@ class DetailHeuresAPIController extends AbstractController
             // Enregistrer les détails des heures dans la base de données
             $entityManager->persist($detailHeures);
             $entityManager->flush();
-
+            $detailHeureService->cleanLastWeek();
             $this->addFlash('success', 'Détails des heures créés avec succès.');
         }
 

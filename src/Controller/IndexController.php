@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\CentreDeCharge;
+use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
@@ -22,13 +24,14 @@ class IndexController extends AbstractController
     }
 
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeHeuresRepository, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepository, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
         // Rendre la vue 'temps/temps.html.twig' en passant les variables 'types', 'taches' et 'user'
         return $this->render('temps.html.twig', [
             'details' => $detailHeuresRepository->findAll(),
             'types' => $typeHeuresRepository->findAll(),
             'taches' => $tacheRepository->findAll(),
+            'CDG' => $CDGRepository->findAll(),
             'user' => $this->getUser(),
         ]);
     }

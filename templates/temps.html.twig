@@ -88,7 +88,12 @@
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divCentreCharge">
                 <label class="mx-3" for="centrecharge"><b>Centre de charge</b></label>
-                <input class="mx-3" type="text" name="centrecharge" id="centrecharge">
+                <select class=" mx-3" name="centrecharge" id="centrecharge">
+                    <option value="-1" selected>-- Sélectionner un centre de charge --</option>
+                    {% for centreCharge in CDG %}
+                        <option value="{{ centreCharge.id }}">{{ centreCharge.id }}</option>
+                    {% endfor %}
+                </select>
                 <p class="mx-3" id="infoCentreCharge"></p>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divSaisiTemps">
