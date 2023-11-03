@@ -17,6 +17,7 @@
         "gedmo/doctrine-extensions": "*",
         "knplabs/knp-paginator-bundle": "*",
         "knpuniversity/oauth2-client-bundle": "*",
+        "phpoffice/phpspreadsheet": "^1.29",
         "phpstan/phpstan": "*",
         "scienta/doctrine-json-functions": "*",
         "symfony/asset": "6.*",

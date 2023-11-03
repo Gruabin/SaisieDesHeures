@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\DetailHeures;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<DetailHeures>
@@ -16,9 +16,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  * @method DetailHeures[]    findAll()
  * @method DetailHeures[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
- * @property EntityManagerInterface   $entityManager
- * @property Security                 $security
- * 
+ * @property EntityManagerInterface $entityManager
+ * @property Security               $security
  */
 class DetailHeuresRepository extends ServiceEntityRepository
 {
@@ -49,6 +48,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
         }
+
         return [];
     }
 
@@ -56,7 +56,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
     {
         $dateLastWeek = strtotime('-1 week');
         $items = $this->createQueryBuilder('d')
-            ->where("d.date < :date")
+            ->where('d.date < :date')
             ->setParameter('date', date('Y-m-d', $dateLastWeek))
             ->getQuery()
             ->getResult();
@@ -70,6 +70,4 @@ class DetailHeuresRepository extends ServiceEntityRepository
         }
         $this->entityManager->flush();
     }
-
-
 }

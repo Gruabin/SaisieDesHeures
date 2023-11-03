@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\CentreDeCharge;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;

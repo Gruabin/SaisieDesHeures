@@ -2,29 +2,22 @@
 
 namespace App\Controller;
 
-use DateTime;
-use App\Entity\Ordre;
-use App\Entity\Tache;
-use App\Entity\Activite;
-use DetailHeuresService;
-use App\Entity\Operation;
-use App\Entity\TypeHeures;
 use App\Entity\DetailHeures;
-use App\Entity\CentreDeCharge;
+use App\Entity\TypeHeures;
+use App\Repository\ActiviteRepository;
+use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\OperationRepository;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\ActiviteRepository;
-use App\Repository\OperationRepository;
 use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DetailHeuresRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
@@ -91,7 +84,6 @@ class DetailHeuresAPIController extends AbstractController
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
     public function post(Request $request, EntityManagerInterface $entityManager, Security $security, DetailHeureService $detailHeureService): Response
     {
-        
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
@@ -142,19 +134,19 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setTempsMainOeuvre($data['temps_main_oeuvre']);
         $detailHeures->setTypeHeures($data['type_heures']);
 
-        if (isset($data['ordre']) || $data['ordre'] != "") {
+        if (isset($data['ordre']) || '' != $data['ordre']) {
             $detailHeures->setOrdre($data['ordre']);
         }
-        if (isset($data['operation']) || $data['operation'] != "") {
+        if (isset($data['operation']) || '' != $data['operation']) {
             $detailHeures->setOperation($data['operation']);
         }
-        if (isset($data['tache']) || $data['tache'] != "") {
+        if (isset($data['tache']) || '' != $data['tache']) {
             $detailHeures->setTache($data['tache']);
         }
-        if (isset($data['activite']) || $data['activite'] != "") {
+        if (isset($data['activite']) || '' != $data['activite']) {
             $detailHeures->setActivite($data['activite']);
         }
-        if (isset($data['centre_de_charge']) || $data['centre_de_charge'] != "") {
+        if (isset($data['centre_de_charge']) || '' != $data['centre_de_charge']) {
             $detailHeures->setCentreDeCharge($data['centre_de_charge']);
         }
         // Enregistrer les modifications dans la base de données

@@ -2,30 +2,27 @@
 
 namespace App\Controller;
 
-use App\Security\AuthSecurity;
 use App\Repository\EmployeRepository;
+use App\Security\AuthSecurity;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ConnexionAPIController extends AbstractController
 {
-
     #[Route('/api/post/connexion', name: 'api_post_connexion', methods: ['POST'])]
     public function loginUser(
-        AuthSecurity $authSecurity, 
-        AuthenticationUtils $authenticationUtils, 
-        EntityManagerInterface $entityManager, 
+        AuthSecurity $authSecurity,
+        AuthenticationUtils $authenticationUtils,
+        EntityManagerInterface $entityManager,
         EmployeRepository $employeRepo,
-        Request $request,   
+        Request $request,
         UserAuthenticatorInterface $userAuth,
-        ): Response
-    {
+    ): Response {
         $error = $authenticationUtils->getLastAuthenticationError();
         if (!empty($error)) {
             $this->addFlash('error', 'Identification échoué');
