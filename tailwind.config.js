@@ -26,6 +26,7 @@ module.exports = {
         "primary": "#005179",
         "primary-content": "#ffffff",
         "secondary": "#00bbee",
+        "tertiary":"#42b284",
         "accent": "#e83a38",
         "neutral": "#333c4d",
         "base-100": "#ffffff",
@@ -36,7 +37,7 @@ module.exports = {
       },
     },
       "light",
-      "cupcake",
+      "emerald",
     ],
   }
 }

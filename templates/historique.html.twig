@@ -52,9 +52,17 @@
                 </div>
             </div>
             <div class="m-2 flex-1">
-                <div class="m-2">
+                <div class="m-2 text-center">
                     <a class="btn btn-primary mt-5" href="{{ path('temps') }}">
                         Saisie des heures
+                    </a>
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2 text-center">
+                        <a class="btn btn-success noLoading mt-5" href="{{ path('api_get_export') }}">
+                        <i class="fa-solid fa-file-excel"></i>
+                        Exporter
                     </a>
                 </div>
             </div>
@@ -124,6 +132,8 @@
     </div>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('export') }}
+
     {% endblock %}
 
     {% endblock %}

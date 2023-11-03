@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\DetailHeures;
 use App\Entity\TypeHeures;
-use App\Repository\ActiviteRepository;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\OperationRepository;
+use App\Entity\DetailHeures;
+use App\Service\ExportService;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
-use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
+use App\Repository\ActiviteRepository;
+use App\Repository\OperationRepository;
+use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\DetailHeuresRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
@@ -228,4 +230,14 @@ class DetailHeuresAPIController extends AbstractController
 
         return $detailHeures;
     }
+
+
+
+    // * READ
+    #[Route('/api/get/export', name: 'api_get_export', methods: ['GET'])]
+    public function export(ExportService $exportService): StreamedResponse
+    {
+        return $exportService->exportExcel();
+    }
+
 }

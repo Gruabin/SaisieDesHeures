@@ -6,8 +6,10 @@ use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
+use App\Service\ExportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
@@ -42,5 +44,11 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepository->findAllToday(),
             'user' => $this->getUser(),
         ]);
+    }
+
+    #[Route('/export', name: 'export')]
+    public function export(DetailHeuresRepository $detailHeuresRepository, ExportService $exportService): StreamedResponse
+    {
+        return $exportService->exportExcel();
     }
 }
