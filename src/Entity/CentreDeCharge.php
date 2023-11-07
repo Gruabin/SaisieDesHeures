@@ -46,6 +46,16 @@ class CentreDeCharge
         return $this->description_CDG;
     }
 
+    public function getName(): ?string
+    {
+        $name = [
+            $this->id,
+            $this->description_CDG,
+        ];
+
+        return implode(' - ', array_filter($name));
+    }
+
     public function setDescriptionCDG(string $description_CDG): static
     {
         $this->description_CDG = $description_CDG;

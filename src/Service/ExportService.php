@@ -10,17 +10,21 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @property DetailHeuresRepository $detailHeuresRepository
+ * @property Security               $security
  */
 class ExportService
 {
     public function __construct(
-        DetailHeuresRepository $detailHeuresRepository
+        DetailHeuresRepository $detailHeuresRepository,
+        Security $security
     ) {
         $this->detailHeuresRepository = $detailHeuresRepository;
+        $this->security = $security;
     }
 
     public function exportExcel(string $file = 'php://output'): StreamedResponse
@@ -37,9 +41,11 @@ class ExportService
             $writer->save($file);
         });
 
+        $user = $this->security->getUser();
+
         // définition des en-têtes HTTP
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment;filename="[findchem][export].xlsx"');
+        $response->headers->set('Content-Disposition', 'attachment;filename="[Gruau][SaisiDesHeures]['.$user->getId().']['.date('Y-m-d').'].xlsx"');
 
         return $response;
     }
@@ -61,7 +67,7 @@ class ExportService
         $this->setStyleHeader($sheet, $x++, 'Opération', $color);
         $this->setStyleHeader($sheet, $x++, 'Tâche', $color);
         $this->setStyleHeader($sheet, $x++, 'Centre de charge', $color);
-        $this->setStyleHeader($sheet, $x++, 'Temps main d\'œuvre', $color);
+        $this->setStyleHeader($sheet, $x++, 'Temps main d\'œuvre en heures', $color);
     }
 
     /**
@@ -93,22 +99,22 @@ class ExportService
                 $value = $item->getOperation()->getDescriptionOperation();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
-            
+
             $value = '';
             if (!empty($item->getTache())) {
-                $value = $item->getTache()->getNomTache();
+                $value = $item->getTache()->getName();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
             $value = '';
             if (!empty($item->getCentreDeCharge())) {
-                $value = $item->getCentreDeCharge()->getDescriptionCDG();
+                $value = $item->getCentreDeCharge()->getName();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
             $value = '';
             if (!empty($item->getTempsMainOeuvre())) {
-                $value = $item->getTempsMainOeuvre();    
+                $value = $item->getTempsMainOeuvre();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
         }
@@ -119,7 +125,7 @@ class ExportService
         $y = 1;
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(12)
             ->setBold(true);
@@ -132,7 +138,7 @@ class ExportService
             ],
         ];
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER)
             ->setVertical(Alignment::VERTICAL_CENTER)
@@ -147,7 +153,7 @@ class ExportService
     {
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(11)
             ->setBold(false);
@@ -160,7 +166,7 @@ class ExportService
             ],
         ];
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setWrapText(true)
             ->applyFromArray($styleArray);
@@ -172,9 +178,9 @@ class ExportService
     private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color): string
     {
         $x = $this->decimalToAlphabetic($x);
-        $sheet->setCellValue($x . $y, $value);
+        $sheet->setCellValue($x.$y, $value);
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
@@ -193,7 +199,7 @@ class ExportService
                 $remainder = 26;
                 --$decimal;
             }
-            $alphabetic = chr($remainder + 64) . $alphabetic;
+            $alphabetic = chr($remainder + 64).$alphabetic;
         }
 
         return $alphabetic;

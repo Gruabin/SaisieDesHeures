@@ -38,6 +38,16 @@ class Tache
         return $this;
     }
 
+    public function getName(): ?string
+    {
+        $name = [
+            $this->id,
+            $this->nom_tache,
+        ];
+
+        return implode(' - ', array_filter($name));
+    }
+
     public function getNomTache(): ?string
     {
         return $this->nom_tache;

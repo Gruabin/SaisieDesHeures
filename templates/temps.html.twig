@@ -90,8 +90,8 @@
                 <label class="mx-3" for="centrecharge"><b>Centre de charge</b></label>
                 <select class=" mx-3" name="centrecharge" id="centrecharge">
                     <option value="-1" selected>-- Sélectionner un centre de charge --</option>
-                    {% for centreCharge in CDG %}
-                        <option value="{{ centreCharge.id }}">{{ centreCharge.id }}</option>
+                    {% for centre_charge in CDG %}
+                        <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
                     {% endfor %}
                 </select>
                 <p class="mx-3" id="infoCentreCharge"></p>

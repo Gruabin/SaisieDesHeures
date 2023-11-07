@@ -40,7 +40,7 @@
                     <span>
                         {% set total = 0 %}
                         {% for heures in details %}
-                            {% if heures.employe.id == user.id %}                            
+                            {%if heures.employe.id == user.id%}
                                 {% set total = total + heures.tempsMainOeuvre %}
                             {% endif %}
                         {% endfor %}
@@ -60,7 +60,7 @@
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2 text-center">
-                        <a class="btn btn-success noLoading mt-5" href="{{ path('api_get_export') }}">
+                        <a class="btn btn-success noLoading text-white mt-5" href="{{ path('api_get_export') }}">
                         <i class="fa-solid fa-file-excel"></i>
                         Exporter
                     </a>
@@ -106,12 +106,12 @@
                             </td>
                             <td class="text-center">
                                 {% if (heures.tache is not empty) %}
-                                    {{ heures.tache.id }} - {{ heures.tache.nomTache }}
+                                    {{ heures.tache.name }}
                                 {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if (heures.centreDeCharge is not empty) %}
-                                    {{ heures.centreDeCharge.id}} - {{ heures.centreDeCharge.descriptionCDG }}
+                                    {{ heures.centreDeCharge.name }}
                                 {% endif %}
                             </td>
                         <td class="text-center">{{ heures.tempsMainOeuvre }}

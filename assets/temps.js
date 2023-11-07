@@ -77,7 +77,6 @@ async function formSubmit() {
     if (centre_de_charge !== "-1") {
         data.centre_de_charge = centre_de_charge;
     }
-    console.log(data);
     const response = await fetch("/api/post/detail_heures", {
         method: "POST",
         headers: {
@@ -107,6 +106,7 @@ document.getElementById("tache").addEventListener("change", function () {
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/api/post/deconnexion';
     }
 })
@@ -114,6 +114,7 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/temps';
     }
 })
