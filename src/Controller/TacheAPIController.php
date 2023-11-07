@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\Tache;
 use App\Repository\TacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class TacheAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // *READ
     #[Route('/api/get/tache/', name: 'api_get_tache', methods: ['GET'])]
     public function get(TacheRepository $tacheRepo): Response
@@ -64,8 +74,11 @@ class TacheAPIController extends AbstractController
         $entityManager->persist($tache);
         $entityManager->flush();
 
+        $message = 'Tache créé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que la tache a été créé avec succès
-        return new Response('Tache créé avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -96,8 +109,11 @@ class TacheAPIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Tache mis à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que la tache a été mis à jour avec succès
-        return new Response('Tache mis à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -126,7 +142,10 @@ class TacheAPIController extends AbstractController
         $entityManager->remove($tache);
         $entityManager->flush();
 
+        $message = 'Tache supprimé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que la tâche a été supprimé avec succès
-        return new Response('Tache supprimé avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

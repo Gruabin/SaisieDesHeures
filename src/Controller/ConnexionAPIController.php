@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\EmployeRepository;
 use App\Security\AuthSecurity;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,8 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class ConnexionAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     #[Route('/api/post/connexion', name: 'api_post_connexion', methods: ['POST'])]
     public function loginUser(
         AuthSecurity $authSecurity,
@@ -46,11 +56,16 @@ class ConnexionAPIController extends AbstractController
                     $request
                 );
 
+                $message = 'Connexion réussi.';
+                $this->logger->info($message);
+
                 return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
             }
         }
 
-        $this->addFlash('error', 'Connexion échouée');
+        $message = 'Connexion échouée.';
+        $this->logger->error($message);
+        $this->addFlash('error', $message);
 
         $message = $this->renderView('alert.html.twig');
 
@@ -62,6 +77,9 @@ class ConnexionAPIController extends AbstractController
     {
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);
+
+        $message = 'Déconnexion réussi.';
+        $this->logger->info($message);
 
         return $this->redirectToRoute('home');
     }

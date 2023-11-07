@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\Employe;
 use App\Repository\EmployeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class APIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // *READ
     #[Route('/api/get/employe/{id}', name: 'api_get', methods: ['GET'])]
     public function get(string $id, EmployeRepository $employeRepo): Response
@@ -93,8 +103,11 @@ class APIController extends AbstractController
         $entityManager->persist($employe);
         $entityManager->flush();
 
+        $message = 'Employe créé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'employé a été créé avec succès
-        return new Response('Employe créé avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -127,8 +140,11 @@ class APIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Employe mis à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'employé a été mis à jour avec succès
-        return new Response('Employe mis à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -157,7 +173,10 @@ class APIController extends AbstractController
         $entityManager->remove($employe);
         $entityManager->flush();
 
+        $message = 'Employe supprimé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'employé a été supprimé avec succès
-        return new Response('Employe supprimé avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

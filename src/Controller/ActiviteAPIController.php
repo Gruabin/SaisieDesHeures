@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\Activite;
 use App\Repository\ActiviteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class ActiviteAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // *READ
     #[Route('/api/get/activite', name: 'api_get_activite', methods: ['GET'])]
     public function get(ActiviteRepository $activiteRepo): Response
@@ -56,8 +66,11 @@ class ActiviteAPIController extends AbstractController
         $entityManager->persist($activite);
         $entityManager->flush();
 
+        $message = 'Activité créée avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'activité a été créée avec succès
-        return new Response('Activité créée avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -82,8 +95,11 @@ class ActiviteAPIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Activité mise à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'activité a été mise à jour avec succès
-        return new Response('Activité mise à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -107,7 +123,10 @@ class ActiviteAPIController extends AbstractController
         $entityManager->remove($activite);
         $entityManager->flush();
 
+        $message = 'Activité supprimée avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'activité a été supprimée avec succès
-        return new Response('Activité supprimée avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

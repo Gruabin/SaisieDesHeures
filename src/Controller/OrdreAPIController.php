@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\Ordre;
 use App\Repository\OrdreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class OrdreAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // READ
     #[Route('/api/get/ordre/{id}', name: 'api_get_ordre', methods: ['GET'])]
     public function get2(OrdreRepository $ordreRepo): Response
@@ -64,8 +74,11 @@ class OrdreAPIController extends AbstractController
         $entityManager->persist($ordre);
         $entityManager->flush();
 
+        $message = 'Ordre créé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'ordre a été créé avec succès
-        return new Response('Ordre créé avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -96,8 +109,11 @@ class OrdreAPIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Ordre mis à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'ordre a été mis à jour avec succès
-        return new Response('Ordre mis à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -126,7 +142,10 @@ class OrdreAPIController extends AbstractController
         $entityManager->remove($ordre);
         $entityManager->flush();
 
+        $message = 'Ordre supprimé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'ordre a été supprimé avec succès
-        return new Response('Ordre supprimé avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

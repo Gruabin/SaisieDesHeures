@@ -7,13 +7,23 @@ use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\ExportService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class IndexController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     #[Route('/', name: 'home')]
     public function index(): Response
     {

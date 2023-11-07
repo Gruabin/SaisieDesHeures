@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\CentreDeCharge;
 use App\Repository\CentreDeChargeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class CentreDeChargeAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // *READ
     #[Route('/api/get/centre_de_charge', name: 'api_get_centre_de_charge', methods: ['GET'])]
     public function get(CentreDeChargeRepository $centreDeChargeRepo): Response
@@ -57,8 +67,11 @@ class CentreDeChargeAPIController extends AbstractController
         $entityManager->persist($centreDeCharge);
         $entityManager->flush();
 
+        $message = 'Centre de charge créé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que le centre de charge a été créé avec succès
-        return new Response('Centre de charge créé avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -83,8 +96,11 @@ class CentreDeChargeAPIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Centre de charge mis à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que le centre de charge a été mis à jour avec succès
-        return new Response('Centre de charge mis à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -108,7 +124,10 @@ class CentreDeChargeAPIController extends AbstractController
         $entityManager->remove($centreDeCharge);
         $entityManager->flush();
 
+        $message = 'Centre de charge supprimé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que le centre de charge a été supprimé avec succès
-        return new Response('Centre de charge supprimé avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

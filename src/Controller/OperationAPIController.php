@@ -5,13 +5,23 @@ namespace App\Controller;
 use App\Entity\Operation;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @property LoggerInterface $logger
+ */
 class OperationAPIController extends AbstractController
 {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     // *READ
     #[Route('/api/get/operation', name: 'api_get_operation', methods: ['GET'])]
     public function get(OperationRepository $operationRepo): Response
@@ -63,8 +73,11 @@ class OperationAPIController extends AbstractController
         $entityManager->persist($operation);
         $entityManager->flush();
 
+        $message = 'Operation créé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'operation a été créé avec succès
-        return new Response('Operation créé avec succès.', Response::HTTP_CREATED);
+        return new Response($message, Response::HTTP_CREATED);
     }
 
     // *UPDATE
@@ -95,8 +108,11 @@ class OperationAPIController extends AbstractController
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
 
+        $message = 'Operation mis à jour avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'operation a été mis à jour avec succès
-        return new Response('Operation mis à jour avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 
     // *DELETE
@@ -125,7 +141,10 @@ class OperationAPIController extends AbstractController
         $entityManager->remove($operation);
         $entityManager->flush();
 
+        $message = 'Operation supprimé avec succès.';
+        $this->logger->info($message);
+
         // Retourner une réponse indiquant que l'opération a été supprimé avec succès
-        return new Response('Operation supprimé avec succès.', Response::HTTP_OK);
+        return new Response($message, Response::HTTP_OK);
     }
 }

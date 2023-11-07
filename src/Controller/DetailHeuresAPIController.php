@@ -14,6 +14,7 @@ use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
 use App\Service\ExportService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @property CentreDeChargeRepository $centreDeChargeRepository
  * @property OperationRepository      $operationRepository
  * @property TacheRepository          $tacheRepository
+ * @property LoggerInterface          $logger
  */
 class DetailHeuresAPIController extends AbstractController
 {
@@ -37,7 +39,8 @@ class DetailHeuresAPIController extends AbstractController
         OperationRepository $operationRepository,
         OrdreRepository $ordreRepository,
         TacheRepository $tacheRepository,
-        TypeHeuresRepository $typeHeuresRepository
+        TypeHeuresRepository $typeHeuresRepository,
+        LoggerInterface $logger,
     ) {
         $this->typeHeuresRepository = $typeHeuresRepository;
         $this->ordreRepository = $ordreRepository;
@@ -45,6 +48,7 @@ class DetailHeuresAPIController extends AbstractController
         $this->centreDeChargeRepository = $centreDeChargeRepository;
         $this->operationRepository = $operationRepository;
         $this->tacheRepository = $tacheRepository;
+        $this->logger = $logger;
     }
 
     // * READ
@@ -109,7 +113,10 @@ class DetailHeuresAPIController extends AbstractController
             $entityManager->persist($detailHeures);
             $entityManager->flush();
             $detailHeureService->cleanLastWeek();
-            $this->addFlash('success', 'Détails des heures créés avec succès.');
+
+            $message = 'Détails des heures créés avec succès.';
+            $this->logger->info($message);
+            $this->addFlash('success', $message);
         }
 
         // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
@@ -158,6 +165,14 @@ class DetailHeuresAPIController extends AbstractController
     #[Route('/api/get/export', name: 'api_get_export', methods: ['GET'])]
     public function export(ExportService $exportService): StreamedResponse
     {
-        return $exportService->exportExcel();
+        try {
+            $message = "L'export saisi des heures créés avec succès.";
+            $this->logger->info($message);
+            return $exportService->exportExcel();
+        } catch (\Exception $exception) {
+            $message = "L'export saisi des heures a échoué.";
+            $this->logger->error($message);
+            $this->logger->error($exception);
+        }
     }
 }
