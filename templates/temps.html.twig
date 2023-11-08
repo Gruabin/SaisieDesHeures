@@ -8,7 +8,7 @@
     <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-row items-center space-x-2 p-2">
+        <div class="flex flex-col lg:flex-row lg:items-center p-2">
             <div class="m-2 flex-1">
                 <div class="m-2"><b>Employé</b></div>
                 <div class="m-2">{{ user.id }} {{ user.nomEmploye }}</div>
@@ -50,56 +50,84 @@
     <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-col flex-wrap items-center space-x-2 p-2">
-            <div class="my-3" id="divType">
-                <label for="selectTemps"><b>Type d'heures</b></label>
-                <select class="mx-3" name="type" id="type">
-                    <option value="-1">-- Sélectionner un type d'heure --</option>
-                    {% for type in types %}
-                        <option value="{{ type.id }}">{{ type.nomType }}</option>
-                    {% endfor %}
-                </select>
-                <div class="mx-3" id="infoType"></div>
+        <div class="flex flex-col flex-wrap text-center p-2">
+            <div class="my-3 flex flex-row" id="divType">
+                <div class="flex-1 text-right self-center">
+                    <label for="selectTemps"><b>Type d'heures</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <select class="mx-3" name="type" id="type">
+                        <option value="-1">-- Sélectionner un type d'heure --</option>
+                        {% for type in types %}
+                            <option value="{{ type.id }}">{{ type.nomType }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="mx-3" id="infoType"></div>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divOrdre">
-                <label class="mx-3" for="ordre"><b>Ordre</b></label>
-                <input class="mx-3" type="text" name="ordre" id="ordre">
-                <p class="mx-3" id="infoType"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="ordre"><b>Ordre</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <input class="mx-3" type="text" name="ordre" id="ordre">
+                    <p class="mx-3" id="infoType"></p>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divTache">
-                <label class="mx-3" for="tache"><b>Tâche</b></label>
-                <select class=" mx-3" name="tache" id="tache">
-                    <option value="-1" selected>-- Sélectionner une tâche --</option>
-                    {% for tache in taches %}
-                        <option value="{{ tache.id }}">{{ tache.id }}</option>
-                    {% endfor %}
-                </select>
-                <p class="mx-3" id="infoTache"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="tache"><b>Tâche</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <select class=" mx-3" name="tache" id="tache">
+                        <option value="-1" selected>-- Sélectionner une tâche --</option>
+                        {% for tache in taches %}
+                            <option value="{{ tache.id }}">{{ tache.id }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="mx-3" id="infoTache"></p>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divOperation">
-                <label class="mx-3" for="operation"><b>Opération</b></label>
-                <input class="mx-3" type="text" name="operation" id="operation">
-                <p class="mx-3" id="infoOperation"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="operation"><b>Opération</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <input class="mx-3" type="text" name="operation" id="operation">
+                    <p class="mx-3" id="infoOperation"></p>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divActivite">
-                <label class="mx-3" for="activite"><b>Activité</b></label>
-                <input class="mx-3" type="text" name="activite" id="activite">
-                <p class="mx-3" id="infoActivite"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="activite"><b>Activité</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <input class="mx-3" type="text" name="activite" id="activite">
+                    <p class="mx-3" id="infoActivite"></p>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divCentreCharge">
-                <label class="mx-3" for="centrecharge"><b>Centre de charge</b></label>
-                <select class=" mx-3" name="centrecharge" id="centrecharge">
-                    <option value="-1" selected>-- Sélectionner un centre de charge --</option>
-                    {% for centre_charge in CDG %}
-                        <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
-                    {% endfor %}
-                </select>
-                <p class="mx-3" id="infoCentreCharge"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="centrecharge"><b>Centre de charge</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <select class=" mx-3" name="centrecharge" id="centrecharge">
+                        <option value="-1" selected>-- Sélectionner un centre de charge --</option>
+                        {% for centre_charge in CDG %}
+                            <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="mx-3" id="infoCentreCharge"></p>
+                </div>
             </div>
             <div class="my-3 hidden flex flex-row items-center" id="divSaisiTemps">
-                <label class="mx-3" for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
-                <input class="mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
-                <p class="mx-3" id="infoSaisiTemps"></p>
+                 <div class="flex-1 text-right self-center">
+                    <label class="mx-3" for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <input class="mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
+                    <p class="mx-3" id="infoSaisiTemps"></p>
+                </div>
             </div>
         </div>
         <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
@@ -113,7 +141,7 @@
             <button class="btn btn-primary mt-5" id="btnEnregistrerQuitter">
                 Enregistrer et quitter
             </button>
-            <button class="btn btn-primary mt-5" id="btnEnregistrerContinue" >
+            <button class="btn btn-primary mt-5" id="btnEnregistrerContinue">
                 Enregistrer et continuer
             </button>
         </div>

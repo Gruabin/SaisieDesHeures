@@ -48,6 +48,26 @@ class DetailHeures
         return $this->id;
     }
 
+    public function getName(): ?string
+    {
+        $name = [];
+
+        if (!empty($this->ordre)) {
+            $name[] = $this->ordre->descriptionOrdre;
+        }
+        if (!empty($this->operation)) {
+            $name[] = $this->operation->descriptionOperation;
+        }
+        if (!empty($this->tache)) {
+            $name[] = $this->tache->name;
+        }
+        if (!empty($this->centre_de_charge)) {
+            $name[] = $this->centre_de_charge->name;
+        }
+
+        return implode(', ', $name);
+    }
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
