@@ -94,10 +94,7 @@ class DetailHeuresAPIController extends AbstractController
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
-        if (null === $data) {
-            return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
-        }
-        if ($this->isCsrfTokenValid('saisieToken', $token)) {
+        if ($this->isCsrfTokenValid('saisieToken', $token) || (null == $data)) {
             // Valider les données entrantes
             $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
             $typeHeures = $data['type_heures'] ?? null;
@@ -114,13 +111,14 @@ class DetailHeuresAPIController extends AbstractController
             $entityManager->flush();
             $detailHeureService->cleanLastWeek();
 
-            $message = 'Détails des heures créés avec succès.';
+            $message = 'Saisi des heures créés avec succès.';
             $this->logger->info($message);
             $this->addFlash('success', $message);
-        }
 
-        // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
-        return new Response('Détails des heures créés avec succès.', Response::HTTP_CREATED);
+            // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
+            return new Response($message, Response::HTTP_CREATED);
+        }
+        return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
     }
 
     private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data): DetailHeures

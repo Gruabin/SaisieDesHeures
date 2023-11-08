@@ -77,22 +77,30 @@ async function formSubmit() {
     if (centre_de_charge !== "-1") {
         data.centre_de_charge = centre_de_charge;
     }
-    const response = await fetch("/api/post/detail_heures", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    })
-    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    if (response.status === 201) {
-        return true
+
+    try {
+        const response = await fetch("/api/post/detail_heures", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+        if (!response.ok) {
+            alert(await response.text());
+            return false;
+        }
+
+        return true;
+
+    } catch (error) {
+        console.error("Une erreur s'est produite :", error);
     }
-    if (response.status !== 201) {
-        alert("Réponse inattendue du serveur");
-        return false
-    }
-    throw new Error("Réponse inattendue du serveur");
+
+    return false;
 }
 
 document.getElementById("type").addEventListener("change", function () {
