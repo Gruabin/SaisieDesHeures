@@ -106,6 +106,13 @@ class DetailHeuresAPIController extends AbstractController
             }
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
 
+            if (!$detailHeures) {
+                $message = "L'ajout de saisi des heures a échoué.";
+                $this->logger->info($message);
+
+                return new Response($message, Response::HTTP_BAD_REQUEST);
+            }
+
             // Enregistrer les détails des heures dans la base de données
             $entityManager->persist($detailHeures);
             $entityManager->flush();
@@ -118,10 +125,11 @@ class DetailHeuresAPIController extends AbstractController
             // Retourner une réponse indiquant que les détails des heures ont été créés avec succès
             return new Response($message, Response::HTTP_CREATED);
         }
+
         return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
     }
 
-    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data): DetailHeures
+    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data): ?DetailHeures
     {
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
@@ -135,24 +143,40 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->setTypeHeures($typeHeures);
         $detailHeures->setEmploye($security->getUser());
+
         if (!empty($data['ordre'])) {
             $ordre = $this->ordreRepository->find($data['ordre']);
+            if (!$ordre) {
+                return null;
+            }
             $detailHeures->setOrdre($ordre);
         }
         if (!empty($data['operation'])) {
-            $operation = $this->ordreRepository->find($data['operation']);
+            $operation = $this->operationRepository->find($data['operation']);
+            if (!$operation) {
+                return null;
+            }
             $detailHeures->setOperation($operation);
         }
         if (!empty($data['tache'])) {
-            $tache = $this->ordreRepository->find($data['tache']);
+            $tache = $this->tacheRepository->find($data['tache']);
+            if (!$tache) {
+                return null;
+            }
             $detailHeures->setTache($tache);
         }
         if (!empty($data['activite'])) {
-            $activite = $this->ordreRepository->find($data['activite']);
+            $activite = $this->activiteRepository->find($data['activite']);
+            if (!$activite) {
+                return null;
+            }
             $detailHeures->setActivite($activite);
         }
         if (!empty($data['centre_de_charge'])) {
             $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
+            if (!$centreDeCharge) {
+                return null;
+            }
             $detailHeures->setCentreDeCharge($centreDeCharge);
         }
 
@@ -166,6 +190,7 @@ class DetailHeuresAPIController extends AbstractController
         try {
             $message = "L'export saisi des heures créés avec succès.";
             $this->logger->info($message);
+
             return $exportService->exportExcel();
         } catch (\Exception $exception) {
             $message = "L'export saisi des heures a échoué.";

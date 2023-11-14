@@ -51,80 +51,86 @@
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col flex-wrap text-center p-2">
-            <div class="my-3 flex flex-row" id="divType">
-                <div class="flex-1 text-right self-center">
+            <div class="my-3 flex md:flex-row flex-col" id="divType">
+                <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="selectTemps"><b>Type d'heures</b></label>
                 </div>
-                <div class="flex-1 text-left">
-                    <select class="mx-3" name="type" id="type">
-                        <option value="-1">-- Sélectionner un type d'heure --</option>
-                        {% for type in types %}
-                            <option value="{{ type.id }}">{{ type.nomType }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="mx-3" id="infoType"></div>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div class="md:self-center">
+                        <select class="mx-3" name="type" id="type">
+                            <option value="-1">-- Sélectionner un type d'heure --</option>
+                            {% for type in types %}
+                                <option value="{{ type.id }}">{{ type.nomType }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mx-3 md:self-center" id="infoType"></div>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divOrdre">
-                 <div class="flex-1 text-right self-center">
-                    <label class="mx-3" for="ordre"><b>Ordre</b></label>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divOrdre">
+                <div class="flex-1 text-left md:text-right md:self-center m-3">
+                    <label for="ordre"><b>Ordre</b></label>
                 </div>
-                <div class="flex-1 text-left">
+                <div class="flex-1 text-left md:self-center">
                     <input class="mx-3" type="text" name="ordre" id="ordre">
                     <p class="mx-3" id="infoType"></p>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divTache">
-                 <div class="flex-1 text-right self-center">
-                    <label class="mx-3" for="tache"><b>Tâche</b></label>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="tache"><b>Tâche</b></label>
                 </div>
-                <div class="flex-1 text-left">
-                    <select class=" mx-3" name="tache" id="tache">
-                        <option value="-1" selected>-- Sélectionner une tâche --</option>
-                        {% for tache in taches %}
-                            <option value="{{ tache.id }}">{{ tache.id }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="mx-3" id="infoTache"></p>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div class="md:self-center">
+                        <select class="mx-3" name="tache" id="tache">
+                            <option value="-1" selected>-- Sélectionner une tâche --</option>
+                            {% for tache in taches %}
+                                <option value="{{ tache.id }}">{{ tache.id }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mx-3 md:self-center" id="infoTache"></div>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divOperation">
-                 <div class="flex-1 text-right self-center">
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divOperation">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="operation"><b>Opération</b></label>
                 </div>
-                <div class="flex-1 text-left">
+                <div class="flex-1 text-left md:self-center">
                     <input class="mx-3" type="text" name="operation" id="operation">
                     <p class="mx-3" id="infoOperation"></p>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divActivite">
-                 <div class="flex-1 text-right self-center">
-                    <label class="mx-3" for="activite"><b>Activité</b></label>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divActivite">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="activite"><b>Activité</b></label>
                 </div>
-                <div class="flex-1 text-left">
+                <div class="flex-1 text-left md:self-center">
                     <input class="mx-3" type="text" name="activite" id="activite">
                     <p class="mx-3" id="infoActivite"></p>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divCentreCharge">
-                 <div class="flex-1 text-right self-center">
-                    <label class="mx-3" for="centrecharge"><b>Centre de charge</b></label>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divCentreCharge">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="centrecharge"><b>Centre de charge</b></label>
                 </div>
-                <div class="flex-1 text-left">
-                    <select class=" mx-3" name="centrecharge" id="centrecharge">
-                        <option value="-1" selected>-- Sélectionner un centre de charge --</option>
-                        {% for centre_charge in CDG %}
-                            <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="mx-3" id="infoCentreCharge"></p>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div>
+                        <select class=" mx-3" name="centrecharge" id="centrecharge">
+                            <option value="-1" selected>-- Sélectionner un centre de charge --</option>
+                            {% for centre_charge in CDG %}
+                                <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mx-3" id="infoCentreCharge"></div>
                 </div>
             </div>
-            <div class="my-3 hidden flex flex-row items-center" id="divSaisiTemps">
-                 <div class="flex-1 text-right self-center">
-                    <label class="mx-3" for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisiTemps">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
                 </div>
-                <div class="flex-1 text-left">
+                <div class="flex-1 text-left md:self-center">
                     <input class="mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
                     <p class="mx-3" id="infoSaisiTemps"></p>
                 </div>
