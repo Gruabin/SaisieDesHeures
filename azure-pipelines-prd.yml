@@ -76,6 +76,22 @@ stages:
       workingDirectory: $(rootFolder)
       displayName: "Clear cache" 
       
+    # Linter PHP CS fixer
+    - script: php vendor/bin/php-cs-fixer fix
+      workingDirectory: $(rootFolder)
+      displayName:
+        "Linter PHP CS fixer"
+
+    # Linter rector
+    - script: php vendor/bin/rector process src
+      workingDirectory: $(rootFolder)
+      displayName: "Linter Rector"
+
+    # Linter twig CS template
+    - script: php vendor/bin/twigcs templates
+      workingDirectory: $(rootFolder)
+      displayName: "Linter twig CS template"
+
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
