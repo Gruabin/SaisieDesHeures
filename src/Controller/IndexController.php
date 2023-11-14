@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
+use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\ExportService;
@@ -35,13 +36,14 @@ class IndexController extends AbstractController
     }
 
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeHeuresRepository, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepository, TacheRepository $tacheRepository, OrdreRepository $ordreRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
-        // Rendre la vue 'temps/temps.html.twig' en passant les variables 'types', 'taches' et 'user'
+        // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
             'details' => $detailHeuresRepository->findAll(),
             'types' => $typeHeuresRepository->findAll(),
             'taches' => $tacheRepository->findAll(),
+            'ordres' => $ordreRepository->findAll(),
             'CDG' => $CDGRepository->findAll(),
             'user' => $this->getUser(),
         ]);
@@ -57,7 +59,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/export', name: 'export')]
-    public function export(DetailHeuresRepository $detailHeuresRepository, ExportService $exportService): StreamedResponse
+    public function export(ExportService $exportService): StreamedResponse
     {
         return $exportService->exportExcel();
     }

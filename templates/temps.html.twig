@@ -71,8 +71,13 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="ordre"><b>Ordre</b></label>
                 </div>
-                <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="text" name="ordre" id="ordre">
+                <div class="flex-1 text-left">
+                    <select class=" mx-3" name="ordre" id="ordre">
+                        <option value="-1" selected>-- Sélectionner un ordre --</option>
+                        {% for ordre in ordres %}
+                            <option value="{{ ordre.id }}">{{ ordre.id }}</option>
+                        {% endfor %}
+                    </select>
                     <p class="mx-3" id="infoType"></p>
                 </div>
             </div>

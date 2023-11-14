@@ -105,14 +105,11 @@ class DetailHeuresAPIController extends AbstractController
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
-
-            if (!$detailHeures) {
-                $message = "L'ajout de saisi des heures a échoué.";
-                $this->logger->info($message);
-
-                return new Response($message, Response::HTTP_BAD_REQUEST);
+            if (null != $detailHeures->getordre()) {
+                if (9 != strlen($detailHeures->getordre()->getId()) || !preg_match('/^[a-zA-Z]{2}[a-zA-Z0-9]{6}$/', $detailHeures->getordre()->getId())) {
+                    return new Response('Ordre non valide.', Response::HTTP_BAD_REQUEST);
+                }
             }
-
             // Enregistrer les détails des heures dans la base de données
             $entityManager->persist($detailHeures);
             $entityManager->flush();
