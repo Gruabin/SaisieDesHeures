@@ -121,7 +121,7 @@ class DetailHeures
         return $this->operation;
     }
 
-    public function setOperation(?int $operation): static
+    public function setOperation(?Operation $operation): static
     {
         $this->operation = $operation;
 
