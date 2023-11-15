@@ -62,7 +62,15 @@ async function formSubmit() {
         'temps_main_oeuvre': temps_main_oeuvre,
         'token': token
     }
-    if (ordre !== "") {
+    if (type_heures == "-1") {
+        alert("Veuillez selectionner un type d'heure");
+        return false;
+    }
+    if (temps_main_oeuvre == "") {
+        alert("Veuillez insérer un temps de main d'oeuvre");
+        return false;
+    }
+    if (ordre !== "-1") {
         data.ordre = ordre;
     }
     if (tache !== "") {
@@ -77,7 +85,6 @@ async function formSubmit() {
     if (centre_de_charge !== "-1") {
         data.centre_de_charge = centre_de_charge;
     }
-
     try {
         const response = await fetch("/api/post/detail_heures", {
             method: "POST",
@@ -90,6 +97,7 @@ async function formSubmit() {
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         if (!response.ok) {
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
             alert(await response.text());
             return false;
         }
@@ -97,6 +105,7 @@ async function formSubmit() {
         return true;
 
     } catch (error) {
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
         console.error("Une erreur s'est produite :", error);
     }
 
@@ -117,6 +126,9 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
         document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/api/post/deconnexion';
     }
+    else{
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
+    }
 })
 
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
@@ -124,6 +136,9 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
     if (state) {
         document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/temps';
+    }
+    else {
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
     }
 })
 
