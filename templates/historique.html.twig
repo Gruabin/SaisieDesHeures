@@ -96,7 +96,7 @@
                                 {{ heures.typeHeures.nomType }}
                             {% endif %}
                         <td class="text-center">
-                            {%  set name = [] %}
+                            {% set name = [] %}
                             {% if (heures.ordre is not empty) %}
                                 {% set name = name|merge({'ordre': heures.ordre.descriptionOrdre}) %}
                             {% endif %}

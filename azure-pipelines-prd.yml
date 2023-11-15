@@ -75,7 +75,7 @@ stages:
     - script: php bin/console cache:clear
       workingDirectory: $(rootFolder)
       displayName: "Clear cache" 
-      
+
     # Linter PHP CS fixer
     - script: php vendor/bin/php-cs-fixer fix
       workingDirectory: $(rootFolder)

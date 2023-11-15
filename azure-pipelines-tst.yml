@@ -87,7 +87,7 @@ stages:
             workingDirectory: $(rootFolder)
             displayName: "Linter Rector"
 
-          # Linter twig CS template
+          # Linter twig CS 
           - script: php vendor/bin/twigcs templates
             workingDirectory: $(rootFolder)
             displayName: "Linter twig CS template"
