@@ -107,8 +107,8 @@ class DetailHeuresAPIController extends AbstractController
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
             if (!$detailHeures) {
                 $message = "L'ajout de saisi des heures a échoué.";
-                $this->logger->info($message);
-            
+                $this->logger->error($message);
+
                 return new Response($message, Response::HTTP_BAD_REQUEST);
             }
             if (null != $detailHeures->getordre()) {
@@ -150,6 +150,8 @@ class DetailHeuresAPIController extends AbstractController
         if (!empty($data['ordre'])) {
             $ordre = $this->ordreRepository->find($data['ordre']);
             if (!$ordre) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Ordre manquant');
+
                 return null;
             }
             $detailHeures->setOrdre($ordre);
@@ -157,6 +159,8 @@ class DetailHeuresAPIController extends AbstractController
         if (!empty($data['operation'])) {
             $operation = $this->operationRepository->find($data['operation']);
             if (!$operation) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Operation manquant');
+
                 return null;
             }
             $detailHeures->setOperation($operation);
@@ -164,6 +168,8 @@ class DetailHeuresAPIController extends AbstractController
         if (!empty($data['tache'])) {
             $tache = $this->tacheRepository->find($data['tache']);
             if (!$tache) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Tache manquant');
+
                 return null;
             }
             $detailHeures->setTache($tache);
@@ -171,6 +177,8 @@ class DetailHeuresAPIController extends AbstractController
         if (!empty($data['activite'])) {
             $activite = $this->activiteRepository->find($data['activite']);
             if (!$activite) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Activite manquant');
+
                 return null;
             }
             $detailHeures->setActivite($activite);
@@ -178,6 +186,8 @@ class DetailHeuresAPIController extends AbstractController
         if (!empty($data['centre_de_charge'])) {
             $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
             if (!$centreDeCharge) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
+
                 return null;
             }
             $detailHeures->setCentreDeCharge($centreDeCharge);
