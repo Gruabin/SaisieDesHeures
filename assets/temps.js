@@ -27,28 +27,28 @@ function formChange() {
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
-        case 3:
-            document.getElementById("divOrdre").classList.remove("hidden");
-            document.getElementById("divTache").classList.remove("hidden");
-            document.getElementById("divOperation").classList.add("hidden");
-            document.getElementById("divActivite").classList.remove("hidden");
-            document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
-            break;
-        default:
-            document.getElementById("divOrdre").classList.add("hidden");
-            document.getElementById("divTache").classList.add("hidden");
+            case 3:
+                document.getElementById("divOrdre").classList.remove("hidden");
+                document.getElementById("divTache").classList.remove("hidden");
+                document.getElementById("divOperation").classList.add("hidden");
+                document.getElementById("divActivite").classList.remove("hidden");
+                document.getElementById("divCentreCharge").classList.add("hidden");
+                document.getElementById("divSaisiTemps").classList.remove("hidden");
+                break;
+                default:
+                    document.getElementById("divOrdre").classList.add("hidden");
+                    document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.add("hidden");
             break;
+        }
     }
-}
-
+    
 async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-
+    
     const type_heures = document.getElementById("type").value;
     const ordre = document.getElementById("ordre").value;
     const tache = document.getElementById("tache").value;
@@ -101,14 +101,14 @@ async function formSubmit() {
             alert(await response.text());
             return false;
         }
-
+        
         return true;
-
+        
     } catch (error) {
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
         console.error("Une erreur s'est produite :", error);
     }
-
+    
     return false;
 }
 
@@ -153,43 +153,60 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
 //     // Effectuer la requête fetch
 //     fetch(url).then(function (response) { // Vérifier si la réponse est OK
 //         if (response.ok) {
-//             return response.json();
-//         } else {
-//             throw new Error("Employé non trouvé");
-//         }
-//     }).then(function (tache) { // Parcourir les taches et les ajouter au tableau
-//         document.getElementById("tache").disabled = false;
-//         tache.forEach((uneTache) => {
-//             let tacheObjet = {};
-//             tacheObjet.id = uneTache.id;
-//             tacheObjet.nom = uneTache.nom;
-//             tacheTable.push(tacheObjet);
+    //             return response.json();
+    //         } else {
+        //             throw new Error("Employé non trouvé");
+        //         }
+        //     }).then(function (tache) { // Parcourir les taches et les ajouter au tableau
+        //         document.getElementById("tache").disabled = false;
+        //         tache.forEach((uneTache) => {
+            //             let tacheObjet = {};
+            //             tacheObjet.id = uneTache.id;
+            //             tacheObjet.nom = uneTache.nom;
+            //             tacheTable.push(tacheObjet);
 //         });
 //     }).catch(function (error) {
-//         console.log(error);
-//     });
-
+    //         console.log(error);
+    //     });
+    
 //     // Désactiver l'input "infoTache"
 //     document.getElementById("tache").disabled = true;
 // });
 
 // document.getElementById("tache").addEventListener("change", function () {
-//     if (this.value == "") { // Supprimer les classes de chargement et réinitialiser le texte
-//         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-//         document.getElementById("infoTache").innerText = "Information employé";
-//         return;
-//     }
-//     // Réinitialiser le texte et ajouter les classes de chargement
-//     document.getElementById("infoTache").innerText = "";
-//     document.getElementById("infoTache").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-
-//     // Récupérer l'input et vérifier si l'employé existe dans le tableau
-//     if (tacheTable.find((e) => e.id === parseInt(this.value))) { // Si l'employé existe, afficher ses informations
-//         const tacheTrouve = tacheTable.find((e) => e.id === parseInt(this.value));
-//         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-//         document.getElementById("infoTache").innerText = tacheTrouve.nom;
-//     } else { // Si l'employé n'existe pas, afficher un message d'erreur
-//         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-//         document.getElementById("infoTache").innerText = "Tache non trouvé";
-//     }
-// });
+    //     if (this.value == "") { // Supprimer les classes de chargement et réinitialiser le texte
+    //         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    //         document.getElementById("infoTache").innerText = "Information employé";
+    //         return;
+    //     }
+    //     // Réinitialiser le texte et ajouter les classes de chargement
+    //     document.getElementById("infoTache").innerText = "";
+    //     document.getElementById("infoTache").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    
+    //     // Récupérer l'input et vérifier si l'employé existe dans le tableau
+    //     if (tacheTable.find((e) => e.id === parseInt(this.value))) { // Si l'employé existe, afficher ses informations
+    //         const tacheTrouve = tacheTable.find((e) => e.id === parseInt(this.value));
+    //         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    //         document.getElementById("infoTache").innerText = tacheTrouve.nom;
+    //     } else { // Si l'employé n'existe pas, afficher un message d'erreur
+    //         document.getElementById("infoTache").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    //         document.getElementById("infoTache").innerText = "Tache non trouvé";
+    //     }
+    // });
+    
+input = document.getElementById("ordre");
+document.getElementById("ordre").addEventListener("input", function () {
+    regex = new RegExp("^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$");
+    input.classList.remove("input-success");
+    input.classList.remove("input-error");
+    console.log(input.value);
+    if (regex.test(input.value)) {
+        input.classList.add("input-success");
+    }
+    else {
+        input.classList.add("input-error");
+    }
+    if (input.value == "") {
+    input.classList.remove("input-success");
+    }
+})
