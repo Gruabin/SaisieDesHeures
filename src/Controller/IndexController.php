@@ -46,7 +46,7 @@ class IndexController extends AbstractController
             'ordres' => $ordreRepository->findAll(),
             'CDG' => $CDGRepository->findAll(),
             'user' => $this->getUser(),
-        ]);
+    ]);
     }
 
     #[Route('/historique', name: 'historique')]

@@ -44,7 +44,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->andWhere('d.employe IN (:employe)')
                 ->setParameter('date', date('Y-m-d', $dateHier))
                 ->setParameter('employe', $user->getId())
-                ->orderBy('d.date', 'ASC')
+                ->orderBy('d.date', 'DESC')
                 ->getQuery()
                 ->getResult();
         }

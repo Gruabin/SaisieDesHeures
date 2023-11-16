@@ -25,6 +25,7 @@ class DetailHeures
     private ?TypeHeures $type_heures = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
+    // #[Assert\Regex(pattern: '/^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$/', htmlPattern: '^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$')]
     private ?Ordre $ordre = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]

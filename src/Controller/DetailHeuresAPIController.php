@@ -2,25 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\DetailHeures;
 use App\Entity\TypeHeures;
-use App\Repository\ActiviteRepository;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\OperationRepository;
+use App\Entity\DetailHeures;
+use Psr\Log\LoggerInterface;
+use App\Service\ExportService;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
-use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
-use App\Service\ExportService;
+use App\Repository\ActiviteRepository;
+use App\Repository\OperationRepository;
+use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\DetailHeuresRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
@@ -105,19 +105,24 @@ class DetailHeuresAPIController extends AbstractController
                 $this->addFlash('error', "Données manquantes.");
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
+            if ($tempsMainOeuvre <= 0) {
+                $this->addFlash('error', "Temps main d'oeuvre invalide.");
+                return new Response("Temps main d'oeuvre invalide.", Response::HTTP_BAD_REQUEST);
+            }
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
             if (!$detailHeures) {
-                $message = "L'ajout de saisi des heures a échoué.";
+                $message = "L'ajout de saisie des heures a échoué.";
                 $this->logger->error($message);
 
                 return new Response($message, Response::HTTP_BAD_REQUEST);
             }
+
             // Enregistrer les détails des heures dans la base de données
             $entityManager->persist($detailHeures);
             $entityManager->flush();
             $detailHeureService->cleanLastWeek();
 
-            $message = 'Saisi des heures créés avec succès.';
+            $message = 'Saisie des heures créé avec succès.';
             $this->logger->info($message);
             $this->addFlash('success', $message);
 
@@ -180,13 +185,15 @@ class DetailHeuresAPIController extends AbstractController
             $detailHeures->setActivite($activite);
         }
         if (!empty($data['centre_de_charge'])) {
-            $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
-            if (!$centreDeCharge) {
-                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
-
-                return null;
+            if ($typeHeures->getId() == 1){
+                $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
+                if (!$centreDeCharge) {
+                    $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
+                    
+                    return null;
+                }
+                $detailHeures->setCentreDeCharge($centreDeCharge);
             }
-            $detailHeures->setCentreDeCharge($centreDeCharge);
         }
 
         return $detailHeures;

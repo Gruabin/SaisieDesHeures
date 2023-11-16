@@ -70,10 +70,10 @@ async function formSubmit() {
         alert("Veuillez insérer un temps de main d'oeuvre");
         return false;
     }
-    if (ordre !== "-1") {
+    if (ordre !== "") {
         data.ordre = ordre;
     }
-    if (tache !== "") {
+    if (tache !== "-1") {
         data.tache = tache;
     }
     if (operation !== "") {
@@ -126,7 +126,7 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
         document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/api/post/deconnexion';
     }
-    else{
+    else {
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
     }
 })
@@ -158,8 +158,8 @@ document.addEventListener("DOMContentLoaded", function () { // Construire l'URL 
             throw new Error("Employé non trouvé");
         }
     }).then(function (tache) { // Parcourir les taches et les ajouter au tableau
+        document.getElementById("tache").disabled = false;
         tache.forEach((uneTache) => {
-            document.getElementById("tache").disabled = false;
             let tacheObjet = {};
             tacheObjet.id = uneTache.id;
             tacheObjet.nom = uneTache.nom;

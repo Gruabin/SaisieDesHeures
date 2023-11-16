@@ -98,10 +98,10 @@
                         <td class="text-center">
                             {% set name = [] %}
                             {% if (heures.ordre is not empty) %}
-                                {% set name = name|merge({'ordre': heures.ordre.descriptionOrdre}) %}
+                                {% set name = name|merge({'ordre': heures.ordre.id}) %}
                             {% endif %}
                             {% if (heures.operation is not empty) %}
-                                {% set name = name|merge({'operation': heures.operation.descriptionOperation}) %}
+                                {% set name = name|merge({'operation': heures.operation.id}) %}
                             {% endif %}
                             {% if (heures.tache is not empty) %}
                                 {% set name = name|merge({'tache': heures.tache.name}) %}
@@ -109,7 +109,7 @@
                             {% if (heures.centreDeCharge is not empty) %}
                                 {% set name = name|merge({'centreDeCharge': heures.centreDeCharge.name}) %}
                             {% endif %}
-                            {{ name|join(', ') }}
+                            {{ name|join('  |  ') }}
                         </td>
                         <td class="text-center">{{ heures.tempsMainOeuvre }}
                             heures

@@ -72,13 +72,8 @@
                     <label for="ordre"><b>Ordre</b></label>
                 </div>
                 <div class="flex-1 text-left">
-                    <select class=" mx-3" name="ordre" id="ordre">
-                        <option value="-1" selected>-- Sélectionner un ordre --</option>
-                        {% for ordre in ordres %}
-                            <option value="{{ ordre.id }}">{{ ordre.id }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="mx-3" id="infoType"></p>
+                    <input class="mx-3" type="text" name="ordre" id="ordre" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
+                    <p class="mx-3" id="infoOrdre"></p>
                 </div>
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
@@ -102,7 +97,7 @@
                     <label class="mx-3" for="operation"><b>Opération</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="text" name="operation" id="operation">
+                    <input class="mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
                     <p class="mx-3" id="infoOperation"></p>
                 </div>
             </div>
@@ -111,7 +106,7 @@
                     <label for="activite"><b>Activité</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="text" name="activite" id="activite">
+                    <input class="mx-3" type="number" name="activite" id="activite" max="9999" min="0" step="10">
                     <p class="mx-3" id="infoActivite"></p>
                 </div>
             </div>
@@ -124,7 +119,7 @@
                         <select class=" mx-3" name="centrecharge" id="centrecharge">
                             <option value="-1" selected>-- Sélectionner un centre de charge --</option>
                             {% for centre_charge in CDG %}
-                                <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                                <option value="{{ centre_charge.id }}" {% if centre_charge.id == user.centreDeCharge.id %} selected {% endif %}>{{ centre_charge.id }}</option>
                             {% endfor %}
                         </select>
                     </div>
