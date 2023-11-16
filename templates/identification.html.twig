@@ -10,7 +10,7 @@
         <div class="flex flex-row justify-center items-center space-x-2">
             <label for="inputEmploye">Code employé
             </label>
-            <input type="text" maxlength="9" name="employe" id="inputEmploye">
+            <input class="input input-bordered" type="text" maxlength="9" name="employe" id="inputEmploye">
             <p id="informationEmploye">Information employé</p>
         </div>
         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">

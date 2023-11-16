@@ -57,7 +57,7 @@
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center">
                     <div class="md:self-center">
-                        <select class="mx-3" name="type" id="type">
+                        <select class="select select-bordered mx-3" name="type" id="type">
                             <option value="-1">-- Sélectionner un type d'heure --</option>
                             {% for type in types %}
                                 <option value="{{ type.id }}">{{ type.nomType }}</option>
@@ -72,7 +72,7 @@
                     <label for="ordre"><b>Ordre</b></label>
                 </div>
                 <div class="flex-1 text-left">
-                    <input class="mx-3" type="text" name="ordre" id="ordre" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
+                    <input class="input input-bordered mx-3" type="text" name="ordre" id="ordre" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
                     <p class="mx-3" id="infoOrdre"></p>
                 </div>
             </div>
@@ -82,14 +82,13 @@
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center">
                     <div class="md:self-center">
-                        <select class="mx-3" name="tache" id="tache">
+                        <select class="select select-bordered mx-3" name="tache" id="tache">
                             <option value="-1" selected>-- Sélectionner une tâche --</option>
                             {% for tache in taches %}
-                                <option value="{{ tache.id }}">{{ tache.id }}</option>
+                                <option value="{{ tache.id }}">{{ tache.id }} - <small>{{ tache.nomTache }}</small></option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="mx-3 md:self-center" id="infoTache"></div>
                 </div>
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divOperation">
@@ -97,7 +96,7 @@
                     <label class="mx-3" for="operation"><b>Opération</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
+                    <input class="input input-bordered mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
                     <p class="mx-3" id="infoOperation"></p>
                 </div>
             </div>
@@ -106,7 +105,7 @@
                     <label for="activite"><b>Activité</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="number" name="activite" id="activite" max="9999" min="0" step="10">
+                    <input class="input input-bordered mx-3" type="number" name="activite" id="activite" max="9999" min="0" step="10">
                     <p class="mx-3" id="infoActivite"></p>
                 </div>
             </div>
@@ -116,10 +115,10 @@
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center">
                     <div>
-                        <select class=" mx-3" name="centrecharge" id="centrecharge">
+                        <select class="select select-bordered mx-3" name="centrecharge" id="centrecharge">
                             <option value="-1" selected>-- Sélectionner un centre de charge --</option>
                             {% for centre_charge in CDG %}
-                                <option value="{{ centre_charge.id }}" {% if centre_charge.id == user.centreDeCharge.id %} selected {% endif %}>{{ centre_charge.id }}</option>
+                                <option value="{{ centre_charge.id }}" {% if centre_charge.id == user.centreDeCharge.id %} selected {% endif %}>{{ centre_charge.id }} - <small>{{ centre_charge.descriptionCdg }}</small> </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -131,7 +130,7 @@
                     <label for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center">
-                    <input class="mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
+                    <input class="input input-bordered mx-3" type="number" min="0" max="100" step=".1" name="saisitemps" id="saisitemps">
                     <p class="mx-3" id="infoSaisiTemps"></p>
                 </div>
             </div>
