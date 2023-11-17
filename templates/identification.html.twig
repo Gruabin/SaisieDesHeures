@@ -8,9 +8,8 @@
         <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">Identification</h1>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-row justify-center items-center space-x-2">
-            <label for="inputEmploye">Code employé
-            </label>
-            <input class="input input-bordered" type="text" maxlength="9" name="employe" id="inputEmploye">
+            <label for="inputEmploye">Code employé </label>
+            <input class="input input-bordered" type="text" maxlength="9" name="inputEmploye" id="inputEmploye">
             <p id="informationEmploye">Information employé</p>
         </div>
         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">

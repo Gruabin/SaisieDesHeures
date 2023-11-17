@@ -6,11 +6,17 @@ var recherche = true;
 
 // Variable pour vérifier si une recherche a été effectuée
 var a = false;
+
+// Lorsque l'input "inputEmploye" est modifié
+document.getElementById("inputEmploye").addEventListener("input", function () { // Vérifier si la valeur est vide
+    findEmploye();
+});
+
 function findEmploye() {
 
     inputEmploye = document.getElementById("inputEmploye");
     // Vérifie la longueur de la valeur saisie
-    if (inputEmploye.value.length == 0 || inputEmploye.value.length == 1 || inputEmploye.value.length == 2 || inputEmploye.value == "") {
+    if (inputEmploye.value.length < 3 || inputEmploye.value == "") {
         recherche = true;
     }
 
@@ -50,7 +56,7 @@ function findEmploye() {
         recherche = true;
     }
 
-    // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux
+    // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux-même
     if (inputEmploye.value.length > 2) {
         if (inputEmploye.value.length == 3) {
             recherche = false;
@@ -71,14 +77,21 @@ function findEmploye() {
                     throw new Error("Employé non trouvé");
                 }
             }).then(function (employe) {
-                employe.forEach((unEmploye) => {
+                employe.forEach(async (unEmploye) => {
                     var employeObjet = {};
                     employeObjet.id = unEmploye.id;
                     employeObjet.nom = unEmploye.nom;
-                    employeTable.push(employeObjet);
+                    await employeTable.push(employeObjet);
                 });
 
                 a = true;
+                if (employeTable.find((e) => e.id === inputEmploye.value)) {
+                    console.log("test");
+                    const employeTrouve = employeTable.find((e) => e.id === inputEmploye.value);
+                    document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                    document.getElementById("informationEmploye").innerText = employeTrouve.nom;
+                    document.getElementById("btnConnexion").classList.remove("btn-disabled");
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -104,11 +117,6 @@ function findEmploye() {
 
 }
 
-// Lorsque l'input "inputEmploye" est modifié
-document.getElementById("inputEmploye").addEventListener("input", function () { // Vérifier si la valeur est vide
-    findEmploye();
-});
-findEmploye();
 
 document.getElementById("btnConnexion").addEventListener("click", function () {
     if (!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {

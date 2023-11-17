@@ -2,25 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\TypeHeures;
 use App\Entity\DetailHeures;
-use Psr\Log\LoggerInterface;
-use App\Service\ExportService;
+use App\Entity\TypeHeures;
+use App\Repository\ActiviteRepository;
+use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\OperationRepository;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\ActiviteRepository;
-use App\Repository\OperationRepository;
 use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
+use App\Service\ExportService;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DetailHeuresRepository;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\Repository\CentreDeChargeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
@@ -102,11 +102,13 @@ class DetailHeuresAPIController extends AbstractController
             $typeHeures = $this->typeHeuresRepository->find($typeHeures);
 
             if (null === $tempsMainOeuvre || null === $typeHeures) {
-                $this->addFlash('error', "Données manquantes.");
+                $this->addFlash('error', 'Données manquantes.');
+
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
             if ($tempsMainOeuvre <= 0) {
                 $this->addFlash('error', "Temps main d'oeuvre invalide.");
+
                 return new Response("Temps main d'oeuvre invalide.", Response::HTTP_BAD_REQUEST);
             }
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
@@ -185,11 +187,11 @@ class DetailHeuresAPIController extends AbstractController
             $detailHeures->setActivite($activite);
         }
         if (!empty($data['centre_de_charge'])) {
-            if ($typeHeures->getId() == 1){
+            if (1 == $typeHeures->getId()) {
                 $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
                 if (!$centreDeCharge) {
                     $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
-                    
+
                     return null;
                 }
                 $detailHeures->setCentreDeCharge($centreDeCharge);
