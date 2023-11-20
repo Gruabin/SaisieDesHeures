@@ -56,6 +56,7 @@ class ExportService
         $sheet = $spreadsheet->getActiveSheet();
         $this->exportHeader($sheet);
         $this->exportItems($sheet);
+        $this->exportEntete($sheet);
     }
 
     private function exportHeader(Worksheet $sheet): void
@@ -70,6 +71,17 @@ class ExportService
         $this->setStyleHeader($sheet, $x++, 'Temps main d\'œuvre en heures', $color);
     }
 
+    private function exportEntete(Worksheet $sheet): void
+    {
+        $x = 1;
+        $y = 1;
+        $color = '#FFFFFF00';
+        $user = $this->security->getUser();
+        // dd($user);
+        $this->setStyleItem($sheet, $x++, $y, $user->getId(), $color);
+        $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'), $color);
+    }
+
     /**
      * @throws Exception
      */
@@ -78,7 +90,7 @@ class ExportService
         $items = $this->detailHeuresRepository->findAllToday();
         foreach ($items as $key => $item) {
             $x = 1;
-            $y = $key + 2;
+            $y = $key + 4;
 
             $color = (0 == $y % 2) ? 'FFF8E1' : 'FFECB3';
 
@@ -122,7 +134,7 @@ class ExportService
 
     private function setStyleHeader(Worksheet $sheet, int $x, string $value, string $color): void
     {
-        $y = 1;
+        $y = 3;
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
             ->getStyle($x.$y)

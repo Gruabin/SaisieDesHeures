@@ -86,7 +86,6 @@ function findEmploye() {
 
                 a = true;
                 if (employeTable.find((e) => e.id === inputEmploye.value)) {
-                    console.log("test");
                     const employeTrouve = employeTable.find((e) => e.id === inputEmploye.value);
                     document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye").innerText = employeTrouve.nom;
