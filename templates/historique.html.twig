@@ -45,8 +45,12 @@
                             {% endif %}
                         {% endfor %}
                         {% if total > 0 %}
-                            {{ total }}
-                            heures
+                            {{ total }} 
+                            {% if total < 2 %}
+                                heure
+                            {% else %}
+                                heures                                    
+                            {% endif %}                            
                         {% endif %}
                     </span>
                 </div>

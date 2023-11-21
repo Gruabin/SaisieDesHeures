@@ -40,7 +40,7 @@ class IndexController extends AbstractController
     {
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
-            'details' => $detailHeuresRepository->findAll(),
+            'details' => $detailHeuresRepository->findAllToday(),
             'types' => $typeHeuresRepository->findAll(),
             'taches' => $tacheRepository->findAll(),
             'ordres' => $ordreRepository->findAll(),

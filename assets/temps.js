@@ -145,17 +145,21 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
 
 input = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
-    regex = new RegExp("^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$");
+    regex = new RegExp("^[A-Z]{2}[A-Z0-9]{1}[0-9]{6}$");
     input.classList.remove("input-success");
     input.classList.remove("input-error");
-    console.log(input.value);
     if (regex.test(input.value)) {
         input.classList.add("input-success");
     }
     else {
         input.classList.add("input-error");
+        document.getElementById("btnEnregistrerQuitter").classList.add("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.add("btn-disabled");
     }
-    if (input.value == "") {
+    if (input.value == "" || input.value == " ") {
         input.classList.remove("input-success");
+        input.classList.remove("input-error");
+        document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
 })
