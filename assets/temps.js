@@ -55,7 +55,7 @@ function tacheChange(id) {
         if (options[i].dataset.idType != id) {
             document.getElementById('tache').options[i].hidden = true;
         }
-        else{
+        else {
             document.getElementById('tache').options[i].hidden = false;
         }
     }
@@ -157,24 +157,87 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
     }
 })
 
-
-input = document.getElementById("ordre");
+//
+//* Effectue la RegEx pour vérifier le champs Ordre
+//
+inputOrdre = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
     regex = new RegExp("^[A-Z]{2}[A-Z0-9]{1}[0-9]{6}$");
-    input.classList.remove("input-success");
-    input.classList.remove("input-error");
-    if (regex.test(input.value)) {
-        input.classList.add("input-success");
+    inputOrdre.classList.remove("input-success");
+    inputOrdre.classList.remove("input-error");
+    if (regex.test(inputOrdre.value)) {
+        inputOrdre.classList.add("input-success");
+        document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
     else {
-        input.classList.add("input-error");
+        inputOrdre.classList.add("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.add("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.add("btn-disabled");
     }
-    if (input.value == "" || input.value == " ") {
-        input.classList.remove("input-success");
-        input.classList.remove("input-error");
+    if (inputOrdre.value == "") {
+        inputOrdre.classList.remove("input-success");
+        inputOrdre.classList.remove("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
 })
+
+//
+//* Retourne toutes les activités
+//
+function makeAPIActivite() {
+    var url = "api/get/activite/";
+    var activiteTable = [];
+    fetch(url).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error("Erreur");
+        }
+    }).then(function (activite) {
+        activite.forEach(async (unActivite) => {
+            var activiteObjet = {};
+            activiteObjet.id = unActivite.id;
+            activiteObjet.nom = unActivite.nom;
+            await activiteTable.push(activiteObjet)
+        });
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+    return activiteTable;
+}
+
+var tableActivite = makeAPIActivite();
+
+//
+//* Effectue la RegEx pour vérifier le champs Activité et afffiche le nom de l'activité
+//
+document.getElementById("activite").addEventListener("input", function () {
+    inputActivite = document.getElementById("activite");
+    regex = new RegExp("^[0-9]{3}$");
+    inputActivite.classList.remove("input-success");
+    inputActivite.classList.remove("input-error");
+    if (regex.test(inputActivite.value) && tableActivite.find((e) => e.id == inputActivite.value)) {
+        const activiteTrouve = tableActivite.find((e) => e.id == inputActivite.value);
+        inputActivite.classList.add("input-success");
+        document.getElementById("infoActivite").innerText = activiteTrouve.nom;
+        document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
+    }
+    else {
+        inputActivite.classList.add("input-error");
+        document.getElementById("infoActivite").innerText = "";
+        document.getElementById("btnEnregistrerQuitter").classList.add("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.add("btn-disabled");
+    }
+    if (inputActivite.value == "") {
+        inputActivite.classList.remove("input-success");
+        inputActivite.classList.remove("input-error");
+        document.getElementById("infoActivite").innerText = "";
+        document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
+        document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
+    }
+}
+)
