@@ -54,10 +54,10 @@ class DetailHeures
         $name = [];
 
         if (!empty($this->ordre)) {
-            $name[] = $this->ordre->descriptionOrdre;
+            $name[] = $this->ordre->id;
         }
         if (!empty($this->operation)) {
-            $name[] = $this->operation->descriptionOperation;
+            $name[] = $this->operation->id;
         }
         if (!empty($this->tache)) {
             $name[] = $this->tache->name;

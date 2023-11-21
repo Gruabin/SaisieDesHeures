@@ -15,9 +15,6 @@ class Operation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description_operation = null;
-
     #[ORM\OneToMany(mappedBy: 'operation', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
@@ -29,18 +26,6 @@ class Operation
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDescriptionOperation(): ?string
-    {
-        return $this->description_operation;
-    }
-
-    public function setDescriptionOperation(string $description_operation): static
-    {
-        $this->description_operation = $description_operation;
-
-        return $this;
     }
 
     /**

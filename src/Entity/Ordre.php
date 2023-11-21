@@ -14,9 +14,6 @@ class Ordre
     #[ORM\Column]
     private ?string $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description_ordre = null;
-
     #[ORM\OneToMany(mappedBy: 'ordre', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
@@ -33,18 +30,6 @@ class Ordre
     public function setId(string $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getDescriptionOrdre(): ?string
-    {
-        return $this->description_ordre;
-    }
-
-    public function setDescriptionOrdre(string $description_ordre): static
-    {
-        $this->description_ordre = $description_ordre;
 
         return $this;
     }

@@ -21,6 +21,10 @@ class Tache
     #[ORM\OneToMany(mappedBy: 'tache', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    #[ORM\ManyToOne(inversedBy: 'taches')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?typeHeures $typeHeures = null;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
@@ -86,6 +90,18 @@ class Tache
                 $detailHeure->setTache(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTypeHeures(): ?typeHeures
+    {
+        return $this->typeHeures;
+    }
+
+    public function setTypeHeures(?typeHeures $typeHeures): static
+    {
+        $this->typeHeures = $typeHeures;
 
         return $this;
     }

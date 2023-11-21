@@ -21,9 +21,13 @@ class TypeHeures
     #[ORM\OneToMany(mappedBy: 'type_heures', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    #[ORM\OneToMany(mappedBy: 'typeHeures', targetEntity: Tache::class)]
+    private Collection $taches;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
+        $this->taches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,6 +71,36 @@ class TypeHeures
             // set the owning side to null (unless already changed)
             if ($detailHeure->getTypeHeures() === $this) {
                 $detailHeure->setTypeHeures(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tache>
+     */
+    public function getTaches(): Collection
+    {
+        return $this->taches;
+    }
+
+    public function addTach(Tache $tach): static
+    {
+        if (!$this->taches->contains($tach)) {
+            $this->taches->add($tach);
+            $tach->setTypeHeures($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTach(Tache $tach): static
+    {
+        if ($this->taches->removeElement($tach)) {
+            // set the owning side to null (unless already changed)
+            if ($tach->getTypeHeures() === $this) {
+                $tach->setTypeHeures(null);
             }
         }
 

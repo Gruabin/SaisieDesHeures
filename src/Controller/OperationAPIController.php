@@ -38,7 +38,6 @@ class OperationAPIController extends AbstractController
         foreach ($operation as $key => $value) {
             $operationData[$key] = [
                 'id' => $value->getId(),
-                'nom' => $value->getDescriptionOperation(),
             ];
         }
 
@@ -65,9 +64,6 @@ class OperationAPIController extends AbstractController
 
         // Créer une nouvelle instance de l'entité Operation
         $operation = new Operation();
-
-        // Remplir les propriétés de l'entité avec les données reçues
-        $operation->setDescriptionOperation($data['nom']);
 
         // Enregistrer l'operation dans la base de données
         $entityManager->persist($operation);
@@ -101,9 +97,6 @@ class OperationAPIController extends AbstractController
         if (!$operation) {
             return new Response('Operation non trouvé.', Response::HTTP_NOT_FOUND);
         }
-
-        // Mettre à jour les propriétés de l'operation avec les nouvelles données
-        $operation->setDescriptionOperation($data['nom']);
 
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();

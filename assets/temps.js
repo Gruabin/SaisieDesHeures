@@ -1,14 +1,7 @@
 function formChange() {
     switch (parseInt(document.getElementById("type").value)) {
-        case 0:
-            document.getElementById("divOrdre").classList.remove("hidden");
-            document.getElementById("divTache").classList.add("hidden");
-            document.getElementById("divOperation").classList.remove("hidden");
-            document.getElementById("divActivite").classList.add("hidden");
-            document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
-            break;
         case 1:
+            tacheChange(1);
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
@@ -29,6 +22,15 @@ function formChange() {
             break;
         case 3:
             document.getElementById("divOrdre").classList.remove("hidden");
+            document.getElementById("divTache").classList.add("hidden");
+            document.getElementById("divOperation").classList.remove("hidden");
+            document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            break;
+        case 4:
+            tacheChange(4);
+            document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.remove("hidden");
@@ -43,6 +45,19 @@ function formChange() {
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.add("hidden");
             break;
+    }
+}
+
+function tacheChange(id) {
+
+    options = document.getElementById('tache').options;
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].dataset.idType != id) {
+            document.getElementById('tache').options[i].hidden = true;
+        }
+        else{
+            document.getElementById('tache').options[i].hidden = false;
+        }
     }
 }
 

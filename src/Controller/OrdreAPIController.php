@@ -38,7 +38,6 @@ class OrdreAPIController extends AbstractController
         foreach ($ordre as $key => $value) {
             $ordreData[$key] = [
                 'id' => $value->getId(),
-                'description' => $value->getDescriptionOrdre(),
             ];
         }
 
@@ -68,7 +67,6 @@ class OrdreAPIController extends AbstractController
 
         // Remplir les propriétés de l'entité avec les données reçues
         $ordre->setid($data['id']);
-        $ordre->setDescriptionOrdre($data['description']);
 
         // Enregistrer l'ordre dans la base de données
         $entityManager->persist($ordre);
@@ -102,9 +100,6 @@ class OrdreAPIController extends AbstractController
         if (!$ordre) {
             return new Response('Ordre non trouvé.', Response::HTTP_NOT_FOUND);
         }
-
-        // Mettre à jour les propriétés de l'ordre avec les nouvelles données
-        $ordre->setDescriptionOrdre($data['description']);
 
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();

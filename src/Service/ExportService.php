@@ -102,13 +102,13 @@ class ExportService
 
             $value = '';
             if (!empty($item->getOrdre())) {
-                $value = $item->getOrdre()->getDescriptionOrdre();
+                $value = $item->getOrdre()->getId();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
             $value = '';
             if (!empty($item->getOperation())) {
-                $value = $item->getOperation()->getDescriptionOperation();
+                $value = $item->getOperation()->getId();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
@@ -120,7 +120,7 @@ class ExportService
 
             $value = '';
             if (!empty($item->getCentreDeCharge())) {
-                $value = $item->getCentreDeCharge()->getName();
+                $value = $item->getCentreDeCharge()->getId();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 

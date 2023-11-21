@@ -14,9 +14,6 @@ class CentreDeCharge
     #[ORM\Column(length: 255)]
     private ?string $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description_CDG = null;
-
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: Employe::class)]
     private Collection $employes;
 
@@ -41,26 +38,13 @@ class CentreDeCharge
         return $this;
     }
 
-    public function getDescriptionCDG(): ?string
-    {
-        return $this->description_CDG;
-    }
-
     public function getName(): ?string
     {
         $name = [
             $this->id,
-            $this->description_CDG,
         ];
 
         return implode(' - ', array_filter($name));
-    }
-
-    public function setDescriptionCDG(string $description_CDG): static
-    {
-        $this->description_CDG = $description_CDG;
-
-        return $this;
     }
 
     /**
