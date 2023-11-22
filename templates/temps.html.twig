@@ -99,7 +99,7 @@
                         <select class="select select-bordered mx-3" name="tache" id="tache">
                             <option value="-1" selected>-- Sélectionner une tâche --</option>
                             {% for tache in taches %}
-                                <option data-idType="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }} - <small>{{ tache.nomTache }}</small></option>
+                                <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }} - <small>{{ tache.nomTache }}</small></option>
                             {% endfor %}
                         </select>
                     </div>
@@ -139,6 +139,9 @@
                     <p class="mx-3" id="infoSaisiTemps"></p>
                 </div>
             </div>
+        </div>
+        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+            <div id="informationSaisiHeures"></div>
         </div>
         <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
         <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">

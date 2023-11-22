@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\DetailHeures;
+use App\Entity\Ordre;
 use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
 use App\Repository\CentreDeChargeRepository;
@@ -111,7 +112,7 @@ class DetailHeuresAPIController extends AbstractController
 
                 return new Response("Temps main d'oeuvre invalide.", Response::HTTP_BAD_REQUEST);
             }
-            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data);
+            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $entityManager, $data);
             if (!$detailHeures) {
                 $message = "L'ajout de saisie des heures a échoué.";
                 $this->logger->error($message);
@@ -135,7 +136,7 @@ class DetailHeuresAPIController extends AbstractController
         return new Response('Aucune donnée soumise.', Response::HTTP_BAD_REQUEST);
     }
 
-    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data): ?DetailHeures
+    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, EntityManagerInterface $entityManager, array $data): ?DetailHeures
     {
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
@@ -151,12 +152,10 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setEmploye($security->getUser());
 
         if (!empty($data['ordre'])) {
-            $ordre = $this->ordreRepository->find($data['ordre']);
-            if (!$ordre) {
-                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Ordre manquant');
-
-                return null;
-            }
+            $ordre = new Ordre;
+            $ordre->setId($data['ordre']);
+            $entityManager->persist($ordre);
+            $entityManager->flush();
             $detailHeures->setOrdre($ordre);
         }
         if (!empty($data['operation'])) {

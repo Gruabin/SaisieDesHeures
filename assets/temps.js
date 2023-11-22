@@ -1,4 +1,10 @@
 function formChange() {
+    document.getElementById("divOrdre").value = "";
+    document.getElementById("divTache").value = -1;
+    document.getElementById("divOperation").value = "";
+    document.getElementById("divActivite").value = "";
+    document.getElementById("divCentreCharge").value = -1;
+
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
             tacheChange(1);
@@ -49,10 +55,9 @@ function formChange() {
 }
 
 function tacheChange(id) {
-
     options = document.getElementById('tache').options;
     for (var i = 0; i < options.length; i++) {
-        if (options[i].dataset.idType != id) {
+        if (options[i].dataset.idtype != id) {
             document.getElementById('tache').options[i].hidden = true;
         }
         else {
