@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}
     Saisie des heures | Historique
 {% endblock %}
-
 {% block body %}
     <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
@@ -45,12 +43,12 @@
                             {% endif %}
                         {% endfor %}
                         {% if total > 0 %}
-                            {{ total }} 
+                            {{ total }}
                             {% if total < 2 %}
                                 heure
                             {% else %}
-                                heures                                    
-                            {% endif %}                            
+                                heures
+                            {% endif %}
                         {% endif %}
                     </span>
                 </div>
@@ -105,7 +103,7 @@
                                 {% set name = name|merge({'ordre': heures.ordre.id}) %}
                             {% endif %}
                             {% if (heures.operation is not empty) %}
-                                {% set name = name|merge({'operation': heures.operation.id}) %}
+                                {% set name = name|merge({'operation': heures.operation}) %}
                             {% endif %}
                             {% if (heures.tache is not empty) %}
                                 {% set name = name|merge({'tache': heures.tache.name}) %}

@@ -45,13 +45,13 @@
         "twig/twig": "*"
     },
     "require-dev": {
-        "friendsoftwig/twigcs": "*",
         "friendsofphp/php-cs-fixer": "*",
         "rector/rector": "*",
         "symfony/debug-bundle": "6.*",
         "symfony/maker-bundle": "*",
         "symfony/stopwatch": "6.*",
-        "symfony/web-profiler-bundle": "6.*"
+        "symfony/web-profiler-bundle": "6.*",
+        "vincentlanglet/twig-cs-fixer": "^1.6"
     },
     "config": {
         "allow-plugins": {

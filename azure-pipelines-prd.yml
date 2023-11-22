@@ -88,9 +88,9 @@ stages:
       displayName: "Linter Rector"
 
     # Linter twig CS template
-    - script: php vendor/bin/twigcs templates
+    - script: php vendor/bin/twig-cs-fixer lint --fix templates
       workingDirectory: $(rootFolder)
-      displayName: "Linter twig CS template"
+      displayName: "Linter twig CS fixer"
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'

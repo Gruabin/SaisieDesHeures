@@ -8,7 +8,6 @@ use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
-use App\Repository\OperationRepository;
 use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
@@ -28,7 +27,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * @property OrdreRepository          $ordreRepository
  * @property ActiviteRepository       $activiteRepository
  * @property CentreDeChargeRepository $centreDeChargeRepository
- * @property OperationRepository      $operationRepository
  * @property TacheRepository          $tacheRepository
  * @property LoggerInterface          $logger
  */
@@ -37,7 +35,6 @@ class DetailHeuresAPIController extends AbstractController
     public function __construct(
         ActiviteRepository $activiteRepository,
         CentreDeChargeRepository $centreDeChargeRepository,
-        OperationRepository $operationRepository,
         OrdreRepository $ordreRepository,
         TacheRepository $tacheRepository,
         TypeHeuresRepository $typeHeuresRepository,
@@ -47,7 +44,6 @@ class DetailHeuresAPIController extends AbstractController
         $this->ordreRepository = $ordreRepository;
         $this->activiteRepository = $activiteRepository;
         $this->centreDeChargeRepository = $centreDeChargeRepository;
-        $this->operationRepository = $operationRepository;
         $this->tacheRepository = $tacheRepository;
         $this->logger = $logger;
     }
@@ -152,21 +148,13 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setEmploye($security->getUser());
 
         if (!empty($data['ordre'])) {
-            $ordre = new Ordre;
+            $ordre = new Ordre();
             $ordre->setId($data['ordre']);
             $entityManager->persist($ordre);
             $entityManager->flush();
             $detailHeures->setOrdre($ordre);
         }
-        if (!empty($data['operation'])) {
-            $operation = $this->operationRepository->find($data['operation']);
-            if (!$operation) {
-                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Operation manquant');
-
-                return null;
-            }
-            $detailHeures->setOperation($operation);
-        }
+        $detailHeures->setOperation($data['operation']);
         if (!empty($data['tache'])) {
             $tache = $this->tacheRepository->find($data['tache']);
             if (!$tache) {

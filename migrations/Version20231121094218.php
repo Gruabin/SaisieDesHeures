@@ -32,6 +32,5 @@ final class Version20231121094218 extends AbstractMigration
         $this->addSql('ALTER TABLE tache DROP CONSTRAINT FK_93872075649D60F6');
         $this->addSql('DROP INDEX IDX_93872075649D60F6');
         $this->addSql('ALTER TABLE tache DROP type_heures_id');
-
     }
 }

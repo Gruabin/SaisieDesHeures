@@ -28,8 +28,8 @@ class DetailHeures
     // #[Assert\Regex(pattern: '/^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$/', htmlPattern: '^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$')]
     private ?Ordre $ordre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    private ?Operation $operation = null;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $operation = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
     private ?Tache $tache = null;
@@ -117,12 +117,12 @@ class DetailHeures
         return $this;
     }
 
-    public function getOperation(): ?Operation
+    public function getOperation(): ?int
     {
         return $this->operation;
     }
 
-    public function setOperation(?Operation $operation): static
+    public function setOperation(?int $operation): static
     {
         $this->operation = $operation;
 
