@@ -13,7 +13,7 @@
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2"><b>Centre de charge</b></div>
-                <div class="m-2">{{ user.centreDeCharge.id }}</div>
+                <div class="m-2" id="CDGUser">{{ user.centreDeCharge.id }}</div>
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2"><b>Date</b></div>
@@ -75,7 +75,7 @@
                     <label for="ordre"><b>Ordre</b></label>
                 </div>
                 <div class="flex-1 text-left">
-                    <input class="input input-bordered mx-3" type="text" name="ordre" id="ordre" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
+                    <input class="input input-bordered mx-3" type="text" name="ordre" id="ordre" maxlength="9" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
                     <p class="mx-3" id="infoOrdre"></p>
                 </div>
             </div>
@@ -119,9 +119,9 @@
                 <div class="flex-1 text-left md:flex md:self-center">
                     <div>
                         <select class="select select-bordered mx-3" name="centrecharge" id="centrecharge">
-                            <option value="-1" selected>-- Sélectionner un centre de charge --</option>
+                            <option value="-1">-- Sélectionner un centre de charge --</option>
                             {% for centre_charge in CDG %}
-                                <option value="{{ centre_charge.id }}" {% if centre_charge.id == user.centreDeCharge.id %} selected {% endif %}>{{ centre_charge.id }}</option>
+                                <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
                             {% endfor %}
                         </select>
                     </div>

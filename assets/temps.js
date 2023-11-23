@@ -1,24 +1,22 @@
 function formChange() {
-    document.getElementById("divOrdre").value = "";
-    document.getElementById("divTache").value = -1;
-    document.getElementById("divOperation").value = "";
-    document.getElementById("divActivite").value = "";
-    document.getElementById("divCentreCharge").value = -1;
-
+    document.getElementById("ordre").value = "";
+    document.getElementById("operation").value = "";
+    document.getElementById("activite").value = "";
+    document.getElementById("tache").value = -1;
+    
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
             tacheChange(1);
+            document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            if (parseInt(document.getElementById("tache").value) === 111) {
-                document.getElementById("divCentreCharge").classList.remove("hidden");
-            }
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
-        case 2:
+            case 2:
+            document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
@@ -27,6 +25,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 3:
+            document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
@@ -36,6 +35,7 @@ function formChange() {
             break;
         case 4:
             tacheChange(4);
+            document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
@@ -44,6 +44,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         default:
+            document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.add("hidden");
@@ -137,9 +138,12 @@ document.getElementById("type").addEventListener("change", function () {
 })
 
 document.getElementById("tache").addEventListener("change", function () {
-    formChange();
+    if (parseInt(document.getElementById("tache").value) === 111) {
+        document.getElementById("divCentreCharge").classList.remove("hidden");
+    }
 })
 
+// Validation du formulaire
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
@@ -150,7 +154,6 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
     }
 })
-
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     const state = await formSubmit();
     if (state) {
@@ -161,6 +164,7 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
     }
 })
+
 
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
@@ -244,5 +248,4 @@ document.getElementById("activite").addEventListener("input", function () {
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
-}
-)
+})

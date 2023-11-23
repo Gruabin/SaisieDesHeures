@@ -51,7 +51,7 @@ php vendor/bin/rector process src
 ```
 
 ```shell
-php vendor/bin/twigcs templates
+php vendor/bin/twig-cs-fixer lint --fix templates
 ```
 
 ```shell

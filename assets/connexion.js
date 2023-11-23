@@ -27,7 +27,7 @@ function findEmploye() {
         return;
     }
 
-    // Recherche l'employé par ID
+    // Recherche l'employé par ID Entier
     if (inputEmploye.value.length == 9 && recherche) {
         var url = "api/get/employe/" + inputEmploye.value;
         recherche = false;
@@ -74,7 +74,7 @@ function findEmploye() {
                     document.getElementById("btnConnexion").classList.add("btn-disabled");
                     document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye").innerText = "Aucun employé correspondant";
-                    throw new Error("Employé non trouvé");
+                    throw new Error("Employés non trouvés");
                 }
             }).then(function (employe) {
                 employe.forEach(async (unEmploye) => {

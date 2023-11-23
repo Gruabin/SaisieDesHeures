@@ -103,11 +103,6 @@ class DetailHeuresAPIController extends AbstractController
 
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
-            if ($tempsMainOeuvre <= 0) {
-                $this->addFlash('error', "Temps main d'oeuvre invalide.");
-
-                return new Response("Temps main d'oeuvre invalide.", Response::HTTP_BAD_REQUEST);
-            }
             $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $entityManager, $data);
             if (!$detailHeures) {
                 $message = "L'ajout de saisie des heures a échoué.";
@@ -154,7 +149,9 @@ class DetailHeuresAPIController extends AbstractController
             $entityManager->flush();
             $detailHeures->setOrdre($ordre);
         }
-        $detailHeures->setOperation($data['operation']);
+        if (!empty($data['operation'])) {
+            $detailHeures->setOperation($data['operation']);
+        }
         if (!empty($data['tache'])) {
             $tache = $this->tacheRepository->find($data['tache']);
             if (!$tache) {
