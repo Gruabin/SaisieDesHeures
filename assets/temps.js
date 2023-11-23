@@ -196,7 +196,7 @@ document.getElementById("ordre").addEventListener("input", function () {
 //* Retourne toutes les activités
 //
 function makeAPIActivite() {
-    var url = "api/get/activite/";
+    var url = "/api/get/activite";
     var activiteTable = [];
     fetch(url).then(function (response) {
         if (response.ok) {
