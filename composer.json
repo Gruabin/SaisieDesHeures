@@ -51,7 +51,7 @@
         "symfony/maker-bundle": "*",
         "symfony/stopwatch": "6.*",
         "symfony/web-profiler-bundle": "6.*",
-        "vincentlanglet/twig-cs-fixer": "^1.6"
+        "vincentlanglet/twig-cs-fixer": "*"
     },
     "config": {
         "allow-plugins": {
