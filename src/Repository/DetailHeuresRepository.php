@@ -70,4 +70,16 @@ class DetailHeuresRepository extends ServiceEntityRepository
         }
         $this->entityManager->flush();
     }
+    public function getNbHeures(): array
+    {
+        $user = $this->security->getUser();
+        if (!empty($user)) {
+            return $this->createQueryBuilder('d')
+                ->select('SUM(d.temps_main_oeuvre) AS total')
+                ->andWhere('d.employe IN (:employe)')
+                ->setParameter('employe', $user->getId())
+                ->getQuery()
+                ->getSingleResult();
+        }
+    }
 }

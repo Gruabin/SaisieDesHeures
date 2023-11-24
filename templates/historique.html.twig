@@ -36,15 +36,9 @@
                 </div>
                 <div class="m-2">
                     <span>
-                        {% set total = 0 %}
-                        {% for heures in details %}
-                            {% if heures.employe.id == user.id %}
-                                {% set total = total + heures.tempsMainOeuvre %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if total > 0 %}
-                            {{ total }}
-                            {% if total < 2 %}
+                        {% if nbHeures > 0 %}
+                            {{ nbHeures }}
+                            {% if nbHeures < 2 %}
                                 heure
                             {% else %}
                                 heures

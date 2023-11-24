@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\DetailHeures;
 use Psr\Log\LoggerInterface;
 use App\Service\ExportService;
 use App\Repository\OrdreRepository;
@@ -37,27 +38,39 @@ class IndexController extends AbstractController
     }
 
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeHeuresRepository, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, OrdreRepository $ordreRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, OrdreRepository $ordreRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
+        $nbHeures = $detailHeuresRepo->getNbHeures();
+        if ($nbHeures >= 10) {
+            $message = "Votre nombre d'heure est trop élevé";
+            $this->addFlash('warning', $message);
+        }
         $detailHeureService->cleanLastWeek();
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
             'details' => $detailHeuresRepository->findAllToday(),
-            'types' => $typeHeuresRepository->findAll(),
+            'types' => $typeHeuresRepo->findAll(),
             'taches' => $tacheRepository->findAll(),
             'ordres' => $ordreRepository->findAll(),
             'CDG' => $CDGRepository->findAll(),
             'user' => $this->getUser(),
+            'nbHeures' => $nbHeures['total'],
         ]);
     }
 
     #[Route('/historique', name: 'historique')]
-    public function historique(DetailHeuresRepository $detailHeuresRepository, DetailHeureService $detailHeureService): Response
+    public function historique(DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService): Response
     {
+        $nbHeures = $detailHeuresRepo->getNbHeures();
+        if ($nbHeures >= 10) {
+            $message = "Votre nombre d'heure est trop élevé";
+            $this->addFlash('warning', $message);
+        }
         $detailHeureService->cleanLastWeek();
         return $this->render('historique.html.twig', [
-            'details' => $detailHeuresRepository->findAllToday(),
+            'details' => $detailHeuresRepo->findAllToday(),
             'user' => $this->getUser(),
+            'nbHeures' => $nbHeures['total'],
         ]);
     }
 

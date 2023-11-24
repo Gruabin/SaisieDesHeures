@@ -86,7 +86,7 @@ class DetailHeuresAPIController extends AbstractController
 
     // * POST
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
-    public function post(Request $request, EntityManagerInterface $entityManager, Security $security, DetailHeureService $detailHeureService): Response
+    public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, Security $security, DetailHeureService $detailHeureService): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -103,16 +103,15 @@ class DetailHeuresAPIController extends AbstractController
 
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
-            $detailHeures = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $entityManager, $data);
-            if (!$detailHeures) {
+            $unDetail = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $entityManager, $data);
+            if (!$unDetail) {
                 $message = "L'ajout de saisie des heures a échoué.";
                 $this->logger->error($message);
 
                 return new Response($message, Response::HTTP_BAD_REQUEST);
             }
-
             // Enregistrer les détails des heures dans la base de données
-            $entityManager->persist($detailHeures);
+            $entityManager->persist($unDetail);
             $entityManager->flush();
             $detailHeureService->cleanLastWeek();
 
