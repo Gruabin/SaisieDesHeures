@@ -29,5 +29,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/temps, roles: ROLE_USER }
+        - { path: ^/historique, roles: ROLE_USER }
 
 

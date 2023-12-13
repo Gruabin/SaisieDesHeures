@@ -70,6 +70,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
         }
         $this->entityManager->flush();
     }
+
     public function getNbHeures(): array
     {
         $user = $this->security->getUser();

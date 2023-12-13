@@ -71,14 +71,14 @@ composer require symfony/http-client
 
 Chercher et replacez:
 
-```
+```php
 $conf[\CURLOPT_SSL_VERIFYHOST] = 2;
 $conf[\CURLOPT_SSL_VERIFYPEER] = true;
 ```
 
 Par
 
-```
+```php
 $conf[\CURLOPT_SSL_VERIFYHOST] = 0;
 $conf[\CURLOPT_SSL_VERIFYPEER] = false;
 ```
@@ -87,6 +87,6 @@ Et voilà vous n'avez plus ce problème !
 
 # SSO
 
-Pour activer le SSO il vous suffit juste de vous diriger vers le fichier `security.yaml` situer `config\packages\security.yaml`
+Pour activer le SSO il vous suffit juste de vous diriger vers le fichier `security.yaml` situé `config\packages\security.yaml`
 Ensuite vous n'avez qu'à ajouter vos routes sécurisée
 Si l'utilisateur est redirigé vers un endroit dont il n'a pas accès, il sera automatiquement renvoyé vers la page de connexion
