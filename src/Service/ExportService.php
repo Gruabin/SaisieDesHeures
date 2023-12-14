@@ -78,7 +78,6 @@ class ExportService
         $y = 1;
         $color = '#FFFFFF00';
         $user = $this->security->getUser();
-        // dd($user);
         $this->setStyleItem($sheet, $x++, $y, $user->getId(), $color);
         $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'), $color);
     }
@@ -88,7 +87,7 @@ class ExportService
      */
     private function exportItems(Worksheet $sheet): void
     {
-        $items = $this->detailHeuresRepository->findAllToday();
+        $items = $this->detailHeuresRepository->findAllSite();
         foreach ($items as $key => $item) {
             $x = 1;
             $y = $key + 4;
