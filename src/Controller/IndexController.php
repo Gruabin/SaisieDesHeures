@@ -67,7 +67,7 @@ class IndexController extends AbstractController
             $this->addFlash('warning', $message);
         }
         $detailHeureService->cleanLastWeek();
-
+        // dd($detailHeuresRepo->findAllToday());
         return $this->render('historique.html.twig', [
             'details' => $detailHeuresRepo->findAllToday(),
             'user' => $this->getUser(),

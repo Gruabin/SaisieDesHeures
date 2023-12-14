@@ -31,6 +31,16 @@ class Activite
         return $this->id;
     }
 
+    public function getName(): ?string
+    {
+        $name = [
+            $this->id,
+            $this->description_activite,
+        ];
+
+        return implode(' - ', array_filter($name));
+    }
+
     public function getDescriptionActivite(): ?string
     {
         return $this->description_activite;

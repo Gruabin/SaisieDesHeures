@@ -69,7 +69,7 @@ Si vous ne trouvez pas le fichier faites la commande:
 composer require symfony/http-client
 ```
 
-Chercher et replacez:
+Chercher et remplacez:
 
 ```php
 $conf[\CURLOPT_SSL_VERIFYHOST] = 2;

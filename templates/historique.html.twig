@@ -74,6 +74,8 @@
                         <span class="hidden md:inline"> | </span>
                         <span class="block md:inline">Opération</span>
                         <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Activité</span>
+                        <span class="hidden md:inline"> | </span>
                         <span class="block md:inline">Tâche</span>
                         <span class="hidden md:inline"> | </span>
                         <span class="block md:inline">Centre de charge</span>
@@ -98,6 +100,9 @@
                             {% endif %}
                             {% if (heures.operation is not empty) %}
                                 {% set name = name|merge({'operation': heures.operation}) %}
+                            {% endif %}
+                            {% if (heures.activite is not empty) %}
+                                {% set name = name|merge({'activite': heures.activite.name}) %}
                             {% endif %}
                             {% if (heures.tache is not empty) %}
                                 {% set name = name|merge({'tache': heures.tache.name}) %}
