@@ -189,12 +189,12 @@ class DetailHeuresAPIController extends AbstractController
     public function export(ExportService $exportService): StreamedResponse
     {
         try {
-            $message = "L'export saisi des heures créés avec succès.";
+            $message = "L'export saisie des heures créés avec succès.";
             $this->logger->info($message);
 
             return $exportService->exportExcel();
         } catch (\Exception $exception) {
-            $message = "L'export saisi des heures a échoué.";
+            $message = "L'export saisie des heures a échoué.";
             $this->logger->error($message);
             $this->logger->error($exception);
         }

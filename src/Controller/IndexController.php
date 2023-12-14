@@ -48,7 +48,7 @@ class IndexController extends AbstractController
 
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
-            'details' => $detailHeuresRepository->findAllToday(),
+            'details' => $detailHeuresRepository->findAllTodayUser(),
             'types' => $typeHeuresRepo->findAll(),
             'taches' => $tacheRepository->findAll(),
             'ordres' => $ordreRepository->findAll(),
@@ -68,7 +68,7 @@ class IndexController extends AbstractController
         }
         $detailHeureService->cleanLastWeek();
         return $this->render('historique.html.twig', [
-            'details' => $detailHeuresRepo->findAllToday(),
+            'details' => $detailHeuresRepo->findAllTodayUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
         ]);

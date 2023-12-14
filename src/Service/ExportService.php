@@ -63,6 +63,7 @@ class ExportService
     {
         $x = 1;
         $color = 'FFC107';
+        $this->setStyleHeader($sheet, $x++, 'Employé', $color);
         $this->setStyleHeader($sheet, $x++, 'Type d\'heure', $color);
         $this->setStyleHeader($sheet, $x++, 'Ordre', $color);
         $this->setStyleHeader($sheet, $x++, 'Opération', $color);
@@ -76,10 +77,9 @@ class ExportService
     {
         $x = 1;
         $y = 1;
-        $color = '#FFFFFF00';
         $user = $this->security->getUser();
-        $this->setStyleItem($sheet, $x++, $y, $user->getId(), $color);
-        $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'), $color);
+        $this->setStyleItem($sheet, $x++, $y, substr($user->getId(), 0, 2));
+        $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'));
     }
 
     /**
@@ -87,7 +87,12 @@ class ExportService
      */
     private function exportItems(Worksheet $sheet): void
     {
-        $items = $this->detailHeuresRepository->findAllSite();
+        $user = $this->security->getUser();
+        if (substr($user->getId(), 0, 2) == 'GA') {
+            $items = $this->detailHeuresRepository->findAllToday();
+        } else {
+            $items = $this->detailHeuresRepository->findAllTodaySite();
+        }
         foreach ($items as $key => $item) {
             $x = 1;
             $y = $key + 4;
@@ -95,6 +100,11 @@ class ExportService
             $color = (0 == $y % 2) ? 'FFF8E1' : 'FFECB3';
 
             $value = '';
+            if (!empty($item->getEmploye())) {
+                $value = $item->getEmploye()->getId() . ' - ' . $item->getEmploye()->getNomEmploye();
+            }
+            $this->setStyleItem($sheet, $x++, $y, $value, $color);
+
             if (!empty($item->getTypeHeures())) {
                 $value = $item->getTypeHeures()->getNomType();
             }
@@ -167,7 +177,7 @@ class ExportService
     /**
      * @param string|null $value
      */
-    private function setStyleItem(Worksheet $sheet, int $x, int $y, mixed $value, string $color): void
+    private function setStyleItem(Worksheet $sheet, int $x, int $y, mixed $value, string $color = null): void
     {
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
@@ -193,10 +203,17 @@ class ExportService
             ->setAutoSize(true);
     }
 
-    private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color): string
+    private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color = null): string
     {
         $x = $this->decimalToAlphabetic($x);
         $sheet->setCellValue($x . $y, $value);
+        if ($color == null) {
+            $sheet
+                ->getStyle($x . $y)
+                ->getFill()
+                ->setFillType(Fill::FILL_SOLID);
+            return $x;
+        }
         $sheet
             ->getStyle($x . $y)
             ->getFill()

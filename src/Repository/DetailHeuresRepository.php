@@ -31,10 +31,18 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('d')
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return DetailHeures[] retourne tout les detailheures de l'utilisateur sur la journée actuelle
      */
-    public function findAllToday(): array
+    public function findAllTodayUser(): array
     {
         $dateHier = strtotime('-1 days');
         $user = $this->security->getUser();
@@ -52,10 +60,30 @@ class DetailHeuresRepository extends ServiceEntityRepository
         return [];
     }
 
+
+    /**
+     * @return DetailHeures[] retourne tout les detailheures sur la journée actuelle
+     */
+    public function findAllToday(): array
+    {
+        $dateHier = strtotime('-1 days');
+        $user = $this->security->getUser();
+        if (!empty($user)) {
+            return $this->createQueryBuilder('d')
+                ->where('d.date > :date')
+                ->setParameter('date', date('Y-m-d', $dateHier))
+                ->orderBy('d.date', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }
+
+        return [];
+    }
+
     /**
      * @return DetailHeures[] retourne tout les detailheures du site de l'utilisateur sur la journée actuelle 
      */
-    public function findAllSite(): array
+    public function findAllTodaySite(): array
     {
         $dateHier = strtotime('-1 days');
         $user = $this->security->getUser();
