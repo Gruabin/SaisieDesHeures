@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\DetailHeures;
-use App\Entity\Ordre;
 use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
-use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
@@ -24,7 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property TypeHeuresRepository     $typeHeuresRepository
- * @property OrdreRepository          $ordreRepository
  * @property ActiviteRepository       $activiteRepository
  * @property CentreDeChargeRepository $centreDeChargeRepository
  * @property TacheRepository          $tacheRepository
@@ -35,13 +32,11 @@ class DetailHeuresAPIController extends AbstractController
     public function __construct(
         ActiviteRepository $activiteRepository,
         CentreDeChargeRepository $centreDeChargeRepository,
-        OrdreRepository $ordreRepository,
         TacheRepository $tacheRepository,
         TypeHeuresRepository $typeHeuresRepository,
         LoggerInterface $logger,
     ) {
         $this->typeHeuresRepository = $typeHeuresRepository;
-        $this->ordreRepository = $ordreRepository;
         $this->activiteRepository = $activiteRepository;
         $this->centreDeChargeRepository = $centreDeChargeRepository;
         $this->tacheRepository = $tacheRepository;
@@ -142,15 +137,13 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setEmploye($security->getUser());
 
         if (!empty($data['ordre'])) {
-            $ordre = new Ordre();
-            $ordre->setId($data['ordre']);
-            $entityManager->persist($ordre);
-            $entityManager->flush();
-            $detailHeures->setOrdre($ordre);
+            $detailHeures->setOrdre($data['ordre']);
         }
+
         if (!empty($data['operation'])) {
             $detailHeures->setOperation($data['operation']);
         }
+
         if (!empty($data['tache'])) {
             $tache = $this->tacheRepository->find($data['tache']);
             if (!$tache) {
@@ -160,6 +153,7 @@ class DetailHeuresAPIController extends AbstractController
             }
             $detailHeures->setTache($tache);
         }
+
         if (!empty($data['activite'])) {
             $activite = $this->activiteRepository->find($data['activite']);
             if (!$activite) {
@@ -169,6 +163,7 @@ class DetailHeuresAPIController extends AbstractController
             }
             $detailHeures->setActivite($activite);
         }
+
         if (!empty($data['centre_de_charge'])) {
             if (1 == $typeHeures->getId()) {
                 $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);

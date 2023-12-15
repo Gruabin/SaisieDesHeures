@@ -24,9 +24,6 @@ class DetailHeures
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeHeures $type_heures = null;
 
-    #[ORM\ManyToOne(inversedBy: 'detailHeures')]
-    // #[Assert\Regex(pattern: '/^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$/', htmlPattern: '^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$')]
-    private ?Ordre $ordre = null;
 
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $operation = null;
@@ -44,6 +41,9 @@ class DetailHeures
     #[ORM\JoinColumn(nullable: false)]
     private ?Employe $employe = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ordre = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,7 +54,7 @@ class DetailHeures
         $name = [];
 
         if (!empty($this->ordre)) {
-            $name[] = $this->ordre->id;
+            $name[] = $this->ordre;
         }
         if (!empty($this->operation)) {
             $name[] = $this->operation;
@@ -101,18 +101,6 @@ class DetailHeures
     public function setTypeHeures(?TypeHeures $type_heures): static
     {
         $this->type_heures = $type_heures;
-
-        return $this;
-    }
-
-    public function getOrdre(): ?Ordre
-    {
-        return $this->ordre;
-    }
-
-    public function setOrdre(?Ordre $ordre): static
-    {
-        $this->ordre = $ordre;
 
         return $this;
     }
@@ -173,6 +161,18 @@ class DetailHeures
     public function setEmploye(?Employe $employe): static
     {
         $this->employe = $employe;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?string
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(?string $ordre): static
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

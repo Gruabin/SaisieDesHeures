@@ -96,7 +96,7 @@
                         <td class="text-center">
                             {% set name = [] %}
                             {% if (heures.ordre is not empty) %}
-                                {% set name = name|merge({'ordre': heures.ordre.id}) %}
+                                {% set name = name|merge({'ordre': heures.ordre}) %}
                             {% endif %}
                             {% if (heures.operation is not empty) %}
                                 {% set name = name|merge({'operation': heures.operation}) %}

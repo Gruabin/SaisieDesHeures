@@ -112,7 +112,7 @@ class ExportService
 
             $value = '';
             if (!empty($item->getOrdre())) {
-                $value = $item->getOrdre()->getId();
+                $value = $item->getOrdre();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 

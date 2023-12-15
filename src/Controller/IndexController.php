@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use Psr\Log\LoggerInterface;
 use App\Service\ExportService;
-use App\Repository\OrdreRepository;
 use App\Repository\TacheRepository;
 use App\Service\DetailHeureService;
 use App\Repository\TypeHeuresRepository;
@@ -37,7 +36,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, OrdreRepository $ordreRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
         $nbHeures = $detailHeuresRepo->getNbHeures();
         if ($nbHeures['total'] >= 10) {
@@ -51,7 +50,6 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepository->findAllTodayUser(),
             'types' => $typeHeuresRepo->findAll(),
             'taches' => $tacheRepository->findAll(),
-            'ordres' => $ordreRepository->findAll(),
             'CDG' => $CDGRepository->findAll(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
