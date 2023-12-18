@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
-use App\Service\ExportService;
-use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\TypeHeuresRepository;
-use App\Repository\DetailHeuresRepository;
 use App\Repository\CentreDeChargeRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\TacheRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
+use App\Service\ExportService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property LoggerInterface $logger
@@ -65,6 +65,7 @@ class IndexController extends AbstractController
             $this->addFlash('warning', $message);
         }
         $detailHeureService->cleanLastWeek();
+
         return $this->render('historique.html.twig', [
             'details' => $detailHeuresRepo->findAllTodayUser(),
             'user' => $this->getUser(),

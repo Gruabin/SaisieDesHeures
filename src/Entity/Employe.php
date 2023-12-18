@@ -24,6 +24,9 @@ class Employe implements UserInterface
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    #[ORM\Column]
+    private ?bool $acces_export = null;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
@@ -106,6 +109,18 @@ class Employe implements UserInterface
                 $detailheure->setEmploye(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isAccesExport(): ?bool
+    {
+        return $this->acces_export;
+    }
+
+    public function setAccesExport(bool $acces_export): static
+    {
+        $this->acces_export = $acces_export;
 
         return $this;
     }

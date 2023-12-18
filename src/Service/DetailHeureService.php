@@ -17,6 +17,6 @@ class DetailHeureService
 
     public function cleanLastWeek(): void
     {
-        $this->detailHeuresRepository->findCleanLastWeek();
+        // $this->detailHeuresRepository->findCleanLastWeek();
     }
 }

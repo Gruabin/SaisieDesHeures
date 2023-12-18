@@ -45,7 +45,7 @@ class ExportService
 
         // définition des en-têtes HTTP
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment;filename="[Gruau][SaisiDesHeures][' . $user->getId() . '][' . date('Y-m-d') . '].xlsx"');
+        $response->headers->set('Content-Disposition', 'attachment;filename="[Gruau][SaisiDesHeures]['.$user->getId().']['.date('Y-m-d').'].xlsx"');
 
         return $response;
     }
@@ -78,7 +78,7 @@ class ExportService
         $x = 1;
         $y = 1;
         $user = $this->security->getUser();
-        $this->setStyleItem($sheet, $x++, $y, substr($user->getId(), 0, 2));
+        $this->setStyleItem($sheet, $x++, $y, substr((string) $user->getId(), 0, 2));
         $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'));
     }
 
@@ -88,7 +88,7 @@ class ExportService
     private function exportItems(Worksheet $sheet): void
     {
         $user = $this->security->getUser();
-        if (substr($user->getId(), 0, 2) == 'GA') {
+        if (str_starts_with((string) $user->getId(), 'GA')) {
             $items = $this->detailHeuresRepository->findAllToday();
         } else {
             $items = $this->detailHeuresRepository->findAllTodaySite();
@@ -101,7 +101,7 @@ class ExportService
 
             $value = '';
             if (!empty($item->getEmploye())) {
-                $value = $item->getEmploye()->getId() . ' - ' . $item->getEmploye()->getNomEmploye();
+                $value = $item->getEmploye()->getId().' - '.$item->getEmploye()->getNomEmploye();
             }
             $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
@@ -153,7 +153,7 @@ class ExportService
         $y = 3;
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(12)
             ->setBold(true);
@@ -166,7 +166,7 @@ class ExportService
             ],
         ];
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER)
             ->setVertical(Alignment::VERTICAL_CENTER)
@@ -181,7 +181,7 @@ class ExportService
     {
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(11)
             ->setBold(false);
@@ -194,7 +194,7 @@ class ExportService
             ],
         ];
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setWrapText(true)
             ->applyFromArray($styleArray);
@@ -206,16 +206,17 @@ class ExportService
     private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color = null): string
     {
         $x = $this->decimalToAlphabetic($x);
-        $sheet->setCellValue($x . $y, $value);
-        if ($color == null) {
+        $sheet->setCellValue($x.$y, $value);
+        if (null == $color) {
             $sheet
-                ->getStyle($x . $y)
+                ->getStyle($x.$y)
                 ->getFill()
                 ->setFillType(Fill::FILL_SOLID);
+
             return $x;
         }
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
@@ -234,7 +235,7 @@ class ExportService
                 $remainder = 26;
                 --$decimal;
             }
-            $alphabetic = chr($remainder + 64) . $alphabetic;
+            $alphabetic = chr($remainder + 64).$alphabetic;
         }
 
         return $alphabetic;

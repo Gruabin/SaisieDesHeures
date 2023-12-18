@@ -60,7 +60,6 @@ class DetailHeuresRepository extends ServiceEntityRepository
         return [];
     }
 
-
     /**
      * @return DetailHeures[] retourne tout les detailheures sur la journée actuelle
      */
@@ -81,7 +80,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return DetailHeures[] retourne tout les detailheures du site de l'utilisateur sur la journée actuelle 
+     * @return DetailHeures[] retourne tout les detailheures du site de l'utilisateur sur la journée actuelle
      */
     public function findAllTodaySite(): array
     {
@@ -89,11 +88,11 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
-                ->join('d.employe','employe')
+                ->join('d.employe', 'employe')
                 ->where('d.date > :date')
                 ->andWhere('employe.id LIKE :employe')
                 ->setParameter('date', date('Y-m-d', $dateHier))
-                ->setParameter('employe', substr($user->getId(),0,2) . '%')
+                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()

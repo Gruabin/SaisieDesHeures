@@ -24,7 +24,6 @@ class DetailHeures
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeHeures $type_heures = null;
 
-
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $operation = null;
 
@@ -43,6 +42,9 @@ class DetailHeures
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ordre = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_export = null;
 
     public function getId(): ?int
     {
@@ -173,6 +175,18 @@ class DetailHeures
     public function setOrdre(?string $ordre): static
     {
         $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    public function getDateExport(): ?\DateTimeInterface
+    {
+        return $this->date_export;
+    }
+
+    public function setDateExport(?\DateTimeInterface $date_export): static
+    {
+        $this->date_export = $date_export;
 
         return $this;
     }
