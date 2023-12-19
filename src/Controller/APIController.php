@@ -38,7 +38,6 @@ class APIController extends AbstractController
         $employeData = [
             'id' => $employe->getId(),
             'nom' => $employe->getNomEmploye(),
-            'centreDeChargeId' => $employe->getCentreDeCharge(),
         ];
 
         // Convertir les données en format JSON
@@ -66,7 +65,6 @@ class APIController extends AbstractController
             $employeData[$key] = [
                 'id' => $unEmploye->getId(),
                 'nom' => $unEmploye->getNomEmploye(),
-                'centreDeChargeId' => $unEmploye->getCentreDeCharge(),
             ];
         }
 

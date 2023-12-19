@@ -4,9 +4,9 @@
     "display": "fullscreen",
     "scope": "/",
     "start_url": "/",
-    "name": "TEMPLATE",
-    "short_name": "TEMPLATE",
-    "description": "TEMPLATE",
+    "name": "Saisie des Heures",
+    "short_name": "Saisie des Heures",
+    "description": "Saisie des Heures",
     "icons": [
         {
             "src": "/manifest/icon-192x192.png",

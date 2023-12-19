@@ -104,7 +104,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
     public function findCleanLastWeek(): void
     {
-        $dateLastWeek = strtotime('now');
+        $dateLastWeek = strtotime('-1 week');
         $items = $this->createQueryBuilder('d')
             ->where('d.date < :date')
             ->setParameter('date', date('Y-m-d', $dateLastWeek))

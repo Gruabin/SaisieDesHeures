@@ -135,6 +135,7 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->setTypeHeures($typeHeures);
         $detailHeures->setEmploye($security->getUser());
+        $detailHeures->setDateExport(null);
 
         if (!empty($data['ordre'])) {
             $detailHeures->setOrdre($data['ordre']);
@@ -184,15 +185,14 @@ class DetailHeuresAPIController extends AbstractController
     public function export(ExportService $exportService): StreamedResponse
     {
         try {
-            if (!$this->getUser()->isAccesExport()) {
-                $message = "L'export saisie des heures créés avec succès.";
+            if ($this->getUser()->isAccesExport()) {
+                $message = "Export des heures créés avec succès.";
                 $this->logger->info($message);
                 return $exportService->exportExcel();
             }
         } catch (\Exception $exception) {
             $message = "L'export saisie des heures a échoué.";
-            $this->logger->error($message);
-            $this->logger->error($exception);
+            return $this->redirectToRoute('historique');
         }
     }
 }

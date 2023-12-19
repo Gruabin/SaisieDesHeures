@@ -140,6 +140,9 @@ document.getElementById("type").addEventListener("change", function () {
 document.getElementById("tache").addEventListener("change", function () {
     if (parseInt(document.getElementById("tache").value) === 111) {
         document.getElementById("divCentreCharge").classList.remove("hidden");
+    }else{
+        document.getElementById("divCentreCharge").classList.add("hidden");
+        document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
     }
 })
 
