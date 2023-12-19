@@ -44,11 +44,11 @@ class DetailHeuresRepository extends ServiceEntityRepository
      */
     public function findAllTodayUser(): array
     {
-        $dateHier = strtotime('-1 days');
+        $dateHier = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
-                ->where('d.date > :date')
+                ->where('d.date >= :date')
                 ->andWhere('d.employe IN (:employe)')
                 ->setParameter('date', date('Y-m-d', $dateHier))
                 ->setParameter('employe', $user->getId())
@@ -65,11 +65,11 @@ class DetailHeuresRepository extends ServiceEntityRepository
      */
     public function findAllToday(): array
     {
-        $dateHier = strtotime('-1 days');
+        $dateHier = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
-                ->where('d.date > :date')
+                ->where('d.date >= :date')
                 ->setParameter('date', date('Y-m-d', $dateHier))
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -84,12 +84,12 @@ class DetailHeuresRepository extends ServiceEntityRepository
      */
     public function findAllTodaySite(): array
     {
-        $dateHier = strtotime('-1 days');
+        $dateHier = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
                 ->join('d.employe', 'employe')
-                ->where('d.date > :date')
+                ->where('d.date >= :date')
                 ->andWhere('employe.id LIKE :employe')
                 ->setParameter('date', date('Y-m-d', $dateHier))
                 ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
