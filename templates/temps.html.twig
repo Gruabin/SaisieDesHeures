@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Saisie des heures
+{% endblock %}
+{% block body %}
+    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex flex-col lg:flex-row lg:items-center p-2">
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Employé</b></div>
+                <div class="m-2">{{ user.id }} {{ user.nomEmploye }}</div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Centre de charge</b></div>
+                <div class="m-2" id="CDGUser">{{ user.centreDeCharge.id }}</div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Date</b></div>
+                <div class="m-2">{{ "now"|date("d/m/Y", "Europe/Paris") }}</div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Temps journalier</b></div>
+                <div class="m-2">
+                    <span>
+                        {% if nbHeures > 0 %}
+                            {{ nbHeures }}
+                            {% if nbHeures < 2 %}
+                                heure
+                            {% else %}
+                                heures
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <a class="btn btn-primary mt-5" id="btnConsulterDetails"
+                       href="{{ path('historique') }}">
+                        Consulter le détails
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex flex-col flex-wrap text-center p-2">
+            <div class="my-3 flex md:flex-row flex-col" id="divType">
+                <div class="flex-1 text-left md:text-right md:self-center m-3">
+                    <label for="selectTemps"><b>Type d'heures</b></label>
+                </div>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div class="md:self-center">
+                        <select class="select select-bordered mx-3" name="type" id="type">
+                            <option value="-1">-- Sélectionner un type d'heure --</option>
+                            {% for type in types %}
+                                <option value="{{ type.id }}">{{ type.nomType }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mx-3 md:self-center" id="infoType"></div>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divOrdre">
+                <div class="flex-1 text-left md:text-right md:self-center m-3">
+                    <label for="ordre"><b>Ordre</b></label>
+                </div>
+                <div class="flex-1 text-left">
+                    <input class="input input-bordered mx-3" type="text" name="ordre" id="ordre" maxlength="9" pattern="^[a-zA-Z]{2}[a-zA-Z0-9]{1}[0-9]{6}$">
+                    <p class="mx-3" id="infoOrdre"></p>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divActivite">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="activite"><b>Activité</b></label>
+                </div>
+                <div class="flex-1 text-left md:self-center">
+                    <input class="input input-bordered mx-3" type="text" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
+                    <p class="mx-3" id="infoActivite"></p>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="tache"><b>Tâche</b></label>
+                </div>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div class="md:self-center">
+                        <select class="select select-bordered mx-3" name="tache" id="tache">
+                            <option value="-1" selected>-- Sélectionner une tâche --</option>
+                            {% for tache in taches %}
+                                <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }} - <small>{{ tache.nomTache }}</small></option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divOperation">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label class="mx-3" for="operation"><b>Opération</b></label>
+                </div>
+                <div class="flex-1 text-left md:self-center">
+                    <input class="input input-bordered mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
+                    <p class="mx-3" id="infoOperation"></p>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divCentreCharge">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="centrecharge"><b>Centre de charge</b></label>
+                </div>
+                <div class="flex-1 text-left md:flex md:self-center">
+                    <div>
+                        <select class="select select-bordered mx-3" name="centrecharge" id="centrecharge">
+                            <option value="-1">-- Sélectionner un centre de charge --</option>
+                            {% for centre_charge in CDG %}
+                                <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mx-3" id="infoCentreCharge"></div>
+                </div>
+            </div>
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisiTemps">
+                <div class="flex-1 text-left md:text-right md:self-center m-2">
+                    <label for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
+                </div>
+                <div class="flex-1 text-left md:self-center">
+                    <input class="input input-bordered mx-3" type="number" max="100" step=".25" name="saisitemps" id="saisitemps">
+                    <p class="mx-3" id="infoSaisiTemps"></p>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+            <div id="informationSaisiHeures"></div>
+        </div>
+        <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
+        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+            <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
+                Quitter
+            </a>
+            <button class="btn btn-primary mt-5" id="btnEnregistrerQuitter">
+                Enregistrer et quitter
+            </button>
+            <button class="btn btn-primary mt-5" id="btnEnregistrerContinue">
+                Enregistrer et continuer
+            </button>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('temps') }}
+    {% endblock %}
+{% endblock %}

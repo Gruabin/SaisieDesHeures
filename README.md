@@ -1,20 +1,92 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+Gruau - Saisi des heures
+--------
+Saisi des heures est une application web légère conçue pour simplifier la gestion de temps 
+et la saisie des heures pour les employés. Elle permet aux utilisateurs de suivre, 
+d'enregistrer et de gérer efficacement les heures travaillées sur différents projets. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+[![PHP](https://img.shields.io/badge/PHP-8.0.2-brightgreen.svg?logo=php&logoColor=white)](https://www.php.net/)
+[![Nginx](https://img.shields.io/badge/Nginx-latest-brightgreen.svg?logo=nginx&logoColor=white)](https://www.nginx.com/)
+[![Symfony](https://img.shields.io/badge/Symfony-6.*-brightgreen.svg?logo=symfony&logoColor=white)](https://www.symfony.com/)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Sommaire
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- [Installation](#installation)
+- [TIPS](#tips)
+- [SSO](#sso)
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+# Installation
+
+Pour utiliser l'application en localhost vous avez juste à suivre les étapes suivantes
+
+1. Vérifier que vous avez php 8
+2. Installer les dépendances
+   ```shell 
+   composer install
+   npm install
+   ```
+3. En cas de modification du fichier `AzureController.php` (sert en localhost) il faut également modifier le fichier `PipelineAzureController.php` (set sur app service)
+4. Démarrer le service php sur windows
+   ```shell
+   php -S 127.0.0.1:8000 -t public
+   ```
+6. Démarrer le service webpack
+   ```shell
+   npm run watch
+   ```
+7. Vous pouvez maintenant accéder à l'application via l'url `http://localhost:8000`
+
+# Linter
+Aide pour executer les linters
+```shell
+php vendor/bin/php-cs-fixer fix
+```
+
+```shell
+php vendor/bin/rector process src
+```
+
+```shell
+php vendor/bin/twig-cs-fixer lint --fix templates
+```
+
+```shell
+php vendor/bin/php-cs-fixer fix
+php vendor/bin/rector process src
+php vendor/bin/twig-cs-fixer lint --fix templates
+```
+
+
+# TIPS
+
+Si vous êtes en localhost et que vous avez un problème de type 'openSSL' modifier le fichier 'CurlFactory' se situant: vendor\guzzlehttp\guzzle\src\Handler\CurlFactory.php
+Si vous ne trouvez pas le fichier faites la commande:
+```shell
+composer require symfony/http-client
+```
+
+Chercher et remplacez:
+
+```php
+$conf[\CURLOPT_SSL_VERIFYHOST] = 2;
+$conf[\CURLOPT_SSL_VERIFYPEER] = true;
+```
+
+Par
+
+```php
+$conf[\CURLOPT_SSL_VERIFYHOST] = 0;
+$conf[\CURLOPT_SSL_VERIFYPEER] = false;
+```
+
+Et voilà vous n'avez plus ce problème !
+
+# SSO
+
+Pour activer le SSO il vous suffit juste de vous diriger vers le fichier `security.yaml` situé `config\packages\security.yaml`
+Ensuite vous n'avez qu'à ajouter vos routes sécurisée
+Si l'utilisateur est redirigé vers un endroit dont il n'a pas accès, il sera automatiquement renvoyé vers la page de connexion

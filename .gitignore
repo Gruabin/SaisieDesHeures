@@ -1,0 +1,45 @@
+
+###> symfony/framework-bundle ###
+!.gitignore
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+###< pdf ###
+/public/fichiers/avisSiren/*
+!/public/fichiers/avisSiren/.gitignore
+/public/fichiers/rib/*
+!/public/fichiers/rib/.gitignore
+/public/fichiers/resume/*
+!/public/fichiers/resume/.gitignore
+###> pdf ###
+
+###> Global ###
+*.lock
+*.log
+###> Global ###
+
+###< IDE ###
+/.vscode
+.idea
+###> IDE ###
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

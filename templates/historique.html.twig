@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Saisie des heures | Historique
+{% endblock %}
+{% block body %}
+    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex flex-col lg:flex-row lg:items-center p-2">
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <b>Employé</b>
+                </div>
+                <div class="m-2">{{ user.id }}
+                    {{ user.nomEmploye }}
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <b>Centre de charge</b>
+                </div>
+                <div class="m-2">
+                    {{ user.centreDeCharge.id }}
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <b>Date</b>
+                </div>
+                <div class="m-2">{{ "now"|date("d/m/Y", "Europe/Paris") }}
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2">
+                    <b>Temps journalier</b>
+                </div>
+                <div class="m-2">
+                    <span>
+                        {% if nbHeures > 0 %}
+                            {{ nbHeures }}
+                            {% if nbHeures < 2 %}
+                                heure
+                            {% else %}
+                                heures
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="m-2 flex-1">
+                <a class="btn btn-primary mt-5" href="{{ path('temps') }}">
+                    Saisie des heures
+                </a>
+            </div>
+            {% if user.accesExport %}
+            <div class="m-2 flex-1">
+                <a class="btn btn-success noLoading text-white mt-5" href="{{ path('api_get_export') }}">
+                    <i class="fa-solid fa-file-excel"></i>
+                    Exporter
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Détails des heures</h2>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex flex-row flex-wrap items-center space-x-2 p-2">
+            <table class="table-fixed w-full">
+                <thead>
+                <tr>
+                    <th class="hidden lg:block">Date de transaction</th>
+                    <th>Type d'heure</th>
+                    <th>
+                        <span class="block md:inline">Ordre</span>
+                        <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Opération</span>
+                        <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Activité</span>
+                        <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Tâche</span>
+                        <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Centre de charge</span>
+                    </th>
+                    <th>Temps main d'œuvre</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for heures in details %}
+                    <tr>
+                        <td class="text-center hidden lg:block">
+                            {{ heures.date|date('d/m/Y H:i') }}
+                        </td>
+                        <td class="text-center">
+                            {% if (heures.typeHeures.nomType is not empty) %}
+                                {{ heures.typeHeures.nomType }}
+                            {% endif %}
+                        <td class="text-center">
+                            {% set name = [] %}
+                            {% if (heures.ordre is not empty) %}
+                                {% set name = name|merge({'ordre': heures.ordre}) %}
+                            {% endif %}
+                            {% if (heures.operation is not empty) %}
+                                {% set name = name|merge({'operation': heures.operation}) %}
+                            {% endif %}
+                            {% if (heures.activite is not empty) %}
+                                {% set name = name|merge({'activite': heures.activite.name}) %}
+                            {% endif %}
+                            {% if (heures.tache is not empty) %}
+                                {% set name = name|merge({'tache': heures.tache.name}) %}
+                            {% endif %}
+                            {% if (heures.centreDeCharge is not empty) %}
+                                {% set name = name|merge({'centreDeCharge': heures.centreDeCharge.name}) %}
+                            {% endif %}
+                            {{ name|join('  |  ') }}
+                        </td>
+                        <td class="text-center">{{ heures.tempsMainOeuvre }}
+                            heures
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="m-2 flex-1">
+            <div class="m-2 text-center">
+                <a class="btn btn-primary mt-5" href="{{ path('temps') }}">
+                    Saisie des heures
+                </a>
+            </div>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('export') }}
+    {% endblock %}
+{% endblock %}

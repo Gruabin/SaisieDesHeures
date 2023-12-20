@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Gruau |
+        {% block title %}{% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="template">
+    <link rel="manifest" href="{{ asset('manifest/manifest.webmanifest') }}">
+    <link rel="icon" href="{{ asset("images/favicon.ico") }}"/>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body class="flex flex-col min-h-[100vh]">
+<header class="invisible">
+    {% block navbar %}
+        {% include "navbar.html.twig" %}
+    {% endblock %}
+</header>
+<section id="boxAlertMessage" class="invisible">
+    {% include "alert.html.twig" %}
+</section>
+<div id="loader">
+    <img class="scale-down-tl" src="{{ asset("images/logo-symbole-haut.svg") }}">
+    Chargement
+    <img class="scale-down-br" src="{{ asset("images/gruau-symbole-bas.svg") }}">
+</div>
+<main class="invisible">
+    {% block body %}{% endblock %}
+</main>
+<footer class="mt-auto invisible">
+    {% include "footer.html.twig" %}
+</footer>
+</body>
+</html>
