@@ -146,7 +146,7 @@ class ExportService
         } else {
             $items = $this->detailHeuresRepository->findAllExportSite();
         }
-        dd($items);
+
         // Parcourt les détails d'heures à exporter
         foreach ($items as $key => $item) {
             // Vérifie si l'élément n'a pas encore été exporté

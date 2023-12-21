@@ -65,7 +65,6 @@ class IndexController extends AbstractController
     public function historique(DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService): Response
     {
         $nbHeures = $detailHeuresRepo->getNbHeures();
-        // dd($nbHeures);
         if ($nbHeures['total'] >= 10) {
             $message = "Votre nombre d'heure est trop élevé";
             $this->addFlash('warning', $message);
