@@ -39,6 +39,18 @@ class DetailHeuresRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAllSite(): array
+    {
+        $user = $this->security->getUser();
+        if (!empty($user)) {
+            return $this->createQueryBuilder('d')
+                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
+                ->orderBy('d.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
+    }
+
     /**
      * @return DetailHeures[] retourne tout les detailheures de l'utilisateur sur la journée actuelle
      */

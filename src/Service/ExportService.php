@@ -96,9 +96,9 @@ class ExportService
 
         $user = $this->security->getUser();
         if (str_starts_with((string) $user->getId(), 'GA')) {
-            $items = $this->detailHeuresRepository->findAllToday();
+            $items = $this->detailHeuresRepository->findAll();
         } else {
-            $items = $this->detailHeuresRepository->findAllTodaySite();
+            $items = $this->detailHeuresRepository->findAllSite();
         }
         foreach ($items as $key => $item) {
             if ($item->getDateExport() == null) {
