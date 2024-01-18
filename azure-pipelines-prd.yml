@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-- prod
+- main
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
@@ -32,6 +32,10 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
+    - script: |
+        cp .env.prod .env
+      displayName: 'Copy .env.prod to .env'
+
     - script: |
         sudo update-alternatives --set php /usr/bin/php$(phpVersion)
         sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)

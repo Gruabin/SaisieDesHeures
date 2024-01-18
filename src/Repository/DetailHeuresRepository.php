@@ -56,13 +56,13 @@ class DetailHeuresRepository extends ServiceEntityRepository
      */
     public function findAllTodayUser(): array
     {
-        $dateHier = strtotime('now');
+        $dateAjd = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
                 ->where('d.date >= :date')
                 ->andWhere('d.employe IN (:employe)')
-                ->setParameter('date', date('Y-m-d', $dateHier))
+                ->setParameter('date', date('Y-m-d', $dateAjd))
                 ->setParameter('employe', $user->getId())
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -75,14 +75,12 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * @return DetailHeures[] retourne tout les detailheures sur la journée actuelle
      */
-    public function findAllToday(): array
+    public function findAllExport(): array
     {
-        $dateHier = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
-                ->where('d.date >= :date')
-                ->setParameter('date', date('Y-m-d', $dateHier))
+                ->where('d.date_export IS NULL')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
                 ->getResult();
@@ -94,17 +92,15 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * @return DetailHeures[] retourne tout les detailheures du site de l'utilisateur sur la journée actuelle
      */
-    public function findAllTodaySite(): array
+    public function findAllExportSite(): array
     {
-        $dateHier = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
                 ->join('d.employe', 'employe')
-                ->where('d.date >= :date')
+                ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('date', date('Y-m-d', $dateHier))
-                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
+                ->setParameter('employe', substr((string) $user->getId(), 0, 2) . '%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -114,6 +110,10 @@ class DetailHeuresRepository extends ServiceEntityRepository
         return [];
     }
 
+
+    /**
+     * Supprime tous les enregistrements de la semaine dernière.
+     */
     public function findCleanLastWeek(): void
     {
         $dateLastWeek = strtotime('-1 week');
@@ -125,6 +125,11 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $this->removeAll($items);
     }
 
+    /**
+     * Supprime tous les éléments spécifiés.
+     *
+     * @param array $items Les éléments à supprimer.
+     */
     public function removeAll($items)
     {
         foreach ($items as $item) {
@@ -133,13 +138,21 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $this->entityManager->flush();
     }
 
+    /**
+     * Récupère le nombre total d'heures pour l'utilisateur connecté.
+     * 
+     * @return array|null Le nombre total d'heures ou null si l'utilisateur n'est pas connecté.
+     */
     public function getNbHeures(): array
     {
+        $dateAjd = strtotime('now');
         $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
                 ->select('SUM(d.temps_main_oeuvre) AS total')
+                ->where('d.date >= :date')
                 ->andWhere('d.employe IN (:employe)')
+                ->setParameter('date', date('Y-m-d', $dateAjd))
                 ->setParameter('employe', $user->getId())
                 ->getQuery()
                 ->getSingleResult();
