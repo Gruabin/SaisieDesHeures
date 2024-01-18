@@ -25,6 +25,7 @@ class IndexController extends AbstractController
         $this->logger = $logger;
     }
 
+    // Affiche la page d'identification
     #[Route('/', name: 'home')]
     public function index(): Response
     {
@@ -35,6 +36,8 @@ class IndexController extends AbstractController
         ]);
     }
 
+
+    // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
     public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
@@ -56,6 +59,8 @@ class IndexController extends AbstractController
         ]);
     }
 
+
+    // Affiche la page d'historique
     #[Route('/historique', name: 'historique')]
     public function historique(DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService): Response
     {
@@ -73,6 +78,7 @@ class IndexController extends AbstractController
         ]);
     }
 
+    // Exporte le fichier Excel
     #[Route('/export', name: 'export')]
     public function export(ExportService $exportService): StreamedResponse
     {
