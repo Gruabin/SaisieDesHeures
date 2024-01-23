@@ -93,6 +93,14 @@ class DetailHeuresAPIController extends AbstractController
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
 
+        //Vérifie que l'utilisateur n'a pas trop d'heures journalières
+        $nbHeures = $detailHeuresRepo->getNbHeures();
+        if ($nbHeures['total'] + $data['temps_main_oeuvre'] > 12) {
+            $message = 'Nombre d\'heures maximal dépassé. Saisie non prise en compte';
+            $this->addFlash('error', $message);
+            return new Response('Trop d\'heures', Response::HTTP_FORBIDDEN);
+        }
+
         // Vérifier si le token CSRF est valide 
         if ($this->isCsrfTokenValid('saisieToken', $token) || (null == $data)) {
             // Valider les données entrantes 
@@ -102,7 +110,7 @@ class DetailHeuresAPIController extends AbstractController
 
             // Vérifier si les données nécessaires sont présentes 
             if (null === $tempsMainOeuvre || null === $typeHeures) {
-                $this->addFlash('error', 'Données manquantes.');
+                $this->addFlash('error', 'Donnée manquante.');
                 return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
             }
 

@@ -36,14 +36,13 @@ class IndexController extends AbstractController
         ]);
     }
 
-
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
     public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
     {
         $nbHeures = $detailHeuresRepo->getNbHeures();
-        if ($nbHeures['total'] >= 10) {
-            $message = "Votre nombre d'heure est trop élevé";
+        if ($nbHeures['total'] >= 12) {
+            $message = "Votre avez atteint votre limite d'heures journalières";
             $this->addFlash('warning', $message);
         }
         $detailHeureService->cleanLastWeek();
@@ -58,7 +57,6 @@ class IndexController extends AbstractController
             'nbHeures' => $nbHeures['total'],
         ]);
     }
-
 
     // Affiche la page d'historique
     #[Route('/historique', name: 'historique')]

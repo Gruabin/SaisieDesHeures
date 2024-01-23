@@ -2,17 +2,15 @@
 
 namespace App\Service;
 
-use PhpOffice\PhpSpreadsheet\Exception;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use App\Repository\DetailHeuresRepository;
-use DateTime;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use Symfony\Bundle\SecurityBundle\Security;
+use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -35,9 +33,9 @@ class ExportService
     /**
      * Exporte les détails d'heures vers un fichier Excel et génère une réponse streamée pour le téléchargement.
      *
-     * @param string $file Le chemin du fichier de sortie (par défaut, 'php://output' pour la sortie directe).
+     * @param string $file le chemin du fichier de sortie (par défaut, 'php://output' pour la sortie directe)
      *
-     * @return StreamedResponse La réponse streamée pour le téléchargement du fichier Excel.
+     * @return StreamedResponse la réponse streamée pour le téléchargement du fichier Excel
      */
     public function exportExcel(string $file = 'php://output'): StreamedResponse
     {
@@ -62,17 +60,16 @@ class ExportService
 
         // Définit les en-têtes HTTP pour la réponse
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment;filename="[Gruau][SaisiDesHeures][' . $user->getId() . '][' . date('Y-m-d') . '].xlsx"');
+        $response->headers->set('Content-Disposition', 'attachment;filename="[Gruau][SaisiDesHeures]['.$user->getId().']['.date('Y-m-d').'].xlsx"');
 
         // Retourne la réponse streamée
         return $response;
     }
 
-
     /**
      * Exporte les détails d'heures vers la feuille de calcul en coordonnant les différentes parties de l'exportation.
      *
-     * @param Spreadsheet $spreadsheet L'objet de la classe Spreadsheet représentant la feuille de calcul.
+     * @param spreadsheet $spreadsheet L'objet de la classe Spreadsheet représentant la feuille de calcul
      */
     private function exportDetailHeure(Spreadsheet $spreadsheet): void
     {
@@ -89,7 +86,7 @@ class ExportService
     /**
      * Exporte l'en-tête de la feuille de calcul avec le style approprié.
      *
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportHeader(Worksheet $sheet): void
     {
@@ -107,13 +104,12 @@ class ExportService
         $this->setStyleHeader($sheet, $x++, 'Tâche', $color);
         $this->setStyleHeader($sheet, $x++, 'Centre de charge', $color);
         $this->setStyleHeader($sheet, $x++, 'Temps main d\'œuvre en heures', $color);
-        
     }
 
     /**
      * Exporte les informations d'en-tête dans la feuille de calcul.
      *
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportEntete(Worksheet $sheet): void
     {
@@ -128,12 +124,10 @@ class ExportService
         $this->setStyleItem($sheet, $x++, $y, substr((string) $user->getId(), 0, 2));
     }
 
-
-
     /**
      * Exporte les détails d'heures dans la feuille de calcul en appliquant le style approprié.
      *
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportItems(Worksheet $sheet): void
     {
@@ -150,7 +144,7 @@ class ExportService
         // Parcourt les détails d'heures à exporter
         foreach ($items as $key => $item) {
             // Vérifie si l'élément n'a pas encore été exporté
-            if ($item->getDateExport() == null) {
+            if (null == $item->getDateExport()) {
                 $x = 1;
                 $y = $key + 4;
 
@@ -159,13 +153,13 @@ class ExportService
 
                 $value = '';
                 if (!empty($item->getdate())) {
-                    $value = $item->getdate()->format("d/m/Y");
+                    $value = $item->getdate()->format('d/m/Y');
                 }
                 $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
                 $value = '';
                 if (!empty($item->getEmploye())) {
-                    $value = $item->getEmploye()->getId() . ' - ' . $item->getEmploye()->getNomEmploye();
+                    $value = $item->getEmploye()->getId().' - '.$item->getEmploye()->getNomEmploye();
                 }
                 $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
@@ -220,16 +214,13 @@ class ExportService
         }
     }
 
-
-
-
     /**
      * Applique le style à l'en-tête d'une feuille de calcul.
      *
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
-     * @param int       $x     La position horizontale de l'en-tête (index ou représentation alphabétique).
-     * @param string    $value La valeur à définir dans l'en-tête.
-     * @param string    $color La couleur de remplissage de l'en-tête.
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param int       $x     la position horizontale de l'en-tête (index ou représentation alphabétique)
+     * @param string    $value la valeur à définir dans l'en-tête
+     * @param string    $color la couleur de remplissage de l'en-tête
      */
     private function setStyleHeader(Worksheet $sheet, int $x, string $value, string $color): void
     {
@@ -241,7 +232,7 @@ class ExportService
 
         // Applique le style de police à l'en-tête
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(12)
             ->setBold(true);
@@ -251,14 +242,14 @@ class ExportService
             'borders' => [
                 'outline' => [
                     'borderStyle' => Border::BORDER_DOUBLE,
-                    'color'       => ['argb' => $color],
+                    'color' => ['argb' => $color],
                 ],
             ],
         ];
 
         // Applique le style d'alignement à l'en-tête
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER)
             ->setVertical(Alignment::VERTICAL_CENTER)
@@ -266,17 +257,14 @@ class ExportService
             ->applyFromArray($styleArray);
     }
 
-
-
-
     /**
      * Applique le style à une cellule spécifique dans une feuille de calcul.
      *
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
-     * @param int       $x     La position horizontale de la cellule (index ou représentation alphabétique).
-     * @param int       $y     La position verticale de la cellule.
-     * @param mixed     $value La valeur à définir dans la cellule.
-     * @param string    $color La couleur de remplissage de la cellule (facultatif).
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param int       $x     la position horizontale de la cellule (index ou représentation alphabétique)
+     * @param int       $y     la position verticale de la cellule
+     * @param mixed     $value la valeur à définir dans la cellule
+     * @param string    $color la couleur de remplissage de la cellule (facultatif)
      */
     private function setStyleItem(Worksheet $sheet, int $x, int $y, mixed $value, string $color = null): void
     {
@@ -285,7 +273,7 @@ class ExportService
 
         // Applique le style de police à la cellule
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFont()
             ->setSize(11)
             ->setBold(false);
@@ -295,14 +283,14 @@ class ExportService
             'borders' => [
                 'outline' => [
                     'borderStyle' => Border::BORDER_DOUBLE,
-                    'color'       => ['argb' => $color],
+                    'color' => ['argb' => $color],
                 ],
             ],
         ];
 
         // Applique le style de bordure et d'alignement à la cellule
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getAlignment()
             ->setWrapText(true)
             ->applyFromArray($styleArray);
@@ -313,18 +301,16 @@ class ExportService
             ->setAutoSize(true);
     }
 
-
-
     /**
      * Définit la valeur et le style d'une cellule dans une feuille de calcul.
      *
-     * @param int      $x     La position horizontale de la cellule (index ou représentation alphabétique).
-     * @param mixed    $value La valeur à définir dans la cellule.
-     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul.
-     * @param int      $y     La position verticale de la cellule.
-     * @param string   $color La couleur de remplissage de la cellule (facultatif).
+     * @param int       $x     la position horizontale de la cellule (index ou représentation alphabétique)
+     * @param mixed     $value la valeur à définir dans la cellule
+     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param int       $y     la position verticale de la cellule
+     * @param string    $color la couleur de remplissage de la cellule (facultatif)
      *
-     * @return string La position horizontale de la cellule après conversion (représentation alphabétique).
+     * @return string la position horizontale de la cellule après conversion (représentation alphabétique)
      */
     private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color = null): string
     {
@@ -332,13 +318,13 @@ class ExportService
         $x = $this->decimalToAlphabetic($x);
 
         // Définition de la valeur de la cellule
-        $sheet->setCellValue($x . $y, $value);
+        $sheet->setCellValue($x.$y, $value);
 
         // Vérification de la présence d'une couleur de remplissage
         if (null == $color) {
             // Si pas de couleur spécifiée, applique un remplissage solide à la cellule
             $sheet
-                ->getStyle($x . $y)
+                ->getStyle($x.$y)
                 ->getFill()
                 ->setFillType(Fill::FILL_SOLID);
 
@@ -348,7 +334,7 @@ class ExportService
 
         // Si une couleur est spécifiée, applique un remplissage solide avec la couleur spécifiée à la cellule
         $sheet
-            ->getStyle($x . $y)
+            ->getStyle($x.$y)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
@@ -358,13 +344,12 @@ class ExportService
         return $x;
     }
 
-
-
     /**
      * Convertit un nombre décimal en une représentation alphabétique basée sur les colonnes d'une feuille de calcul.
      *
-     * @param int $decimal Le nombre décimal à convertir.
-     * @return string La représentation alphabétique correspondante.
+     * @param int $decimal le nombre décimal à convertir
+     *
+     * @return string la représentation alphabétique correspondante
      */
     private function decimalToAlphabetic($decimal): string
     {
@@ -385,11 +370,10 @@ class ExportService
             }
 
             // Conversion du reste en caractère alphabétique et construction de la chaîne résultante
-            $alphabetic = chr($remainder + 64) . $alphabetic;
+            $alphabetic = chr($remainder + 64).$alphabetic;
         }
 
         // Retourne la représentation alphabétique
         return $alphabetic;
     }
-
 }
