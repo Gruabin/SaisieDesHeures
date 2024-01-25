@@ -52,7 +52,7 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepository->findAllTodayUser(),
             'types' => $typeHeuresRepo->findAll(),
             'taches' => $tacheRepository->findAll(),
-            'CDG' => $CDGRepository->findAll(),
+            'CDG' => $CDGRepository->findAllUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
         ]);
