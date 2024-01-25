@@ -100,7 +100,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->join('d.employe', 'employe')
                 ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('employe', substr((string) $user->getId(), 0, 2) . '%')
+                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -109,7 +109,6 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
         return [];
     }
-
 
     /**
      * Supprime tous les enregistrements de la semaine dernière.
@@ -128,7 +127,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * Supprime tous les éléments spécifiés.
      *
-     * @param array $items Les éléments à supprimer.
+     * @param array $items les éléments à supprimer
      */
     public function removeAll($items)
     {
@@ -140,8 +139,8 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
     /**
      * Récupère le nombre total d'heures pour l'utilisateur connecté.
-     * 
-     * @return array|null Le nombre total d'heures ou null si l'utilisateur n'est pas connecté.
+     *
+     * @return array|null le nombre total d'heures ou null si l'utilisateur n'est pas connecté
      */
     public function getNbHeures(): array
     {

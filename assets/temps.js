@@ -1,9 +1,19 @@
+// 
+//* Détecte un changement de type d'heure
+// 
+document.getElementById("type").addEventListener("change", function () {
+    formChange();
+})
+
+// 
+//* Affiche les différents champs en fonction du type d'heure
+// 
 function formChange() {
     document.getElementById("ordre").value = "";
     document.getElementById("operation").value = "";
     document.getElementById("activite").value = "";
     document.getElementById("tache").value = -1;
-    
+
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
             tacheChange(1);
@@ -15,7 +25,7 @@ function formChange() {
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
-            case 2:
+        case 2:
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -55,6 +65,9 @@ function formChange() {
     }
 }
 
+// 
+//* Renvoie la liste des taches en fonction du type d'heure
+// 
 function tacheChange(id) {
     options = document.getElementById('tache').options;
     for (var i = 0; i < options.length; i++) {
@@ -67,6 +80,30 @@ function tacheChange(id) {
     }
 }
 
+// 
+//* Validation du formulaire
+// 
+document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    const state = await formSubmit();
+    if (state.status != 400) {
+        window.location.href = '/api/post/deconnexion';
+    }
+    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+})
+document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    const state = await formSubmit();
+
+    if (state.status != 400) {
+        window.location.href = '/temps';
+    }
+    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+})
+
+// 
+//* Envoie les données du formulaire au serveur
+// 
 async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
@@ -85,11 +122,15 @@ async function formSubmit() {
     }
     if (type_heures == "-1") {
         alert("Veuillez selectionner un type d'heure");
-        return false;
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+        return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
         alert("Veuillez insérer un temps de main d'oeuvre");
-        return false;
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+        return respnse.status = 400;
     }
     if (ordre !== "") {
         data.ordre = ordre;
@@ -114,17 +155,12 @@ async function formSubmit() {
             },
             body: JSON.stringify(data),
         })
-
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-
         if (!response.ok) {
             document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
-            alert(await response.text());
-            return false;
+            return response;
         }
-
         return true;
-
     } catch (error) {
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
         console.error("Une erreur s'est produite :", error);
@@ -133,41 +169,17 @@ async function formSubmit() {
     return false;
 }
 
-document.getElementById("type").addEventListener("change", function () {
-    formChange();
-})
-
+// 
+//* Affiche les centres de charges si la tache 111 est sélectionné
+// 
 document.getElementById("tache").addEventListener("change", function () {
     if (parseInt(document.getElementById("tache").value) === 111) {
         document.getElementById("divCentreCharge").classList.remove("hidden");
-    }else{
+    } else {
         document.getElementById("divCentreCharge").classList.add("hidden");
         document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
     }
 })
-
-// Validation du formulaire
-document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
-    const state = await formSubmit();
-    if (state) {
-        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-        window.location.href = '/api/post/deconnexion';
-    }
-    else {
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
-    }
-})
-document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
-    const state = await formSubmit();
-    if (state) {
-        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-        window.location.href = '/temps';
-    }
-    else {
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
-    }
-})
-
 
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
