@@ -98,6 +98,7 @@ class ExportService
         $color = 'FFC107';
 
         // Applique le style d'en-tête à chaque colonne
+        $this->setStyleHeader($sheet, $x++, 'Date d\'enregistrement', $color);
         $this->setStyleHeader($sheet, $x++, 'Employé', $color);
         $this->setStyleHeader($sheet, $x++, 'Type d\'heure', $color);
         $this->setStyleHeader($sheet, $x++, 'Ordre', $color);
@@ -125,7 +126,6 @@ class ExportService
 
         // Applique le style d'item à chaque élément de l'en-tête
         $this->setStyleItem($sheet, $x++, $y, substr((string) $user->getId(), 0, 2));
-        $this->setStyleItem($sheet, $x++, $y, date('d/m/Y'));
     }
 
 
@@ -158,11 +158,18 @@ class ExportService
                 $color = (0 == $y % 2) ? 'FFF8E1' : 'FFECB3';
 
                 $value = '';
+                if (!empty($item->getdate())) {
+                    $value = $item->getdate()->format("d/m/Y");
+                }
+                $this->setStyleItem($sheet, $x++, $y, $value, $color);
+
+                $value = '';
                 if (!empty($item->getEmploye())) {
                     $value = $item->getEmploye()->getId() . ' - ' . $item->getEmploye()->getNomEmploye();
                 }
                 $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
+                $value = '';
                 if (!empty($item->getTypeHeures())) {
                     $value = $item->getTypeHeures()->getNomType();
                 }
