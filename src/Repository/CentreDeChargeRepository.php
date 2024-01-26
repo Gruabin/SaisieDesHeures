@@ -36,7 +36,6 @@ class CentreDeChargeRepository extends ServiceEntityRepository
             ->andWhere('c.id LIKE :val')
             ->setParameter('val', substr((string) $user->getId(), 0, 2).'%')
             ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
