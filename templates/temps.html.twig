@@ -54,7 +54,7 @@
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center">
                     <div class="md:self-center">
-                        <select class="select select-bordered mx-3" name="type" id="type">
+                        <select class="select select-bordered mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
                             <option value="-1">-- Sélectionner un type d'heure --</option>
                             {% for type in types %}
                                 <option value="{{ type.id }}">{{ type.nomType }}</option>
@@ -140,10 +140,10 @@
             <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
                 Quitter
             </a>
-            <button class="btn btn-primary mt-5" id="btnEnregistrerQuitter">
+            <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerQuitter">
                 Enregistrer et quitter
             </button>
-            <button class="btn btn-primary mt-5" id="btnEnregistrerContinue">
+            <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerContinue">
                 Enregistrer et continuer
             </button>
         </div>

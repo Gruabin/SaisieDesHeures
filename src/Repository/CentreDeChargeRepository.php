@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\CentreDeCharge;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<CentreDeCharge>
@@ -16,32 +17,34 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CentreDeChargeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        Security $security,
+    ) {
         parent::__construct($registry, CentreDeCharge::class);
+        $this->security = $security;
     }
 
-    //    /**
-    //     * @return CentreDeCharge[] Returns an array of CentreDeCharge objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return CentreDeCharge[] retourne les centres de charges du même site que l'utilisateur
+     */
+    public function findAllUser(): array
+    {
+        $user = $this->security->getUser();
+
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id LIKE :val')
+            ->setParameter('val', substr((string) $user->getId(), 0, 2).'C%0')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function findAll(): array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }
