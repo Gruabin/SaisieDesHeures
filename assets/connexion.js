@@ -14,9 +14,9 @@ document.getElementById("inputEmploye").addEventListener("input", function () { 
 
 function findEmploye() {
 
-    inputEmploye = document.getElementById("inputEmploye");
+    inputEmploye = document.getElementById("inputEmploye").value.toUpperCase();
     // Vérifie la longueur de la valeur saisie
-    if (inputEmploye.value.length < 3 || inputEmploye.value == "") {
+    if (inputEmploye.length < 3 || inputEmploye == "") {
         recherche = true;
     }
 
@@ -28,8 +28,8 @@ function findEmploye() {
     }
 
     // Recherche l'employé par ID Entier
-    if (inputEmploye.value.length == 9 && recherche) {
-        var url = "api/get/employe/" + inputEmploye.value;
+    if (inputEmploye.length == 9 && recherche) {
+        var url = "api/get/employe/" + inputEmploye;
         recherche = false;
         a = false;
 
@@ -57,10 +57,10 @@ function findEmploye() {
     }
 
     // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux-même
-    if (inputEmploye.value.length > 2) {
-        if (inputEmploye.value.length == 3) {
+    if (inputEmploye.length > 2) {
+        if (inputEmploye.length == 3) {
             recherche = false;
-            var url = "api/get/employe2/" + inputEmploye.value;
+            var url = "api/get/employe2/" + inputEmploye
 
             fetch(url).then(function (response) {
                 document.getElementById("btnConnexion").classList.add("btn-disabled");
@@ -85,8 +85,8 @@ function findEmploye() {
                 });
 
                 a = true;
-                if (employeTable.find((e) => e.id === inputEmploye.value)) {
-                    const employeTrouve = employeTable.find((e) => e.id === inputEmploye.value);
+                if (employeTable.find((e) => e.id === inputEmploye)) {
+                    const employeTrouve = employeTable.find((e) => e.id === inputEmploye);
                     document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye").innerText = employeTrouve.nom;
                     document.getElementById("btnConnexion").classList.remove("btn-disabled");
@@ -97,8 +97,8 @@ function findEmploye() {
         }
 
         // Vérifie si l'employé existe dans le tableau
-        if (employeTable.find((e) => e.id === inputEmploye.value)) {
-            const employeTrouve = employeTable.find((e) => e.id === inputEmploye.value);
+        if (employeTable.find((e) => e.id === inputEmploye)) {
+            const employeTrouve = employeTable.find((e) => e.id === inputEmploye);
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye").innerText = employeTrouve.nom;
             document.getElementById("btnConnexion").classList.remove("btn-disabled");
@@ -116,7 +116,7 @@ function findEmploye() {
 
 }
 
-
+// Connection
 document.getElementById("btnConnexion").addEventListener("click", function () {
     if (!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {
         document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
