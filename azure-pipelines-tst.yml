@@ -119,7 +119,7 @@ stages:
             deploy:
               steps:
                 - task: AzureWebApp@1
-                  displayName: "Deploy Azure Web App : app-prd-saisie-heures"
+                  displayName: "Deploy Azure Web App : app-tst-saisie-heures"
                   inputs:
                     azureSubscription: $(azureSubscription)
                     appName: $(webAppName)

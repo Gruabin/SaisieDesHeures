@@ -33,7 +33,12 @@ function findEmploye() {
         recherche = false;
         a = false;
 
-        fetch(url).then(function (response) {
+        fetch(url, {
+            headers: {
+                'X-API-Key': '^^u6#h289SrB$!DxDDms55reFZcwWoY2e93TcseYf8^URbaZ%!CS^cHD^6YfyX!e4Lo@oPg3&u8b7dzA*Q9PYCdBRVRVGut3r2$JT2J9kU*FNKbmQ$@8oxtE5!mp7m8#'
+
+            }
+        }).then(function (response) {
             document.getElementById("btnConnexion").classList.add("btn-disabled");
             document.getElementById("informationEmploye").innerText = "";
             document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -62,7 +67,11 @@ function findEmploye() {
             recherche = false;
             var url = "api/get/employe2/" + inputEmploye
 
-            fetch(url).then(function (response) {
+            fetch(url, {
+                headers: {
+                    'X-API-Key': '*Q4mZWWphxjuBbcUU6YGWiLwddsFtQxBPDGwP#EwmB5KdmU^UgZYcV3h5puz@cg84YPYX&vmd%obs5$x9sRw58PUSk!iNZSfhzCssYB&5H#9fdFzFuaUUah7QVH8KenB'
+                }
+            }).then(function (response) {
                 document.getElementById("btnConnexion").classList.add("btn-disabled");
                 document.getElementById("informationEmploye").innerText = "";
                 document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -122,7 +131,7 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
         document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         // Récupérez l'ID de l'utilisateur depuis le champ input
-        const idEmploye = document.getElementById("inputEmploye").value;
+        const idEmploye = document.getElementById("inputEmploye").value.toUpperCase();
         const token = document.getElementById("loginToken").value;
 
         // Créez un objet JSON avec l'ID de l'utilisateur
@@ -130,10 +139,10 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
             id: idEmploye,
             token: token
         };
-
         // Envoyez la requête AJAX
         fetch("/api/post/connexion", {
             method: "POST",
+            credentials: 'same-origin',
             headers: {
                 "Content-Type": "application/json",
             },
@@ -143,6 +152,7 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
                 if (response.status === 404) {
                     // Gérer le cas où la réponse est un statut 404
                     return response.json().then((errorData) => {
+                        console.log(errorData);
                         document.getElementById("boxAlertMessage").innerHTML = errorData.message;
                         document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     });
