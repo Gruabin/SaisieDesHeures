@@ -61,17 +61,13 @@ class ConnexionAPIController extends AbstractController
                 return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
             } else {
                 $message = 'Utilisateur introuvalbe';
+                $this->logger->error($message);
             }
         } else {
             $message = 'Connexion échouée. Token invalide';
-            $this->addFlash('error', $message);
+            $this->logger->error($message);
         }
-        $this->logger->error($message);
-        $this->addFlash('error', $message);
-
-        $message = $this->renderView('alert.html.twig');
-
-        return $this->json(['message' => $message], Response::HTTP_FORBIDDEN);
+        return new Response($message, Response::HTTP_FORBIDDEN);
     }
 
     #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]

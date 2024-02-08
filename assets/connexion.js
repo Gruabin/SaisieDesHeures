@@ -167,26 +167,22 @@ function submitForm() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
-        })
-            .then((response) => {
-                if (response.status === 404) {
-                    // Gérer le cas où la réponse est un statut 404
-                    return response.json().then((errorData) => {
-                        console.log(errorData);
-                        document.getElementById("boxAlertMessage").innerHTML = errorData.message;
-                        document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                    });
-                } else if (response.status === 200) {
-                    // Rediriger l'utilisateur en cas de succès
-                    window.location.href = "/temps";
-                } else {
-                    // Gérer d'autres statuts d'erreur ici
-                    throw new Error("Réponse inattendue du serveur");
-                }
-            })
-            .catch((error) => {
-                // Afficher un message d'erreur
-                alert(error);
-            });
+        }).then((response) => {
+            if (response.status === 200) {
+                // Rediriger l'utilisateur en cas de succès
+                window.location.href = "/temps";
+            } else {
+                console.log(response);
+                // Gérer d'autres statuts d'erreur ici
+                document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                throw new Error("Réponse inattendue du serveur");
+            }
+        }).catch((error) => {
+            // Afficher un message d'erreur
+            console.log(response);
+            // Gérer d'autres statuts d'erreur ici
+            document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            throw new Error("Réponse inattendue du serveur");
+        });
     }
 }
