@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
+use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
 use App\Service\ExportService;
@@ -38,7 +39,7 @@ class IndexController extends AbstractController
 
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
-    public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository): Response
+    public function temps(TypeHeuresRepository $typeHeuresRepo, DetailHeuresRepository $detailHeuresRepo, DetailHeureService $detailHeureService, TacheRepository $tacheRepository, DetailHeuresRepository $detailHeuresRepository, CentreDeChargeRepository $CDGRepository, TacheSpecifiqueRepository $tacheSpecifiqueRepository): Response
     {
         $nbHeures = $detailHeuresRepo->getNbHeures();
         if ($nbHeures['total'] >= 12) {
@@ -52,6 +53,7 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepository->findAllTodayUser(),
             'types' => $typeHeuresRepo->findAll(),
             'taches' => $tacheRepository->findAll(),
+            'tachesSpe' => $tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $CDGRepository->findAllUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],

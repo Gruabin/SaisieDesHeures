@@ -27,7 +27,6 @@ class APIController extends AbstractController
     public function get(string $id, EmployeRepository $employeRepo, Request $request): Response
     {
         if ('^^u6#h289SrB$!DxDDms55reFZcwWoY2e93TcseYf8^URbaZ%!CS^cHD^6YfyX!e4Lo@oPg3&u8b7dzA*Q9PYCdBRVRVGut3r2$JT2J9kU*FNKbmQ$@8oxtE5!mp7m8#' == $request->headers->get('X-API-Key')) {
-
             // Récupérer l'employé correspondant à l'ID depuis la base de données
             $employe = $employeRepo->findOneBy(['id' => $id]);
 
@@ -64,7 +63,7 @@ class APIController extends AbstractController
             // Récupérer l'employé correspondant à l'ID depuis la base de données
             $qb = $employeRepo->createQueryBuilder('e');
             $qb->where($qb->expr()->like('e.id', ':premiersCaracteres'))
-                ->setParameter('premiersCaracteres', $id . '%');
+                ->setParameter('premiersCaracteres', $id.'%');
             $employe = $qb->getQuery()->getResult();
             // Convertir l'objet Employe en tableau associatif
             foreach ($employe as $key => $unEmploye) {
@@ -82,6 +81,7 @@ class APIController extends AbstractController
         } else {
             $response = new Response('Raté 🙃', Response::HTTP_UNAUTHORIZED);
         }
+
         return $response;
     }
 
