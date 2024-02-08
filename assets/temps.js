@@ -207,7 +207,7 @@ document.getElementById("tache").addEventListener("change", function () {
 //
 inputOrdre = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
-    regex = new RegExp("^[A-Z]{2}[A-Z0-9]{1}[0-9]{6}$");
+    regex = new RegExp("^[0-9]{9}$");
     inputOrdre.classList.remove("input-success");
     inputOrdre.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {

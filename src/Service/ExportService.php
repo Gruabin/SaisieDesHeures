@@ -191,6 +191,9 @@ class ExportService
                 if (!empty($item->getTache())) {
                     $value = $item->getTache()->getName();
                 }
+                elseif (!empty($item->getTacheSpecifique())) {
+                    $value = $item->getTacheSpecifique()->getName();
+                }
                 $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
                 $value = '';
