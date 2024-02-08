@@ -24,8 +24,8 @@ class Employe implements UserInterface
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
-    #[ORM\Column]
-    private ?bool $acces_export = null;
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $acces_export = false;
 
     public function __construct()
     {

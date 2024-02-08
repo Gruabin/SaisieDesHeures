@@ -40,6 +40,7 @@ function findEmploye() {
             }
         }).then(function (response) {
             document.getElementById("btnConnexion").classList.add("btn-disabled");
+            document.getElementById("btnConnexion").disabled = true;
             document.getElementById("informationEmploye").innerText = "";
             document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
@@ -52,8 +53,10 @@ function findEmploye() {
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye").innerText = employe.nom;
             document.getElementById("btnConnexion").classList.remove("btn-disabled");
+            document.getElementById("btnConnexion").disabled = false;
         }).catch(function (error) {
             document.getElementById("btnConnexion").classList.add("btn-disabled");
+            document.getElementById("btnConnexion").disabled = true;
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye").innerText = error.message;
         });
@@ -73,6 +76,7 @@ function findEmploye() {
                 }
             }).then(function (response) {
                 document.getElementById("btnConnexion").classList.add("btn-disabled");
+                document.getElementById("btnConnexion").disabled = true;
                 document.getElementById("informationEmploye").innerText = "";
                 document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 a = true;
@@ -81,6 +85,7 @@ function findEmploye() {
                     return response.json();
                 } else {
                     document.getElementById("btnConnexion").classList.add("btn-disabled");
+                    document.getElementById("btnConnexion").disabled = true;
                     document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye").innerText = "Aucun employé correspondant";
                     throw new Error("Employés non trouvés");
@@ -99,6 +104,7 @@ function findEmploye() {
                     document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                     document.getElementById("informationEmploye").innerText = employeTrouve.nom;
                     document.getElementById("btnConnexion").classList.remove("btn-disabled");
+                    document.getElementById("btnConnexion").disabled = false;
                 }
             }).catch(function (error) {
                 console.log(error);
@@ -111,8 +117,10 @@ function findEmploye() {
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             document.getElementById("informationEmploye").innerText = employeTrouve.nom;
             document.getElementById("btnConnexion").classList.remove("btn-disabled");
+            document.getElementById("btnConnexion").disabled = false;
         } else {
             document.getElementById("btnConnexion").classList.add("btn-disabled");
+            document.getElementById("btnConnexion").disabled = true;
             if (a) {
                 document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 document.getElementById("informationEmploye").innerText = "Employé inexistant";
@@ -125,8 +133,20 @@ function findEmploye() {
 
 }
 
-// Connection
+// 
+//* Connexion
+// 
 document.getElementById("btnConnexion").addEventListener("click", function () {
+    submitForm();
+})
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        submitForm();
+    }
+})
+
+function submitForm() {
     if (!document.getElementById("btnConnexion").classList.contains('btn-disabled')) {
         document.getElementById("informationEmploye").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
@@ -169,4 +189,4 @@ document.getElementById("btnConnexion").addEventListener("click", function () {
                 alert(error);
             });
     }
-})
+}
