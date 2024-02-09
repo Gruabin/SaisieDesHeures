@@ -67,6 +67,7 @@ class ConnexionAPIController extends AbstractController
             $message = 'Connexion échouée. Token invalide';
             $this->logger->error($message);
         }
+
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
 

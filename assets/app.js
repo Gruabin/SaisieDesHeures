@@ -81,15 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function lettreCouleur(lettre) {
         // Conversion de la lettre en nombre (valeur ASCII)
         let valeurAscii = lettre.charCodeAt(0);
-
         // Ajout d'une constante pour décaler les couleurs
         valeurAscii += 300;
 
         // Calcul des composantes RGB en fonction de la valeur ASCII
-        const r = (valeurAscii * 3) % 256;
-        const g = (valeurAscii * 5) % 256;
-        const b = (valeurAscii * 7) % 256;
-
+        const r = (valeurAscii * 420) % 256;
+        const g = (valeurAscii * 530) % 256;
+        const b = (valeurAscii * 440) % 256;
         // Conversion des composantes RGB en une couleur hexadécimale
         const couleur = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 

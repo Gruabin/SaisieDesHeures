@@ -63,7 +63,7 @@ class APIController extends AbstractController
             // Récupérer l'employé correspondant à l'ID depuis la base de données
             $qb = $employeRepo->createQueryBuilder('e');
             $qb->where($qb->expr()->like('e.id', ':premiersCaracteres'))
-                ->setParameter('premiersCaracteres', $id . '%');
+                ->setParameter('premiersCaracteres', $id.'%');
             $employe = $qb->getQuery()->getResult();
             // Convertir l'objet Employe en tableau associatif
             foreach ($employe as $key => $unEmploye) {
