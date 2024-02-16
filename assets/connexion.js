@@ -64,7 +64,7 @@ function findEmploye() {
         recherche = true;
     }
 
-    // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux-même
+    // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux
     if (inputEmploye.length > 2) {
         if (inputEmploye.length == 3) {
             recherche = false;
