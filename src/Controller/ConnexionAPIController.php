@@ -48,7 +48,6 @@ class ConnexionAPIController extends AbstractController
             // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
             // Assurez-vous d'adapter cette logique à votre propre système
             $user = $employeRepo->findOneBy(['id' => $userId]);
-
             if ($user) {
                 $userAuth->authenticateUser(
                     $user,
@@ -60,16 +59,16 @@ class ConnexionAPIController extends AbstractController
                 $this->logger->info($message);
 
                 return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
+            } else {
+                $message = 'Utilisateur introuvalbe';
+                $this->logger->error($message);
             }
+        } else {
+            $message = 'Connexion échouée. Token invalide';
+            $this->logger->error($message);
         }
 
-        $message = 'Connexion échouée.';
-        $this->logger->error($message);
-        $this->addFlash('error', $message);
-
-        $message = $this->renderView('alert.html.twig');
-
-        return $this->json(['message' => $message], Response::HTTP_NOT_FOUND);
+        return new Response($message, Response::HTTP_FORBIDDEN);
     }
 
     #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]

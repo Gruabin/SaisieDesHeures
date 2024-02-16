@@ -68,10 +68,10 @@
         <div class="flex flex-row flex-wrap items-center space-x-2 p-2">
             <table class="table-fixed w-full">
                 <thead>
-                <tr>
-                    <th class="hidden lg:block">Date de transaction</th>
-                    <th>Type d'heure</th>
-                    <th>
+                <tr class="flex">
+                    <th class="hidden basis-1/6 lg:block">Date de transaction</th>
+                    <th class="basis-1/6">Type d'heure</th>
+                    <th class="basis-1/2">
                         <span class="block md:inline">Ordre</span>
                         <span class="hidden md:inline"> | </span>
                         <span class="block md:inline">Opération</span>
@@ -81,21 +81,23 @@
                         <span class="block md:inline">Tâche</span>
                         <span class="hidden md:inline"> | </span>
                         <span class="block md:inline">Centre de charge</span>
+                        <span class="hidden md:inline"> | </span>
+                        <span class="block md:inline">Tâche spécifique</span>
                     </th>
-                    <th>Temps main d'œuvre</th>
+                    <th class="basis-1/6">Temps main d'œuvre</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for heures in details %}
-                    <tr>
-                        <td class="text-center hidden lg:block">
+                    <tr class="flex">
+                        <td class="text-center basis-1/6 hidden lg:block">
                             {{ heures.date|date('d/m/Y H:i') }}
                         </td>
-                        <td class="text-center">
+                        <td class="text-center basis-1/6">
                             {% if (heures.typeHeures.nomType is not empty) %}
                                 {{ heures.typeHeures.nomType }}
                             {% endif %}
-                        <td class="text-center">
+                        <td class="text-center basis-1/2">
                             {% set name = [] %}
                             {% if (heures.ordre is not empty) %}
                                 {% set name = name|merge({'ordre': heures.ordre}) %}
@@ -112,9 +114,12 @@
                             {% if (heures.centreDeCharge is not empty) %}
                                 {% set name = name|merge({'centreDeCharge': heures.centreDeCharge.name}) %}
                             {% endif %}
+                            {% if (heures.tacheSpecifique is not empty) %}
+                                {% set name = name|merge({'tacheSpecifique': heures.tacheSpecifique.name}) %}
+                            {% endif %}
                             {{ name|join('  |  ') }}
                         </td>
-                        <td class="text-center">{{ heures.tempsMainOeuvre }}
+                        <td class="text-center basis-1/6">{{ heures.tempsMainOeuvre }}
                             heures
                         </td>
                     </tr>

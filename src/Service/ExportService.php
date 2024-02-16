@@ -69,7 +69,7 @@ class ExportService
     /**
      * Exporte les détails d'heures vers la feuille de calcul en coordonnant les différentes parties de l'exportation.
      *
-     * @param spreadsheet $spreadsheet L'objet de la classe Spreadsheet représentant la feuille de calcul
+     * @param Spreadsheet $spreadsheet L'objet de la classe Spreadsheet représentant la feuille de calcul
      */
     private function exportDetailHeure(Spreadsheet $spreadsheet): void
     {
@@ -86,7 +86,7 @@ class ExportService
     /**
      * Exporte l'en-tête de la feuille de calcul avec le style approprié.
      *
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportHeader(Worksheet $sheet): void
     {
@@ -109,7 +109,7 @@ class ExportService
     /**
      * Exporte les informations d'en-tête dans la feuille de calcul.
      *
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportEntete(Worksheet $sheet): void
     {
@@ -127,7 +127,7 @@ class ExportService
     /**
      * Exporte les détails d'heures dans la feuille de calcul en appliquant le style approprié.
      *
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      */
     private function exportItems(Worksheet $sheet): void
     {
@@ -190,6 +190,8 @@ class ExportService
                 $value = '';
                 if (!empty($item->getTache())) {
                     $value = $item->getTache()->getName();
+                } elseif (!empty($item->getTacheSpecifique())) {
+                    $value = $item->getTacheSpecifique()->getName();
                 }
                 $this->setStyleItem($sheet, $x++, $y, $value, $color);
 
@@ -217,7 +219,7 @@ class ExportService
     /**
      * Applique le style à l'en-tête d'une feuille de calcul.
      *
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      * @param int       $x     la position horizontale de l'en-tête (index ou représentation alphabétique)
      * @param string    $value la valeur à définir dans l'en-tête
      * @param string    $color la couleur de remplissage de l'en-tête
@@ -260,13 +262,13 @@ class ExportService
     /**
      * Applique le style à une cellule spécifique dans une feuille de calcul.
      *
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      * @param int       $x     la position horizontale de la cellule (index ou représentation alphabétique)
      * @param int       $y     la position verticale de la cellule
      * @param mixed     $value la valeur à définir dans la cellule
      * @param string    $color la couleur de remplissage de la cellule (facultatif)
      */
-    private function setStyleItem(Worksheet $sheet, int $x, int $y, mixed $value, string $color = null): void
+    private function setStyleItem(Worksheet $sheet, int $x, int $y, mixed $value, ?string $color = null): void
     {
         // Applique le style de valeur à la cellule
         $x = $this->setStyleValue($x, $value, $sheet, $y, $color);
@@ -306,13 +308,13 @@ class ExportService
      *
      * @param int       $x     la position horizontale de la cellule (index ou représentation alphabétique)
      * @param mixed     $value la valeur à définir dans la cellule
-     * @param worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
+     * @param Worksheet $sheet L'objet de la classe Worksheet représentant la feuille de calcul
      * @param int       $y     la position verticale de la cellule
      * @param string    $color la couleur de remplissage de la cellule (facultatif)
      *
      * @return string la position horizontale de la cellule après conversion (représentation alphabétique)
      */
-    private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, string $color = null): string
+    private function setStyleValue(int $x, mixed $value, Worksheet $sheet, int $y, ?string $color = null): string
     {
         // Conversion de l'index horizontal en représentation alphabétique
         $x = $this->decimalToAlphabetic($x);

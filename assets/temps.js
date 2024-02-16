@@ -5,6 +5,16 @@ document.getElementById("type").addEventListener("change", function () {
     formChange();
 })
 
+document.getElementById("cbTacheSpe").addEventListener("change", function () {
+    document.getElementById("tacheSpe").value = -1;
+    if (document.getElementById("cbTacheSpe").checked) {
+        document.getElementById("tacheSpe").disabled = false;
+    }else{
+        document.getElementById("tacheSpe").disabled = true;
+    }
+    
+})
+
 // 
 //* Affiche les différents champs en fonction du type d'heure
 // 
@@ -12,7 +22,9 @@ function formChange() {
     document.getElementById("ordre").value = "";
     document.getElementById("operation").value = "";
     document.getElementById("activite").value = "";
+    document.getElementById("divTacheSpe").value = "";
     document.getElementById("tache").value = -1;
+    document.getElementById("tacheSpe").value = -1;
 
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
@@ -22,6 +34,7 @@ function formChange() {
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
@@ -31,6 +44,7 @@ function formChange() {
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divTacheSpe").classList.remove("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
@@ -40,6 +54,7 @@ function formChange() {
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.remove("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
@@ -50,6 +65,7 @@ function formChange() {
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.remove("hidden");
+            document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
@@ -59,6 +75,7 @@ function formChange() {
             document.getElementById("divTache").classList.add("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
+            document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.add("hidden");
             break;
@@ -111,6 +128,7 @@ async function formSubmit() {
     const ordre = document.getElementById("ordre").value;
     const tache = document.getElementById("tache").value;
     const operation = document.getElementById("operation").value;
+    const tacheSpecifique = document.getElementById("tacheSpe").value;
     const activite = document.getElementById("activite").value;
     const centre_de_charge = document.getElementById("centrecharge").value;
     const temps_main_oeuvre = document.getElementById("saisitemps").value;
@@ -143,6 +161,9 @@ async function formSubmit() {
     }
     if (activite !== "") {
         data.activite = activite;
+    }
+    if (tacheSpecifique !== "-1") {
+        data.tacheSpecifique = tacheSpecifique;
     }
     if (centre_de_charge !== "-1") {
         data.centre_de_charge = centre_de_charge;
@@ -186,7 +207,7 @@ document.getElementById("tache").addEventListener("change", function () {
 //
 inputOrdre = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
-    regex = new RegExp("^[A-Z]{2}[A-Z0-9]{1}[0-9]{6}$");
+    regex = new RegExp("^[0-9A-Z]{9}$");
     inputOrdre.classList.remove("input-success");
     inputOrdre.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {

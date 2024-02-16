@@ -24,7 +24,7 @@ class DetailHeures
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeHeures $type_heures = null;
 
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $operation = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailHeures')]
@@ -45,6 +45,9 @@ class DetailHeures
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_export = null;
+
+    #[ORM\ManyToOne(inversedBy: 'detailHeure')]
+    private ?TacheSpecifique $tacheSpecifique = null;
 
     public function getId(): ?int
     {
@@ -187,6 +190,18 @@ class DetailHeures
     public function setDateExport(?\DateTimeInterface $date_export): static
     {
         $this->date_export = $date_export;
+
+        return $this;
+    }
+
+    public function getTacheSpecifique(): ?TacheSpecifique
+    {
+        return $this->tacheSpecifique;
+    }
+
+    public function setTacheSpecifique(?TacheSpecifique $tacheSpecifique): static
+    {
+        $this->tacheSpecifique = $tacheSpecifique;
 
         return $this;
     }

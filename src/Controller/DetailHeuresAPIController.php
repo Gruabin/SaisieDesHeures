@@ -8,6 +8,7 @@ use App\Repository\ActiviteRepository;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\TacheRepository;
+use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
 use App\Service\ExportService;
@@ -21,11 +22,12 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @property TypeHeuresRepository     $typeHeuresRepository
- * @property ActiviteRepository       $activiteRepository
- * @property CentreDeChargeRepository $centreDeChargeRepository
- * @property TacheRepository          $tacheRepository
- * @property LoggerInterface          $logger
+ * @property TypeHeuresRepository      $typeHeuresRepository
+ * @property ActiviteRepository        $activiteRepository
+ * @property CentreDeChargeRepository  $centreDeChargeRepository
+ * @property TacheRepository           $tacheRepository
+ * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
+ * @property LoggerInterface           $logger
  */
 class DetailHeuresAPIController extends AbstractController
 {
@@ -34,12 +36,14 @@ class DetailHeuresAPIController extends AbstractController
         CentreDeChargeRepository $centreDeChargeRepository,
         TacheRepository $tacheRepository,
         TypeHeuresRepository $typeHeuresRepository,
+        TacheSpecifiqueRepository $tacheSpecifiqueRepository,
         LoggerInterface $logger,
     ) {
         $this->typeHeuresRepository = $typeHeuresRepository;
         $this->activiteRepository = $activiteRepository;
         $this->centreDeChargeRepository = $centreDeChargeRepository;
         $this->tacheRepository = $tacheRepository;
+        $this->tacheSpecifiqueRepository = $tacheSpecifiqueRepository;
         $this->logger = $logger;
     }
 
@@ -113,7 +117,7 @@ class DetailHeuresAPIController extends AbstractController
             if (null === $tempsMainOeuvre || null === $typeHeures) {
                 $this->addFlash('error', 'Donnée manquante.');
 
-                return new Response('Données manquantes.', Response::HTTP_BAD_REQUEST);
+                return new Response('Données manquantes.', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             // Créer un nouvel objet DetailHeures
@@ -121,10 +125,10 @@ class DetailHeuresAPIController extends AbstractController
 
             // Vérifier si la création du détail d'heures a échoué
             if (!$unDetail) {
-                $message = "L'ajout de saisie des heures a échoué.";
+                $message = "L'ajout des heures a échoué.";
                 $this->logger->error($message);
 
-                return new Response($message, Response::HTTP_BAD_REQUEST);
+                return new Response($message, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             // Enregistrer les détails des heures dans la base de données
@@ -134,7 +138,7 @@ class DetailHeuresAPIController extends AbstractController
             // Nettoyer les détails des heures de la semaine précédente
             $detailHeureService->cleanLastWeek();
 
-            $message = 'Saisie des heures créée avec succès.';
+            $message = 'Heures ajoutées avec succès.';
             $this->logger->info($message);
             $this->addFlash('success', $message);
 
@@ -179,6 +183,15 @@ class DetailHeuresAPIController extends AbstractController
                 return null;
             }
             $detailHeures->setTache($tache);
+        }
+        if (!empty($data['tacheSpecifique'])) {
+            $tacheSpecifique = $this->tacheSpecifiqueRepository->find($data['tacheSpecifique']);
+            if (!$tacheSpecifique) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object tacheSpecifique manquant');
+
+                return null;
+            }
+            $detailHeures->setTacheSpecifique($tacheSpecifique);
         }
         if (!empty($data['activite'])) {
             $activite = $this->activiteRepository->find($data['activite']);
