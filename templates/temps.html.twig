@@ -111,7 +111,7 @@
                 </div>
                 <div class="flex-1 text-left md:self-center">
                     <input type="checkbox" class="checkbox checkbox-primary border-none focus:ring-primary" id="cbTacheSpe" />
-                    <select class="select focus:ring-primary mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
+                    <select class="select mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
                         <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
                         {% for tache in tachesSpe %}
                             <option value="{{ tache.id }}">{{ tache.id }} - {{ tache.description }}</option>

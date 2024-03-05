@@ -7,6 +7,7 @@ use App\Security\AuthSecurity;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,8 +46,6 @@ class ConnexionAPIController extends AbstractController
         if ($this->isCsrfTokenValid('loginToken', $token)) {
             // Récupérez l'ID de l'utilisateur depuis les données de la requête
             $userId = $data['id'];
-            // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
-            // Assurez-vous d'adapter cette logique à votre propre système
             $user = $employeRepo->findOneBy(['id' => $userId]);
             if ($user) {
                 $userAuth->authenticateUser(
@@ -58,7 +57,8 @@ class ConnexionAPIController extends AbstractController
                 $message = 'Connexion réussi.';
                 $this->logger->info($message);
 
-                return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
+                $page = ($user->getResponsable()->count() > 0) ? "/console" : "/temps";
+                return new RedirectResponse($page);
             } else {
                 $message = 'Utilisateur introuvalbe';
                 $this->logger->error($message);
