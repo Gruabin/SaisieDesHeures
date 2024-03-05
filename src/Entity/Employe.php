@@ -27,9 +27,13 @@ class Employe implements UserInterface
     #[ORM\Column(options: ['default' => false])]
     private ?bool $acces_export = false;
 
+    #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'id_responsable')]
+    private Collection $responsable;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
+        $this->responsable = new ArrayCollection();
     }
 
     public function getRoles(): array
@@ -121,6 +125,36 @@ class Employe implements UserInterface
     public function setAccesExport(bool $acces_export): static
     {
         $this->acces_export = $acces_export;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CentreDeCharge>
+     */
+    public function getResponsable(): Collection
+    {
+        return $this->responsable;
+    }
+
+    public function addResponsable(CentreDeCharge $responsable): static
+    {
+        if (!$this->responsable->contains($responsable)) {
+            $this->responsable->add($responsable);
+            $responsable->setIdResponsable($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResponsable(CentreDeCharge $responsable): static
+    {
+        if ($this->responsable->removeElement($responsable)) {
+            // set the owning side to null (unless already changed)
+            if ($responsable->getIdResponsable() === $this) {
+                $responsable->setIdResponsable(null);
+            }
+        }
 
         return $this;
     }

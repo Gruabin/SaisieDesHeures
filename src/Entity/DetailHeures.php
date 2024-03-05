@@ -49,6 +49,12 @@ class DetailHeures
     #[ORM\ManyToOne(inversedBy: 'detailHeure')]
     private ?TacheSpecifique $tacheSpecifique = null;
 
+    #[ORM\ManyToOne(inversedBy: 'detail')]
+    private ?Statut $statut = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $motif_erreur = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -202,6 +208,30 @@ class DetailHeures
     public function setTacheSpecifique(?TacheSpecifique $tacheSpecifique): static
     {
         $this->tacheSpecifique = $tacheSpecifique;
+
+        return $this;
+    }
+
+    public function getStatut(): ?Statut
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?Statut $statut): static
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getMotifErreur(): ?string
+    {
+        return $this->motif_erreur;
+    }
+
+    public function setMotifErreur(?string $motif_erreur): static
+    {
+        $this->motif_erreur = $motif_erreur;
 
         return $this;
     }

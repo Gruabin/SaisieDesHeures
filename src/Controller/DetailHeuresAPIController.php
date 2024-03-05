@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\DetailHeures;
+use App\Entity\Statut;
 use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
+use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
@@ -91,7 +93,7 @@ class DetailHeuresAPIController extends AbstractController
      */
     // * POST
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
-    public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, Security $security, DetailHeureService $detailHeureService): Response
+    public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, StatutRepository $statutRepo, Security $security, DetailHeureService $detailHeureService): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -112,6 +114,7 @@ class DetailHeuresAPIController extends AbstractController
             $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
             $typeHeures = $data['type_heures'] ?? null;
             $typeHeures = $this->typeHeuresRepository->find($typeHeures);
+            $statut = $statutRepo->getStatutEnregistré();
 
             // Vérifier si les données nécessaires sont présentes
             if (null === $tempsMainOeuvre || null === $typeHeures) {
@@ -121,7 +124,7 @@ class DetailHeuresAPIController extends AbstractController
             }
 
             // Créer un nouvel objet DetailHeures
-            $unDetail = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $entityManager, $data);
+            $unDetail = $this->setDetailHeures($tempsMainOeuvre, $typeHeures, $security, $data, $statut);
 
             // Vérifier si la création du détail d'heures a échoué
             if (!$unDetail) {
@@ -153,7 +156,7 @@ class DetailHeuresAPIController extends AbstractController
      * Cette fonction crée une nouvelle instance de l'entité DetailHeures, remplit ses propriétés avec les données reçues et renvoie l'entité créée.
      * Si certaines propriétés sont manquantes ou invalides, la fonction renvoie null et enregistre un message de débogage.
      */
-    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, EntityManagerInterface $entityManager, array $data): ?DetailHeures
+    private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data, Statut $statut): ?DetailHeures
     {
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
@@ -167,6 +170,7 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setTypeHeures($typeHeures);
         $detailHeures->setEmploye($security->getUser());
         $detailHeures->setDateExport(null);
+        $detailHeures->setStatut($statut);
 
         // Vérifier et définir les propriétés optionnelles
         if (!empty($data['ordre'])) {
