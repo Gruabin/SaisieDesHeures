@@ -168,18 +168,18 @@ function submitForm() {
             },
             body: JSON.stringify(data),
         }).then((response) => {
-            if (response.status === 200) {
-                // Rediriger l'utilisateur en cas de succès
-                window.location.href = "/temps";
-            } else {
+            if (!response.ok) {
                 console.log(response);
                 // Gérer d'autres statuts d'erreur ici
                 document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 throw new Error("Réponse inattendue du serveur");
+            } else {
+                // Rediriger l'utilisateur en cas de succès
+                window.location.href = response.url;
             }
         }).catch((error) => {
             // Afficher un message d'erreur
-            console.log(response);
+            alert(error);
             // Gérer d'autres statuts d'erreur ici
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             throw new Error("Réponse inattendue du serveur");

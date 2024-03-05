@@ -32,7 +32,6 @@ class IndexController extends AbstractController
     {
         // Rendre la vue 'index/index.html.twig' en passant les variables 'controller_name' et 'user'
         return $this->render('identification.html.twig', [
-            'controller_name' => 'IndexController',
             'user' => $this->getUser(),
         ]);
     }
@@ -75,6 +74,17 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepo->findAllTodayUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
+        ]);
+    }
+
+    // Affiche la page de console d'approbation
+    #[Route('/console', name: 'console')]
+    public function console(): Response
+    {
+        // dd($this->getUser()->getResponsable());
+        return $this->render('console.html.twig', [
+            'Responsable' => $this->getUser()->getResponsable(),
+            'user' => $this->getUser(),
         ]);
     }
 
