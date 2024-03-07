@@ -128,7 +128,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * Récupère le nombre total d'heures pour l'utilisateur connecté.
      *
-     * @return array|null le nombre total d'heures ou null si l'utilisateur n'est pas connecté
+     * @return array|null le nombre total d'heures
      */
     public function getNbHeures(): array
     {
@@ -143,6 +143,27 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->setParameter('employe', $user->getId())
                 ->getQuery()
                 ->getSingleResult();
+        }
+    }
+
+    /**
+     * Récupère le nombre total d'anomalies pour l'utilisateur connecté.
+     *
+     * @return int le nombre total d'anomalies
+     */
+    public function findNbAnomalie(): int
+    {
+        $user = $this->security->getUser();
+        if (!empty($user)) {
+            $qb = $this->createQueryBuilder('d');
+            $qb->select('COUNT(d.id)')
+                ->innerJoin('d.employe', 'employe')
+                ->innerJoin('employe.centre_de_charge', 'centre_de_charge')
+                ->where('d.statut =  2')
+                ->andWhere('centre_de_charge.responsable = :responsable_id')
+                ->setParameter('responsable_id', $user->getId());
+
+            return $qb->getQuery()->getSingleScalarResult();
         }
     }
 }

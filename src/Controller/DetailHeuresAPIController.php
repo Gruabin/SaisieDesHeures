@@ -114,7 +114,7 @@ class DetailHeuresAPIController extends AbstractController
             $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
             $typeHeures = $data['type_heures'] ?? null;
             $typeHeures = $this->typeHeuresRepository->find($typeHeures);
-            $statut = $statutRepo->getStatutEnregistré();
+            $statut = $statutRepo->getStatutEnregistre();
 
             // Vérifier si les données nécessaires sont présentes
             if (null === $tempsMainOeuvre || null === $typeHeures) {

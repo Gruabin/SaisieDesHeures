@@ -25,6 +25,7 @@ Encore
 .addEntry("connexion", "./assets/connexion.js")
 .addEntry("temps", "./assets/temps.js")
 .addEntry("export", "./assets/export.js")
+.addEntry("console", "./assets/console.js")
 
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
