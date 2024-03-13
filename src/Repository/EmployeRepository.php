@@ -53,7 +53,6 @@ class EmployeRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e');
         $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
         ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :responsable_id')
-        // ->setParameter('statut_ids', [2, 3])
         ->setParameter('responsable_id', $responsable)
         ->orderBy('e.id', 'ASC');
 

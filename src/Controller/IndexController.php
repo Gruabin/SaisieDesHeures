@@ -83,7 +83,7 @@ class IndexController extends AbstractController
     {
         $user = $this->getUser();
 
-        return $this->render('console.html.twig', [
+        return $this->render('console/console.html.twig', [
             'user' => $user,
             'site' => substr((string) $user->getId(), 0, 2),
             'nbAnomalie' => $detailHeuresRepo->findNbAnomalie(),

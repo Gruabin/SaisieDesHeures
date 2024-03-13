@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Console d'approbation
+{% endblock %}
+
+{% block body %}
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Console d'approbation</h2>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex flex-col lg:flex-row lg:items-center p-2">
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Site</b></div>
+                <div class="m-2">{{ site }}</div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Responsable</b></div>
+                <div class="m-2" id="CDGUser">{{ user.id }} - {{ user.nomEmploye }} </div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"><b>Date</b></div>
+                <div class="m-2">{{ "now"|date("d/m/Y", "Europe/Paris") }}</div>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2"></div>
+                <div class="m-2">
+                    <b>{{ nbAnomalie }}</b>
+                    {% if nbAnomalie <= 2 %}
+                        Anomalie
+                    {% else %}
+                        Anomalies
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
+        <div class="p-5 flex">
+            <label class="label">
+                <input type="checkbox" class="checkbox checkbox-primary" id="select_all"/>
+                <span class="label-text">&nbsp; Tout sélectionner</span>
+            </label>
+        </div>
+        <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
+            {% for employe in employes %}
+                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full">
+                    <div class="flex justify-between m-3">
+                        <div class="flex flex-col">
+                            <h1 class="text-primary">{{ employe.id }} - {{ employe.nomEmploye }} </h1>
+                        </div>
+                    </div>
+                    {# Tableau #}
+                    <div class="overflow-x-auto">
+                        <table class="table" id="">
+                        {% block thead %}
+                            {% include 'console/head.table.html.twig' %}
+                        {% endblock %}
+                        {% block tbody %}
+                            {% include 'console/body.table.html.twig' %}
+                        {% endblock %}
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <div class="flex gap-10 justify-center text-center m-16">
+        <a type="button" class="btn btn-primary btn-wide"  href="{{ path('api_post_deconnexion') }}">Quitter</a>
+        <button type="button" class="btn btn-primary btn-wide ">Approuver la selection</button>
+    </div>
+{% endblock %}
