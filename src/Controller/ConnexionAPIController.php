@@ -57,7 +57,8 @@ class ConnexionAPIController extends AbstractController
                 $message = 'Connexion réussi.';
                 $this->logger->info($message);
 
-                $page = ($user->getResponsable()->count() > 0) ? "/console" : "/temps";
+                $page = ($user->getResponsable()->count() > 0) ? '/console' : '/temps';
+
                 return new RedirectResponse($page);
             } else {
                 $message = 'Utilisateur introuvalbe';
@@ -72,7 +73,7 @@ class ConnexionAPIController extends AbstractController
     }
 
     #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]
-    public function logoutUser(): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function logoutUser(): RedirectResponse
     {
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);

@@ -9,10 +9,10 @@ document.getElementById("cbTacheSpe").addEventListener("change", function () {
     document.getElementById("tacheSpe").value = -1;
     if (document.getElementById("cbTacheSpe").checked) {
         document.getElementById("tacheSpe").disabled = false;
-    }else{
+    } else {
         document.getElementById("tacheSpe").disabled = true;
     }
-    
+
 })
 
 // 
@@ -103,11 +103,11 @@ function tacheChange(id) {
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     const state = await formSubmit();
-    if (state.status != 400 && state.status != 500) {
-        window.location.href = '/api/post/deconnexion';
+    if (!state.ok) {
+        alert("Une erreur s'est produite")
     }
     else {
-        alert("Une erreur s'est produite")
+        window.location.href = '/api/post/deconnexion';
     }
     document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 })
@@ -115,11 +115,11 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     const state = await formSubmit();
 
-    if (state.status != 400 && state.status != 500) {
-        window.location.href = '/temps';
-    }
-    else{
+    if (!state.ok) {
         alert("Une erreur s'est produite")
+    }
+    else {
+        window.location.href = '/temps';
     }
     document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 })

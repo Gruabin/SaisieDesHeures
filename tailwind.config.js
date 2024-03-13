@@ -3,28 +3,40 @@ module.exports = {
   content: [
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
-    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    screens: {
-      sm: '480px',
-      md: '768px',
-      lg: '976px',
-      xl: '1440px',
-    },
-    extend: {},
-    colors: {
-      'gruau-red': '#e83a38',
-      'gruau-dark-blue': '#005179',
-      'gruau-light-blue': '#00bbee',
-      'gruau-green': '#42b284',
-      'white': '#ffffff',
-      'black': '#000000',
+    extend: {
+      fontFamily: {
+        'handel': ['Handel Gothic', 'Verdana', 'sans - serif']
+      },
+      screens: {
+        sm: '480px',
+        md: '768px',
+        lg: '976px',
+        xl: '1440px',
+      },
+      textColor: {
+        'gruau-red': '#e83a38',
+        "gruau-light-blue": '#005179',
+        'gruau-light-blue': '#00bbee',
+        'gruau-green': '#42b284',
+        'white': '#ffffff',
+        'black': '#000000',
+      },
+      colors: {
+        'gruau-red': '#e83a38',
+        'gruau-dark-blue': '#005179',
+        'gruau-light-blue': '#00bbee',
+        'gruau-green': '#42b284',
+        'white': '#ffffff',
+        'black': '#000000',
+      },
     },
   },
   plugins: [
-    require('flowbite/plugin'),
     require("daisyui"),
+    require("tailwindcss"),
+    require("autoprefixer"),
   ],
   daisyui: {
     themes: [{
@@ -32,11 +44,12 @@ module.exports = {
         "primary": "#005179",
         "primary-content": "#ffffff",
         "secondary": "#00bbee",
-        "tertiary":"#42b284",
+        "secondary-content": "#ffffff",
+        "tertiary": "#42b284",
         "accent": "#e83a38",
         "neutral": "#333c4d",
         "base-100": "#ffffff",
-        "info": "#00bbee",
+        "info": "#ebfbff",
         "success": "#42b284",
         "warning": "#fbbd23",
         "error": "#e83a38",

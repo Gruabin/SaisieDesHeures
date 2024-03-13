@@ -1,0 +1,54 @@
+{% block tbody %}
+    <tbody>
+        {% for heure in employe.detailHeures %}
+            {% if heure.employe.id == employe.id and heure.statut is not null %}
+                {% if heure.statut.id == 2 or heure.statut.id == 3 %}
+                    <tr class="text-center">
+                        <td>
+                        <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="" id="">
+                        </td>
+                        <td>
+                            {{ heure.typeHeures.nomType }}
+                        </td>
+                        <td>
+                            {{ heure.ordre }}
+                        </td>
+                        <td>
+                            {{ heure.operation }}
+                        </td>
+                        <td>
+                            {% if heure.tache is not empty %}
+                                {{ heure.tache.id }} - {{ heure.tache.nomTache }}
+                            {% elseif heure.tacheSpecifique is not empty %}
+                                {{ heure.tacheSpecifique.id }} - {{ heure.tacheSpecifique.description }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ heure.centreDeCharge.id ?? null }}
+                        </td>
+                        <th>
+
+                            {{ heure.tempsMainOeuvre }}h
+                        </th>
+                        <td>
+                        {% if heure.statut.id == 3 %}
+                            <i class="fa-solid fa-circle-check fa-xl text-success"></i>
+                        {% elseif heure.statut.id == 2 %}
+                            <i class="fa-solid fa-circle-xmark fa-xl text-accent"></i>
+                        {% endif %}
+                        </td>
+                        <td>
+                            {{ heure.motifErreur }}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>
+                            <button type="button" class="btn btn-link xmark hidden" value="" ><i class="fa-solid fa-xmark fa-xl"></i></button>
+                            <button type="button" class="btn btn-link pen " value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
+                            <button type="button" class="btn btn-link xmark" value=""><i class="fa-solid fa-trash-can fa-xl"></i></button>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </tbody>
+{% endblock %}

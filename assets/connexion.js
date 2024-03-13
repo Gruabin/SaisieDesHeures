@@ -169,8 +169,6 @@ function submitForm() {
             body: JSON.stringify(data),
         }).then((response) => {
             if (!response.ok) {
-                console.log(response);
-                // Gérer d'autres statuts d'erreur ici
                 document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 throw new Error("Réponse inattendue du serveur");
             } else {
