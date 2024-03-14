@@ -109,7 +109,7 @@ class DetailHeuresAPIController extends AbstractController
         }
 
         // Vérifier si le token CSRF est valide
-        if ($this->isCsrfTokenValid('saisieToken', $token) || (null == $data)) {
+        if ($this->isCsrfTokenValid('saisieToken', $token)) {
             // Valider les données entrantes
             $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
             $typeHeures = $data['type_heures'] ?? null;

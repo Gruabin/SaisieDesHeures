@@ -58,4 +58,22 @@ class EmployeRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Retourne l'employé s'il est un responsable.
+     *
+     * @return ?Employe Employé ou null
+     */
+    public function estResponsable($user): bool
+    {
+        $qb = $this->createQueryBuilder('e')
+        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :user')
+        ->setParameter('user', $user)
+        ->addGroupBy('e')
+        ->getQuery()
+        ->getResult();
+        $return = (null == $qb) ? false : true;
+
+        return $return;
+    }
 }

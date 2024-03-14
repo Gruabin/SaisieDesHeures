@@ -64,8 +64,10 @@ Console d'approbation
             {% endfor %}
         </div>
     </section>
+    <input type="hidden" name="token" id="approbationToken" value="{{ csrf_token('approbationToken') }}">
     <div class="flex gap-10 justify-center text-center m-16">
-        <a type="button" class="btn btn-primary btn-wide"  href="{{ path('api_post_deconnexion') }}">Quitter</a>
-        <button type="button" class="btn btn-primary btn-wide ">Approuver la selection</button>
+        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('api_post_deconnexion') }}">Quitter</a>
+        <span id="loading" class=""></span>
+        <button type="button" id="validation" class="btn btn-primary btn-wide ">Approuver la selection</button>
     </div>
 {% endblock %}

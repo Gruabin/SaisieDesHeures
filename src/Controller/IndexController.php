@@ -82,6 +82,9 @@ class IndexController extends AbstractController
     public function console(DetailHeuresRepository $detailHeuresRepo, EmployeRepository $employeRepo): Response
     {
         $user = $this->getUser();
+        if (!$employeRepo->estResponsable($user)) {
+            return $this->redirectToRoute('temps');
+        }
 
         return $this->render('console/console.html.twig', [
             'user' => $user,
