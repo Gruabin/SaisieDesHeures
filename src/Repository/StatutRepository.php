@@ -21,11 +21,44 @@ class StatutRepository extends ServiceEntityRepository
         parent::__construct($registry, Statut::class);
     }
 
+    /**
+     * Récupère le statut Enregistré.
+     *
+     * @return ?Statut
+     */
     public function getStatutEnregistre(): ?Statut
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.id = :val')
             ->setParameter('val', 1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Récupère le statut Conforme.
+     *
+     * @return ?Statut
+     */
+    public function getStatutConforme(): ?Statut
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', 3)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Récupère le statut Approuvé.
+     *
+     * @return ?Statut
+     */
+    public function getStatutApprouve(): ?Statut
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', 4)
             ->getQuery()
             ->getOneOrNullResult();
     }

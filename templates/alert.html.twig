@@ -8,7 +8,7 @@
                 {{ message }}
             </span>
         </div>
-        <button class="absolute inset-y-0 right-0 mx-4 " data-dismiss-target="#flasheSuccess" aria-label="Close"><i class="fa-solid fa-xmark text-white"></i></button>
+        <button class="absolute inset-y-0 right-0 mx-4 " onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-xmark text-white"></i></button>
     </div>
 {% endfor %}
 {% for message in app.flashes('error') %}
@@ -21,7 +21,7 @@
                 {{ message }}
             </span>
         </div>
-        <button class="absolute inset-y-0 right-0 mx-4 " data-dismiss-target="#flasheError" aria-label="Close"><i class="fa-solid fa-xmark text-white"></i></button>
+        <button class="absolute inset-y-0 right-0 mx-4 " onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-xmark text-white"></i></button>
     </div>
 {% endfor %}
 {% for message in app.flashes('warning') %}
@@ -34,6 +34,6 @@
                 {{ message }}
             </span>
         </div>
-        <button class="absolute inset-y-0 right-0 mx-4 " data-dismiss-target="#flasheWarning" aria-label="Close"><i class="fa-solid fa-xmark text-white"></i></button>
+        <button class="absolute inset-y-0 right-0 mx-4 " onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-xmark text-white"></i></button>
     </div>
 {% endfor %}

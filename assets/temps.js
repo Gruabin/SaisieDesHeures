@@ -103,7 +103,7 @@ function tacheChange(id) {
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     const state = await formSubmit();
-    if (!state.ok) {
+    if (!state) {
         alert("Une erreur s'est produite")
     }
     else {
@@ -115,7 +115,7 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     const state = await formSubmit();
 
-    if (!state.ok) {
+    if (!state) {
         alert("Une erreur s'est produite")
     }
     else {

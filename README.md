@@ -25,23 +25,30 @@ Pour utiliser l'application en localhost vous avez juste à suivre les étapes s
 
 1. Vérifier que vous avez php 8
 2. Installer les dépendances
-   ```shell 
+
+   ```shell
    composer install
    npm install
    ```
+
 3. En cas de modification du fichier `AzureController.php` (sert en localhost) il faut également modifier le fichier `PipelineAzureController.php` (set sur app service)
 4. Démarrer le service php sur windows
+
    ```shell
    php -S 127.0.0.1:8000 -t public
    ```
-6. Démarrer le service webpack
+
+5. Démarrer le service webpack
+
    ```shell
    npm run watch
    ```
-7. Vous pouvez maintenant accéder à l'application via l'url `http://localhost:8000`
+
+6. Vous pouvez maintenant accéder à l'application via l'url `http://localhost:8000`
 
 # Linter
 Aide pour executer les linters
+
 ```shell
 php vendor/bin/php-cs-fixer fix
 ```
@@ -59,12 +66,12 @@ php vendor/bin/php-cs-fixer fix
 php vendor/bin/rector process src
 php vendor/bin/twig-cs-fixer lint --fix templates
 ```
-
 
 # TIPS
 
 Si vous êtes en localhost et que vous avez un problème de type 'openSSL' modifier le fichier 'CurlFactory' se situant: vendor\guzzlehttp\guzzle\src\Handler\CurlFactory.php
 Si vous ne trouvez pas le fichier faites la commande:
+
 ```shell
 composer require symfony/http-client
 ```

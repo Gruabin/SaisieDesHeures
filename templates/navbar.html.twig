@@ -5,7 +5,7 @@
         </a>
         <div class="flex md:order-2 w-56 justify-end max-sm:justify-center items-center max-sm:mt-1">
             {% if user.roles[0] is defined %}
-                <div class="dropdown dropdown-end">
+                <div class="dropdown dropdown-end" id="menu">
                     <div tabindex="0" role="button" class="btn btn-circle m-1">
                         <span class="sr-only">Open user menu</span>
                         <span class="text-xl font font-bold text-center" id="couleurLettre">{{ user.nomEmploye|slice(0, 1) }}</span>
@@ -17,18 +17,18 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{{ path('temps') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
+                                <a href="{{ path('temps') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" data-dismiss-target="#menu"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
                             </li>
                             <li>
-                                <a href="{{ path('historique') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
+                                <a href="{{ path('historique') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" data-dismiss-target="#menu"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
                             </li>
                             {% if user.responsable|length > 0 %}
                                 <li>
-                                    <a href="{{ path('console') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
+                                    <a href="{{ path('console') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" data-dismiss-target="#menu"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('api_post_deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Déconnexion</a>
+                                <a id="deconnexion" href="{{ path('api_post_deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue" data-dismiss-target="#menu"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Déconnexion</a>
                             </li>
                         </ul>
                     </div>

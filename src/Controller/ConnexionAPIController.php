@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\EmployeRepository;
 use App\Security\AuthSecurity;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,7 +28,6 @@ class ConnexionAPIController extends AbstractController
     public function loginUser(
         AuthSecurity $authSecurity,
         AuthenticationUtils $authenticationUtils,
-        EntityManagerInterface $entityManager,
         EmployeRepository $employeRepo,
         Request $request,
         UserAuthenticatorInterface $userAuth,
@@ -54,14 +52,14 @@ class ConnexionAPIController extends AbstractController
                     $request
                 );
 
-                $message = 'Connexion réussi.';
+                $message = 'Connexion de '.$user->getNomEmploye();
                 $this->logger->info($message);
 
                 $page = ($user->getResponsable()->count() > 0) ? '/console' : '/temps';
 
                 return new RedirectResponse($page);
             } else {
-                $message = 'Utilisateur introuvalbe';
+                $message = 'Utilisateur introuvable';
                 $this->logger->error($message);
             }
         } else {
@@ -78,16 +76,9 @@ class ConnexionAPIController extends AbstractController
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);
 
-        $message = 'Déconnexion réussi.';
+        $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
         $this->logger->info($message);
 
         return $this->redirectToRoute('home');
-    }
-
-    #[Route('/home', name: 'home_page', methods: ['GET'])]
-    public function securedPage(): Response
-    {
-        // Cette action est accessible uniquement si l'utilisateur est connecté
-        return $this->json(['message' => 'Page sécurisée']);
     }
 }
