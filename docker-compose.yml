@@ -1,0 +1,39 @@
+version: "3.4"
+
+services:
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    container_name: saisie-heures-nginx
+    depends_on:
+      - php
+    labels:
+      - traefik.enable=${TRAEFIK:-''}
+      - traefik.http.routers.saisie-heures-nginx.rule=Host(`${SERVICE_URL:-''}`)
+      - traefik.http.routers.saisie-heures-nginx.tls.certresolver=myresolver
+    restart: unless-stopped
+
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+      args:
+        - APP_DEBUG=${APP_DEBUG:-''}
+        - APP_ENV=${APP_ENV:-''}
+        - APP_SECRET=${APP_SECRET:-''}
+        - AZURE_TENANT_ID=${AZURE_TENANT_ID:-''}
+        - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN:-''}
+        - COMPOSER_NO_DEV=${COMPOSER_NO_DEV:-''}
+        - DATABASE_HOST=${DATABASE_HOST:-''}
+        - DATABASE_NAME=${DATABASE_NAME:-''}
+        - DATABASE_PASSWORD=${DATABASE_PASSWORD:-''}
+        - DATABASE_PORT=${DATABASE_PORT:-''}
+        - DATABASE_USER=${DATABASE_USER:-''}
+        - MAILER_DSN=${MAILER_DSN:-''}
+        - PHP_INI_ENV=${PHP_INI_ENV:-''}
+        - OAUTH_AZURE_CLIENT_ID=${OAUTH_AZURE_CLIENT_ID:-''}
+        - OAUTH_AZURE_CLIENT_SECRET=${OAUTH_AZURE_CLIENT_SECRET:-''}
+    container_name: saisie-heures-php
+    restart: unless-stopped

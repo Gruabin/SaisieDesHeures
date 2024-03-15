@@ -33,6 +33,9 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - script: |
+        cp ./app/ ./
+      displayName: 'Copy files application'
+    - script: |
         cp .env.prod .env
       displayName: 'Copy .env.prod to .env'
 

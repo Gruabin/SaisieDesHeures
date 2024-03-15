@@ -1,0 +1,24 @@
+version: "3.4"
+
+services:
+
+  nginx:
+    volumes:
+      - ./app/public:/var/www/html/public
+
+  php:
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
+    volumes:
+      - ./app:/var/www/html
+      - ./docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+
+  node:
+    image: node
+    container_name: saisie-heures-node
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+      - ./docker/node/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+    working_dir: /var/www/html
+
