@@ -14,7 +14,6 @@
         "doctrine/doctrine-migrations-bundle": "*",
         "doctrine/orm": "*",
         "firebase/php-jwt": "*",
-        "gedmo/doctrine-extensions": "*",
         "knplabs/knp-paginator-bundle": "*",
         "knpuniversity/oauth2-client-bundle": "*",
         "nelmio/cors-bundle": "^2.4",

@@ -3,7 +3,7 @@
     Saisie des heures
 {% endblock %}
 {% block body %}
-    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col lg:flex-row lg:items-center p-2">
@@ -43,8 +43,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-[#f5f5f5] border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+    </section>
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col flex-wrap text-center p-2">
@@ -52,7 +52,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="selectTemps"><b>Type d'heures</b></label>
                 </div>
-                <div class="flex-1 text-left md:flex md:self-center">
+                <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
                             <option value="-1">-- Sélectionner un type d'heure --</option>
@@ -68,7 +68,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="ordre"><b>Ordre</b></label>
                 </div>
-                <div class="flex-1 text-left">
+                <div class="flex-1 text-left items-center">
                     <input class="input focus:ring-primary mx-3" type="text" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">
                     <p class="mx-3" id="infoOrdre"></p>
                 </div>
@@ -77,7 +77,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="activite"><b>Activité</b></label>
                 </div>
-                <div class="flex-1 text-left md:self-center">
+                <div class="flex-1 text-left md:self-center items-center">
                     <input class="input focus:ring-primary mx-3" type="text" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
                     <p class="mx-3" id="infoActivite"></p>
                 </div>
@@ -86,7 +86,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="tache"><b>Tâche</b></label>
                 </div>
-                <div class="flex-1 text-left md:flex md:self-center">
+                <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" name="tache" id="tache">
                             <option value="-1" selected>-- Sélectionner une tâche --</option>
@@ -101,7 +101,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="operation"><b>Opération</b></label>
                 </div>
-                <div class="flex-1 text-left md:self-center">
+                <div class="flex-1 text-left md:self-center items-center">
                     <input class="input focus:ring-primary mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
                 </div>
             </div>
@@ -109,9 +109,9 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="tacheSpe"><b>Tâche spécifique</b></label>
                 </div>
-                <div class="flex-1 text-left md:self-center">
-                    <input type="checkbox" class="checkbox checkbox-primary border-none focus:ring-primary" id="cbTacheSpe" />
-                    <select class="select focus:ring-primary mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
+                <div class="flex-1 flex text-left md:self-center items-center">
+                    <input type="checkbox" class="checkbox checkbox-primary" id="cbTacheSpe" />
+                    <select class="select mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
                         <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
                         {% for tache in tachesSpe %}
                             <option value="{{ tache.id }}">{{ tache.id }} - {{ tache.description }}</option>
@@ -123,22 +123,20 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="centrecharge"><b>Centre de charge</b></label>
                 </div>
-                <div class="flex-1 text-left md:flex md:self-center">
-                    <div>
-                        <select class="select focus:ring-primary mx-3" name="centrecharge" id="centrecharge">
-                            <option value="-1">-- Sélectionner un centre de charge --</option>
-                            {% for centre_charge in CDG %}
-                                <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                <div class="flex-1 text-left md:flex md:self-center items-center">
+                    <select class="select focus:ring-primary mx-3" name="centrecharge" id="centrecharge">
+                        <option value="-1">-- Sélectionner un centre de charge --</option>
+                        {% for centre_charge in CDG %}
+                            <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisiTemps">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
                 </div>
-                <div class="flex-1 text-left md:self-center">
+                <div class="flex-1 text-left md:self-center items-center">
                     <input class="input focus:ring-primary mx-3" type="number" max="100" step=".25" name="saisitemps" id="saisitemps">
                 </div>
             </div>
@@ -158,9 +156,5 @@
                 Enregistrer et continuer
             </button>
         </div>
-    </div>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-        {{ encore_entry_script_tags('temps') }}
-    {% endblock %}
+    </section>
 {% endblock %}

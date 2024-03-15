@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Repository\EmployeRepository;
 use App\Security\AuthSecurity;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +28,6 @@ class ConnexionAPIController extends AbstractController
     public function loginUser(
         AuthSecurity $authSecurity,
         AuthenticationUtils $authenticationUtils,
-        EntityManagerInterface $entityManager,
         EmployeRepository $employeRepo,
         Request $request,
         UserAuthenticatorInterface $userAuth,
@@ -45,8 +44,6 @@ class ConnexionAPIController extends AbstractController
         if ($this->isCsrfTokenValid('loginToken', $token)) {
             // Récupérez l'ID de l'utilisateur depuis les données de la requête
             $userId = $data['id'];
-            // Vous pouvez vérifier l'existence de l'utilisateur en fonction de son ID ici
-            // Assurez-vous d'adapter cette logique à votre propre système
             $user = $employeRepo->findOneBy(['id' => $userId]);
             if ($user) {
                 $userAuth->authenticateUser(
@@ -55,12 +52,14 @@ class ConnexionAPIController extends AbstractController
                     $request
                 );
 
-                $message = 'Connexion réussi.';
+                $message = 'Connexion de '.$user->getNomEmploye();
                 $this->logger->info($message);
 
-                return $this->json(['message' => 'ID OK'], Response::HTTP_OK);
+                $page = ($user->getResponsable()->count() > 0) ? '/console' : '/temps';
+
+                return new RedirectResponse($page);
             } else {
-                $message = 'Utilisateur introuvalbe';
+                $message = 'Utilisateur introuvable';
                 $this->logger->error($message);
             }
         } else {
@@ -72,21 +71,15 @@ class ConnexionAPIController extends AbstractController
     }
 
     #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]
-    public function logoutUser(): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function logoutUser(): RedirectResponse
     {
+        $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
+        $this->addFlash('success', 'Déconnexion de ' . $this->getUser()->getNomEmploye());
+        $this->logger->info($message);
+
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);
 
-        $message = 'Déconnexion réussi.';
-        $this->logger->info($message);
-
         return $this->redirectToRoute('home');
-    }
-
-    #[Route('/home', name: 'home_page', methods: ['GET'])]
-    public function securedPage(): Response
-    {
-        // Cette action est accessible uniquement si l'utilisateur est connecté
-        return $this->json(['message' => 'Page sécurisée']);
     }
 }

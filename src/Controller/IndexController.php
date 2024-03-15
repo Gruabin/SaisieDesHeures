@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
+use App\Repository\EmployeRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
@@ -30,9 +31,7 @@ class IndexController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(): Response
     {
-        // Rendre la vue 'index/index.html.twig' en passant les variables 'controller_name' et 'user'
         return $this->render('identification.html.twig', [
-            'controller_name' => 'IndexController',
             'user' => $this->getUser(),
         ]);
     }
@@ -75,6 +74,23 @@ class IndexController extends AbstractController
             'details' => $detailHeuresRepo->findAllTodayUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
+        ]);
+    }
+
+    // Affiche la page de console d'approbation
+    #[Route('/console', name: 'console')]
+    public function console(DetailHeuresRepository $detailHeuresRepo, EmployeRepository $employeRepo): Response
+    {
+        $user = $this->getUser();
+        if (!$employeRepo->estResponsable($user)) {
+            return $this->redirectToRoute('temps');
+        }
+
+        return $this->render('console/console.html.twig', [
+            'user' => $user,
+            'site' => substr((string) $user->getId(), 0, 2),
+            'nbAnomalie' => $detailHeuresRepo->findNbAnomalie(),
+            'employes' => $employeRepo->findHeuresControle($user->getId()),
         ]);
     }
 

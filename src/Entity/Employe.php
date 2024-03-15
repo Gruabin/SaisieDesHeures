@@ -27,9 +27,13 @@ class Employe implements UserInterface
     #[ORM\Column(options: ['default' => false])]
     private ?bool $acces_export = false;
 
+    #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
+    private Collection $responsable;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
+        $this->responsable = new ArrayCollection();
     }
 
     public function getRoles(): array
@@ -123,5 +127,13 @@ class Employe implements UserInterface
         $this->acces_export = $acces_export;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, CentreDeCharge>
+     */
+    public function getResponsable(): Collection
+    {
+        return $this->responsable;
     }
 }

@@ -21,20 +21,19 @@ class EmployeRepository extends ServiceEntityRepository
         parent::__construct($registry, Employe::class);
     }
 
-    //    /**
-    //     * @return Employe[] Returns an array of Employe objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Employe[] Retourne les employées d'un responsable
+     */
+    public function findEmployeByResponsable($responsable): array
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.centre_de_charge', 'centre_de_charge')
+            ->andWhere('centre_de_charge.responsable = :responsable')
+            ->setParameter('responsable', $responsable)
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function findAll(): array
     {
@@ -42,5 +41,39 @@ class EmployeRepository extends ServiceEntityRepository
             ->orderBy('e.id', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Récupère toute les heures à controller du responsable connecté trié par employe.
+     *
+     * @return array Retourne les employées d'un responsable
+     */
+    public function findHeuresControle($responsable): array
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
+        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :responsable_id')
+        ->setParameter('responsable_id', $responsable)
+        ->orderBy('e.id', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Retourne l'employé s'il est un responsable.
+     *
+     * @return ?Employe Employé ou null
+     */
+    public function estResponsable($user): bool
+    {
+        $qb = $this->createQueryBuilder('e')
+        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :user')
+        ->setParameter('user', $user)
+        ->addGroupBy('e')
+        ->getQuery()
+        ->getResult();
+        $return = (null == $qb) ? false : true;
+
+        return $return;
     }
 }

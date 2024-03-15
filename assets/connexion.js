@@ -27,7 +27,7 @@ function findEmploye() {
         return;
     }
 
-    // Recherche l'employé par ID Entier
+    // Recherche l'employé par matricule Entier
     if (inputEmploye.length == 9 && recherche) {
         var url = "api/get/employe/" + inputEmploye;
         recherche = false;
@@ -36,7 +36,6 @@ function findEmploye() {
         fetch(url, {
             headers: {
                 'X-API-Key': '^^u6#h289SrB$!DxDDms55reFZcwWoY2e93TcseYf8^URbaZ%!CS^cHD^6YfyX!e4Lo@oPg3&u8b7dzA*Q9PYCdBRVRVGut3r2$JT2J9kU*FNKbmQ$@8oxtE5!mp7m8#'
-
             }
         }).then(function (response) {
             document.getElementById("btnConnexion").classList.add("btn-disabled");
@@ -64,7 +63,7 @@ function findEmploye() {
         recherche = true;
     }
 
-    // Recherche en BDD lorsque les 3 premières caractères sont écrits en fonction d'eux
+    // Recherche en BDD lorsque les 3 premiers caractères sont écrits en fonction d'eux
     if (inputEmploye.length > 2) {
         if (inputEmploye.length == 3) {
             recherche = false;
@@ -168,18 +167,16 @@ function submitForm() {
             },
             body: JSON.stringify(data),
         }).then((response) => {
-            if (response.status === 200) {
-                // Rediriger l'utilisateur en cas de succès
-                window.location.href = "/temps";
-            } else {
-                console.log(response);
-                // Gérer d'autres statuts d'erreur ici
+            if (!response.ok) {
                 document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
                 throw new Error("Réponse inattendue du serveur");
+            } else {
+                // Rediriger l'utilisateur en cas de succès
+                window.location.href = response.url;
             }
         }).catch((error) => {
             // Afficher un message d'erreur
-            console.log(response);
+            alert(error);
             // Gérer d'autres statuts d'erreur ici
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             throw new Error("Réponse inattendue du serveur");

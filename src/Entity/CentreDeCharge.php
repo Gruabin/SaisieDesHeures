@@ -20,6 +20,9 @@ class CentreDeCharge
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    #[ORM\ManyToOne(inversedBy: 'responsable')]
+    private ?employe $responsable = null;
+
     public function __construct()
     {
         $this->employes = new ArrayCollection();
@@ -103,6 +106,18 @@ class CentreDeCharge
                 $detailHeure->setCentreDeCharge(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResponsable(): ?employe
+    {
+        return $this->responsable;
+    }
+
+    public function setResponsable(?employe $responsable): static
+    {
+        $this->responsable = $responsable;
 
         return $this;
     }

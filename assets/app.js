@@ -7,7 +7,6 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
-// import 'flowbite';
 
 require('@fortawesome/fontawesome-free/css/fontawesome.min.css');
 require('@fortawesome/fontawesome-free/css/solid.min.css');
