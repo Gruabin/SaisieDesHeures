@@ -73,11 +73,12 @@ class ConnexionAPIController extends AbstractController
     #[Route('/api/post/deconnexion', name: 'api_post_deconnexion', methods: ['GET'])]
     public function logoutUser(): RedirectResponse
     {
+        $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
+        $this->addFlash('success', 'Déconnexion de ' . $this->getUser()->getNomEmploye());
+        $this->logger->info($message);
+
         $tokenStorage = $this->container->get('security.token_storage');
         $tokenStorage->setToken(null);
-
-        $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
-        $this->logger->info($message);
 
         return $this->redirectToRoute('home');
     }
