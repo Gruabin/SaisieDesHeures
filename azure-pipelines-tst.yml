@@ -125,13 +125,15 @@ stages:
             deploy:
               steps:
               - task: AzureCLI@2
+                displayName: "Création du Slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
-                  scriptType: 'ps'
+                  scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
               
               - task: AzureRmWebAppDeployment@4
+                displayName: "Déploiement de l'application"
                 inputs:
                   ConnectionType: 'AzureRM'
                   azureSubscription: '$(azureSubscription)'
@@ -144,6 +146,7 @@ stages:
                   StartupCommand: '/home/site/wwwroot/startup.sh'
               
               - task: AzureAppServiceManage@0
+                displayName: "Swap des Slots"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   Action: 'Swap Slots'
@@ -152,6 +155,7 @@ stages:
                   SourceSlot: '$(slotName)'
               
               - task: AzureAppServiceManage@0
+                displayName: "Suppression du Slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   Action: 'Delete Slot'
