@@ -20,7 +20,7 @@ variables:
   environmentName: "app-gruau-prd-test-slot"
 
   # Resource group name
-  rgName: "rg-tst-webapps"
+  rgName: "rg-prd-webapps"
 
   # Slot name
   slotName: "temp"
