@@ -17,7 +17,7 @@ variables:
   vmImageName: "ubuntu-latest"
 
   # Environment name
-  environmentName: "app-gruau-prd-test-slot"
+  environmentName: "app-gruau-prd-saisie-heures"
 
   # Resource group name
   rgName: "rg-prd-webapps"
