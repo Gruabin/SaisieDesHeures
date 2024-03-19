@@ -19,6 +19,12 @@ variables:
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures"
 
+  # Resource group name
+  rgName: "rg-tst-webapps"
+
+  # Slot name
+  slotName: "temp"
+
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
 
@@ -118,11 +124,37 @@ stages:
           runOnce:
             deploy:
               steps:
+              - task: AzureCLI@2
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  scriptType: 'ps'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
+              
               - task: AzureRmWebAppDeployment@4
                 inputs:
                   ConnectionType: 'AzureRM'
                   azureSubscription: '$(azureSubscription)'
                   appType: 'webAppLinux'
                   WebAppName: '$(webAppName)'
+                  deployToSlotOrASE: true
+                  ResourceGroupName: '$(rgName)'
+                  SlotName: '$(slotName)'
                   packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
                   StartupCommand: '/home/site/wwwroot/startup.sh'
+              
+              - task: AzureAppServiceManage@0
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  Action: 'Swap Slots'
+                  WebAppName: '$(webAppName)'
+                  ResourceGroupName: '$(rgName)'
+                  SourceSlot: '$(slotName)'
+              
+              - task: AzureAppServiceManage@0
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  Action: 'Delete Slot'
+                  WebAppName: '$(webAppName)'
+                  ResourceGroupName: '$(rgName)'
+                  Slot: '$(slotName)'
