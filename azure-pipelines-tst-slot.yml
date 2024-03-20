@@ -94,7 +94,7 @@ stages:
 
           # Mend
           - task: WhiteSource@21
-          displayName: "Mend"
+            displayName: "Mend"
             inputs:
               cwd: '$(System.DefaultWorkingDirectory)'
 
