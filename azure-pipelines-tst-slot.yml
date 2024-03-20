@@ -47,9 +47,9 @@ stages:
             displayName: "Composer install"
 
           # Install the JavaScript packages with Yarn
-          - script: yarn install
+          - script: npm install
             workingDirectory: $(rootFolder)
-            displayName: "Run yarn install"
+            displayName: "Run npm install"
 
           # Install the Symfony CLI to test for requirements
           - script: curl -sS https://get.symfony.com/cli/installer | bash
@@ -62,7 +62,7 @@ stages:
             displayName: "Symfony - Check requirements"
 
           # Build JavaScript assets
-          - script: yarn build
+          - script: npm run build
             workingDirectory: $(rootFolder)
             displayName: "Build JS assets"
 
