@@ -93,7 +93,7 @@ stages:
             displayName: "Linter twig CS fixer"
 
           # Mend
-          - task: mend@21
+          - task: WhiteSource@21
             inputs:
               cwd: '$(System.DefaultWorkingDirectory)'
 
