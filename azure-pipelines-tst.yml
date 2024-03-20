@@ -32,7 +32,7 @@ stages:
 - stage: Build
   displayName: Build stage
   variables:
-    phpVersion: "8.0"
+    phpVersion: "8.2"
   jobs:
     - job: BuildJob
       pool:
@@ -52,10 +52,10 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "Composer install"
 
-        # Install the JavaScript packages with Yarn
-        - script: yarn install
+        # Install the JavaScript packages with npm
+        - script: npm install
           workingDirectory: $(rootFolder)
-          displayName: "Run yarn install"
+          displayName: "Run npm install"
 
         # Install the Symfony CLI to test for requirements
         - script: curl -sS https://get.symfony.com/cli/installer | bash
@@ -68,7 +68,7 @@ stages:
           displayName: "Symfony - Check requirements"
 
         # Build JavaScript assets
-        - script: yarn build
+        - script: npm run build
           workingDirectory: $(rootFolder)
           displayName: "Build JS assets"
 
@@ -101,7 +101,7 @@ stages:
         # Mend
         - task: WhiteSource@21
           displayName: "Mend"
-            inputs:
+          inputs:
             cwd: '$(System.DefaultWorkingDirectory)'
 
         - task: ArchiveFiles@2
