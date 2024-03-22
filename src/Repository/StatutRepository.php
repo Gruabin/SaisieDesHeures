@@ -36,6 +36,20 @@ class StatutRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère le statut Anomalie.
+     *
+     * @return ?Statut
+     */
+    public function getStatutAnomalie(): ?Statut
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', 2)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * Récupère le statut Conforme.
      *
      * @return ?Statut
@@ -59,6 +73,20 @@ class StatutRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->andWhere('s.id = :val')
             ->setParameter('val', 4)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Récupère le statut Supprimé.
+     *
+     * @return ?Statut
+     */
+    public function getStatutSupprime(): ?Statut
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', 6)
             ->getQuery()
             ->getOneOrNullResult();
     }

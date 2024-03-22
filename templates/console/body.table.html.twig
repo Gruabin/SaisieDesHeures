@@ -3,7 +3,8 @@
         {% for heure in employe.detailHeures %}
             {% if heure.employe.id == employe.id and heure.statut is not null %}
                 {% if heure.statut.id == 2 or heure.statut.id == 3 %}
-                    <tr class="text-center ligne" data-idligne="{{ heure.id }}">
+                    <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}">
+                        <input type="hidden" name="token" id="ligneToken" value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
                         <td>
                             <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="" id="">
                         </td>
@@ -11,10 +12,10 @@
                             {{ heure.typeHeures.nomType }}
                         </td>
                         <td>
-                            {{ heure.ordre }}
+                            {{ heure.ordre ?? null }}
                         </td>
                         <td>
-                            {{ heure.operation }}
+                            {{ heure.operation ?? null }}
                         </td>
                         <td>
                             {% if heure.tache is not empty %}
@@ -28,9 +29,9 @@
                         </td>
                         <th>
 
-                            {{ heure.tempsMainOeuvre }}h
+                            {{ heure.tempsMainOeuvre }}
                         </th>
-                        <td>
+                        <td >
                         {% if heure.statut.id == 3 %}
                             <i class="fa-solid fa-circle-check fa-xl text-success"></i>
                         {% elseif heure.statut.id == 2 %}
@@ -38,13 +39,13 @@
                         {% endif %}
                         </td>
                         <td>
-                            {{ heure.motifErreur }}
+                            {{ heure.motifErreur ?? null }}
                         </td>
                         <td>
                             <button type="button" data-ligne="{{ heure.id }}" id="check" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>
                             <button type="button" data-ligne="{{ heure.id }}" id="xmark" class="btn btn-link xmark hidden" value="" ><i class="fa-solid fa-xmark fa-xl"></i></button>
-                            <button type="button" data-ligne="{{ heure.id }}" id="pen" class="btn btn-link pen hidden" value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
-                            <button type="button" data-ligne="{{ heure.id }}" id="trash" class="btn btn-link xmark hidden" value=""><i class="fa-solid fa-trash-can fa-xl"></i></button>
+                            <button type="button" data-ligne="{{ heure.id }}" id="pen" class="btn btn-link pen" value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
+                            <button type="button" data-ligne="{{ heure.id }}" id="trash" class="btn btn-link xmark" value=""><i class="fa-solid fa-trash-can fa-xl"></i></button>
                         </td>
                     </tr>
                 {% endif %}

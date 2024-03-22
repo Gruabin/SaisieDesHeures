@@ -1,4 +1,4 @@
-Gruau - Saisi des heures
+Gruau - Saisie des heures
 --------
 Saisi des heures est une application web légère conçue pour simplifier la gestion de temps 
 et la saisie des heures pour les employés. Elle permet aux utilisateurs de suivre, 
