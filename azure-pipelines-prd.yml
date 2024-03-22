@@ -19,12 +19,6 @@ variables:
   # Environment name
   environmentName: 'app-gruau-prd-saisie-heures'
 
-    # Resource group name
-  rgName: "rg-prd-webapps"
-
-  # Slot name
-  slotName: "temp"
-
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
 
@@ -32,7 +26,7 @@ stages:
 - stage: Build
   displayName: Build stage
   variables:
-    phpVersion: '8.0'
+    phpVersion: "8.2"
   jobs:
   - job: BuildJob
     pool:
@@ -50,17 +44,18 @@ stages:
         sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
         php -version
       workingDirectory: $(rootFolder)
-      displayName: 'Use PHP version $(phpVersion)'
+      displayName: "Use PHP version $(phpVersion)"
 
+    #install les packages Symfony
     - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
       workingDirectory: $(rootFolder)
-      displayName: 'Composer install'
+      displayName: "Composer install"
 
-    # Install the JavaScript packages with Yarn
-    - script: yarn install
+    # Install the JavaScript packages with npm
+    - script: npm install
       workingDirectory: $(rootFolder)
-      displayName: "Run yarn install"
-    
+      displayName: "Run npm install"
+
     # Install the Symfony CLI to test for requirements
     - script: curl -sS https://get.symfony.com/cli/installer | bash
       workingDirectory: $(rootFolder)
@@ -70,21 +65,21 @@ stages:
     - script: /home/vsts/.symfony5/bin/symfony check:requirements
       workingDirectory: $(rootFolder)
       displayName: "Symfony - Check requirements"
-      
+
     # Build JavaScript assets
-    - script: yarn build
+    - script: npm run build
       workingDirectory: $(rootFolder)
       displayName: "Build JS assets"
-      
+
     # Generate cache file structure
     - script: composer dump-autoload --classmap-authoritative
       workingDirectory: $(rootFolder)
-      displayName: "Generate cache file structure" 
+      displayName: "Generate cache file structure"
 
     # Clear cache
     - script: php bin/console cache:clear
       workingDirectory: $(rootFolder)
-      displayName: "Clear cache" 
+      displayName: "Clear cache"
 
     # Linter PHP CS fixer
     - script: php vendor/bin/php-cs-fixer fix
@@ -102,17 +97,23 @@ stages:
       workingDirectory: $(rootFolder)
       displayName: "Linter twig CS fixer"
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    # Mend
+    - task: WhiteSource@21
+      displayName: "Mend"
       inputs:
-        rootFolderOrFile: '$(rootFolder)'
+        cwd: '$(System.DefaultWorkingDirectory)'
+
+    - task: ArchiveFiles@2
+      displayName: "Archive files"
+      inputs:
+        rootFolderOrFile: "$(rootFolder)"
         includeRootFolder: false
         archiveType: zip
         archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
         replaceExistingArchive: true
 
     - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      displayName: 'Upload package'
+      displayName: "Upload package"
       artifact: drop
 
 - stage: Deploy
@@ -128,14 +129,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: AzureCLI@2
-            displayName: "Création du Slot"
-            inputs:
-              azureSubscription: '$(azureSubscription)'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
-          
           - task: AzureRmWebAppDeployment@4
             displayName: "Déploiement de l'application"
             inputs:
@@ -143,26 +136,5 @@ stages:
               azureSubscription: '$(azureSubscription)'
               appType: 'webAppLinux'
               WebAppName: '$(webAppName)'
-              deployToSlotOrASE: true
-              ResourceGroupName: '$(rgName)'
-              SlotName: '$(slotName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
-          
-          - task: AzureAppServiceManage@0
-            displayName: "Swap des Slots"
-            inputs:
-              azureSubscription: '$(azureSubscription)'
-              Action: 'Swap Slots'
-              WebAppName: '$(webAppName)'
-              ResourceGroupName: '$(rgName)'
-              SourceSlot: '$(slotName)'
-          
-          - task: AzureAppServiceManage@0
-            displayName: "Suppression du Slot"
-            inputs:
-              azureSubscription: '$(azureSubscription)'
-              Action: 'Delete Slot'
-              WebAppName: '$(webAppName)'
-              ResourceGroupName: '$(rgName)'
-              Slot: '$(slotName)'

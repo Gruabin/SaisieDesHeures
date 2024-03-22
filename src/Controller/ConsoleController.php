@@ -25,23 +25,25 @@ class ConsoleController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/api/post/approuver', name: 'approuver', methods: ['POST'])]
-    public function approuver(Request $request, DetailHeuresRepository $detailHeuresRepo, StatutRepository $statutRepo): Response
+    /**
+     * Fonction pour approuver les lignes de détails des heures via une requête POST.
+     * Vérifie le jeton CSRF, met à jour le statut des détails conformes à approuvé, et enregistre les modifications.
+     * Retourne des messages de succès ou d'erreur en fonction du résultat.
+     */
+    #[Route('/api/post/approuverLigne', name: 'approuverLigne', methods: ['POST'])]
+    public function approuverLigne(Request $request, DetailHeuresRepository $detailHeuresRepo, StatutRepository $statutRepo): Response
     {
         try {
             // Récupérer les données JSON envoyées dans la requête POST
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $token = $data['token'];
-
             // Vérifie si le jeton CSRF est valide
-            if ($this->isCsrfTokenValid('approbationToken', $token)) {
+            if ($this->isCsrfTokenValid('ligneToken'.$data['id'], $token)) {
                 $statutApprouvé = $statutRepo->getStatutApprouve();
                 $statutConforme = $statutRepo->getStatutConforme();
-
                 // Parcourir les ID des détails envoyés
                 foreach ($data['id'] as $ligne) {
                     $unDetail = $detailHeuresRepo->findOneBy(['id' => $ligne]);
-
                     // Vérifie si le statut du détail est conforme
                     if ($unDetail->getStatut() == $statutConforme) {
                         $unDetail->setStatut($statutApprouvé);
@@ -54,10 +56,55 @@ class ConsoleController extends AbstractController
                 $code = Response::HTTP_OK;
                 $this->addFlash('success', $message);
             }
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             $message = 'Erreur lors de l\'approbation';
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $this->addFlash('error', $th);
+            $this->addFlash('error', $message);
+        }
+
+        return new Response($message, $code);
+    }
+
+    /**
+     * Fonction pour supprimer les lignes de détails des heures via une requête POST.
+     * Vérifie le jeton CSRF, met à jour le statut des détails à supprimé, et enregistre les modifications.
+     * Retourne des messages de succès ou d'erreur en fonction du résultat.
+     */
+    #[Route('/api/post/supprimerligne', name: 'supprimerligne', methods: ['POST'])]
+    public function supprimerligne(Request $request, DetailHeuresRepository $detailHeuresRepo, StatutRepository $statutRepo): Response
+    {
+        try {
+            // Récupérer les données JSON envoyées dans la requête POST de manière sécurisée
+            $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $token = $data['token'] ?? '';
+
+            // Vérifie si le jeton CSRF est valide
+            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
+                $statutSupprime = $statutRepo->getStatutSupprime();
+                $statutConforme = $statutRepo->getStatutConforme();
+                $statutAnomalie = $statutRepo->getStatutAnomalie();
+                $unDetail = $detailHeuresRepo->find($data['id']);
+
+                if ($unDetail && in_array($unDetail->getStatut(), [$statutConforme, $statutAnomalie])) {
+                    $unDetail->setStatut($statutSupprime);
+                    $unDetail->setMotifErreur(null);
+                    $this->entityManager->persist($unDetail);
+                    $this->entityManager->flush();
+                    $this->logger->info('Détail n°'.$data['id'].' Supprimé par '.$this->getUser()->getNomEmploye());
+
+                    $message = 'Heure Supprimé';
+                    $code = Response::HTTP_OK;
+                } else {
+                    $message = 'Statut du détail non conforme pour la suppression';
+                    $code = Response::HTTP_BAD_REQUEST;
+                }
+            } else {
+                $message = 'Jeton CSRF invalide';
+                $code = Response::HTTP_UNAUTHORIZED;
+            }
+        } catch (\Throwable) {
+            $message = 'Erreur lors de la suppression';
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
         return new Response($message, $code);
