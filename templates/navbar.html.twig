@@ -5,7 +5,7 @@
         </a>
         <div class="flex md:order-2 w-56 justify-end max-sm:justify-center items-center max-sm:mt-1">
             {% if user.roles[0] is defined %}
-                <div class="dropdown dropdown-end" >
+                <div class="dropdown md:dropdown-end dropdown-bottom" >
                     <div  tabindex="0" role="button" class="btn btn-circle m-1">
                         <span class="sr-only">Open user menu</span>
                         <span class="text-xl font font-bold text-center" id="couleurLettre">{{ user.nomEmploye|slice(0, 1) }}</span>

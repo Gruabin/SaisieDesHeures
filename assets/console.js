@@ -109,31 +109,31 @@ ligne.forEach(element => {
         document.getElementById('modalSuppr').close();
     });
     //  Ouvre la modal
-    element.querySelector('#trash').addEventListener("click", (event) => {
+    element.querySelector('#trash').addEventListener("click", () => {
         document.getElementById('modalSuppr').showModal();
-        // Supprime la ligne
-        document.getElementById('btnModalSuppr').addEventListener("click", () => {
-            APISuppression(element);
-        });
+        ligneASupprimer = element
     });
 });
 
+// Supprime la ligne
+document.getElementById('btnModalSuppr').addEventListener("click", () => {
+    APISuppression(ligneASupprimer);
+});
 
 //
 // * Supprime une ligne
 //
-function APISuppression(element) {
+function APISuppression(ligneASupprimer) {
 
-    token = element.querySelector('#ligneToken').value;
+    token = ligneASupprimer.querySelector('#ligneToken').value;
     document.getElementById('btnModalSuppr').classList.add("invisible");
     document.getElementById('btnModalAnnuler').classList.add("invisible");
     document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const data = {
-        id: element.dataset.idligne,
+        id: ligneASupprimer.dataset.idligne,
         token: token
     };
-    console.log(element);
     fetch("api/post/supprimerligne",
         {
             method: 'POST',
@@ -144,11 +144,11 @@ function APISuppression(element) {
         }
     ).then((response) => {
         if (response.ok) {
-            if (element.dataset.statut == 2) {
+            if (ligneASupprimer.dataset.statut == 2) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
-            element.remove();
-            element = null;
+            ligneASupprimer.remove();
+            // element = null;
             addToastSuccess("Saisie supprimée");
         } else {
             addToastErreur("Erreur lors de la suppression de la saisie");

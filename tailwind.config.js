@@ -55,6 +55,7 @@ module.exports = {
         "success-content": "#ffffff",
         "warning": "#fbbd23",
         "error": "#e83a38",
+        "error-content": "#ffffff",
       },
     },
       "light",
