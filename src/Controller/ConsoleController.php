@@ -6,6 +6,7 @@ use App\Repository\DetailHeuresRepository;
 use App\Repository\StatutRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,15 +39,15 @@ class ConsoleController extends AbstractController
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $token = $data['token'];
             // Vérifie si le jeton CSRF est valide
-            if ($this->isCsrfTokenValid('ligneToken'.$data['id'], $token)) {
-                $statutApprouvé = $statutRepo->getStatutApprouve();
+            if (!empty($token) && $this->isCsrfTokenValid('approbationToken', $token)) {
+                $statutApprouve = $statutRepo->getStatutApprouve();
                 $statutConforme = $statutRepo->getStatutConforme();
                 // Parcourir les ID des détails envoyés
                 foreach ($data['id'] as $ligne) {
                     $unDetail = $detailHeuresRepo->findOneBy(['id' => $ligne]);
                     // Vérifie si le statut du détail est conforme
                     if ($unDetail->getStatut() == $statutConforme) {
-                        $unDetail->setStatut($statutApprouvé);
+                        $unDetail->setStatut($statutApprouve);
                         $this->entityManager->persist($unDetail);
                         $this->entityManager->flush();
                         $this->logger->info('Détail n°'.$ligne.' approuvé par '.$this->getUser()->getNomEmploye());
@@ -55,6 +56,9 @@ class ConsoleController extends AbstractController
                 $message = 'Heures approuvées';
                 $code = Response::HTTP_OK;
                 $this->addFlash('success', $message);
+            }else {
+                $message = 'Jeton CSRF invalide';
+                $code = Response::HTTP_UNAUTHORIZED;
             }
         } catch (\Throwable) {
             $message = 'Erreur lors de l\'approbation';
