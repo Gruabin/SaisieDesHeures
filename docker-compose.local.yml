@@ -7,7 +7,7 @@ services:
       - ./app/public:/var/www/html/public
 
   php:
-    entrypoint: /usr/local/bin/docker-entrypoint.sh
+    command: ["cd /usr/local/bin/ && ls -al"] 
     volumes:
       - ./app:/var/www/html
       - ./docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
@@ -15,7 +15,7 @@ services:
   node:
     image: node
     container_name: saisie-heures-node
-    entrypoint: /usr/local/bin/docker-entrypoint.sh
+    command: ["cd /usr/local/bin/ && ls -al"]
     restart: unless-stopped
     volumes:
       - ./app:/var/www/html

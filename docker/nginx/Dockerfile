@@ -6,15 +6,15 @@ RUN mkdir public
 
 COPY app/package.json ./
 
-RUN npm install
+# RUN npm install
 
-COPY app/assets/ assets/
-COPY app/webpack.config.js ./
-COPY app/tailwind.config.js ./
+# COPY app/assets/ assets/
+# COPY app/webpack.config.js ./
+# COPY app/tailwind.config.js ./
 
-RUN npm run build
+# RUN npm run build
 
-RUN cd public/build/ && ls -l
+# RUN cd public/build/ && ls -l
 
 FROM nginx
 
@@ -30,9 +30,9 @@ COPY --link ./docker/nginx/nginx.conf /etc/nginx/conf.d
 # Installez App
 COPY --link ./app/public /var/www/html/public
 
-COPY --from=symfony_assets_builder /var/www/html/public/build /var/www/html/public/build
+# COPY --from=symfony_assets_builder /var/www/html/public/build /var/www/html/public/build
 
-RUN ls -l /var/www/html/public/build
+# RUN ls -l /var/www/html/public/build
 
 EXPOSE 80
 
