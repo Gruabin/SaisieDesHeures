@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 ARG APP_DEBUG
 ARG APP_ENV
@@ -47,8 +47,8 @@ COPY --link ./docker/php/app.$APP_ENV.ini $PHP_INI_DIR/conf.d/
 # Installation des extensions PHP
 RUN docker-php-ext-configure intl \
     && docker-php-ext-install calendar dom gd intl mbstring pdo pdo_mysql opcache xsl zip
-    #&& pecl install apcu  \
-    #&& docker-php-ext-enable apcu
+RUN pecl install apcu
+RUN docker-php-ext-enable apcu
 
 # Timezone Paris
 RUN ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime \
