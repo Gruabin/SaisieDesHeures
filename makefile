@@ -13,7 +13,7 @@ help: ## Outputs this help screen
 
 ## —— 🔧 🐳 Docker environnements 🐳 🔧 ——————————————————————————————————
 dcb: ## Build docker containers
-	@$(DC) build --no-cache
+	@$(DC) build
 
 dcu: ## Start docker containers
 	@$(DC) up -d
@@ -31,13 +31,14 @@ dci: ## Start a bash in the container, exemple make dci php
 	@$(DC) exec -it php bash
 
 dcclean: ## Clean docker >24h
-	@ sudo docker container prune --filter "until=24h" -f \
-		&& sudo docker image prune --all --filter "until=24h" -f \
-		&& sudo docker volume prune --filter "label!=keep" -f \
-		&& sudo docker network prune --filter "until=24h" -f
+	@sudo docker system prune -f
 
 dclog: ## Show live logs
 	@$(DC) logs --tail=0 --follow
+
+bash: ## Start a bash in the container, exemple make bash c=php
+	@$(eval c ?=)
+	@$(DC) exec -it $(c) bash
 
 ## —— Linter 🧙 ——————————————————————————————————————————————————————————————
 linter:	rector cs twigcs # Run linters
@@ -60,10 +61,15 @@ cpi: ## Run composer
 	@$(APP) composer install \
 		&& $(DC) exec -it node npm install
 
-
 cpu: ## Run composer
 	@$(APP) composer update \
 		&& $(DC) exec -it node npm update
+
+watch: ## Run watch
+	@$(DC) exec -it node npm run watch
+
+test: ## Run test symfony
+	@$(DC) exec -it php php bin/phpunit
 
 ## —— CHMOD 🧙 ——————————————————————————————————————————————————————————————
 chown: ## Chown local files

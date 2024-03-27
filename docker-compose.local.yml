@@ -1,24 +1,32 @@
-version: "3.4"
-
 services:
 
   nginx:
+    networks:
+      - gruau-local_mynetgruau
     volumes:
       - ./app/public:/var/www/html/public
 
   php:
-    command: bash /usr/local/bin/docker-entrypoint.sh
+    networks:
+      - gruau-local_mynetgruau
     volumes:
       - ./app:/var/www/html
-      - ./docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
 
   node:
-    image: node
-    container_name: saisie-heures-node
-    command: bash /usr/local/bin/docker-entrypoint.sh
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    container_name: helloworld-node
+    networks:
+      - gruau-local_mynetgruau
     restart: unless-stopped
     volumes:
       - ./app:/var/www/html
-      - ./docker/node/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
     working_dir: /var/www/html
+
+networks:
+    gruau-local_mynetgruau:
+        external: true
+
+
 
