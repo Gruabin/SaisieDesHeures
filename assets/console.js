@@ -39,9 +39,10 @@ ligne.forEach(element => {
     // * Modifier une ligne
     //
     element.querySelector('#check').addEventListener("click", () => {
-        
-        // await APIModifier(element);
-        modifierLigne(element);
+        element.querySelector('#loading').classList.remove('hidden');
+        element.querySelector('#check').classList.add('hidden');
+        element.querySelector('#xmark').classList.add('hidden');
+        APIModification(element);
     });
 
 });
@@ -215,45 +216,168 @@ function resetModif(element) {
 }
 
 
-function modifierLigne(element) {
-    element.querySelectorAll('.form').forEach((form) => {
+// 
+//* Envoie les données du formulaire au serveur
+// 
+async function APIModification(element) {
 
+    const id = element.dataset.idligne;
+    const statut = element.dataset.statut;
+    const ordre = element.querySelector("#ordre").value;
+    const tache = element.querySelector("#tache").value;
+    const operation = element.querySelector("#operation").value;
+    const activite = element.querySelector("#activite").value;
+    const centre_de_charge = element.querySelector("#centrecharge").value;
+    const temps_main_oeuvre = element.querySelector("#saisieTemps").value;
+    const token = element.querySelector("#ligneToken").value;
+    const data = {
+        'id': id,
+        'temps_main_oeuvre': temps_main_oeuvre,
+        'statut': statut,
+        'token': token
+    }
+    if (temps_main_oeuvre == "") {
+        alert("Veuillez insérer un temps de main d'oeuvre");
+
+        return respnse.status = 400;
+    }
+    if (ordre !== "") {
+        data.ordre = ordre;
+    } else {
+        data.ordre = null;
+    }
+    if (tache !== "-1") {
+        data.tache = tache;
+    } else {
+        data.tache = null;
+    }
+    if (operation !== "") {
+        data.operation = operation;
+    } else {
+        data.operation = null;
+    }
+    if (activite !== "") {
+        data.activite = activite;
+    } else {
+        data.activite = null;
+    }
+    if (centre_de_charge !== "-1") {
+        data.centre_de_charge = centre_de_charge;
+    } else {
+        data.centre_de_charge = null;
+    }
+    fetch("/api/post/modifierLigne", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+
+    }).then((response) => {
+        element.querySelector('#loading').classList.add('hidden');
+        if (!response.ok) {
+            addToastErreur("Erreur lors de la modification de la saisie");
+            element.querySelector('#check').classList.remove('hidden');
+            element.querySelector('#xmark').classList.remove('hidden');
+
+        }
+        addToastSuccess("Saisie modifiée");
+        element.querySelector('#pen').classList.remove('hidden');
+        element.querySelector('#trash').classList.remove('hidden');
+        MAJDonnees(element, data);
+        resetModif(element)
+
+    }).catch((error) => {
+        console.error("Une erreur s'est produite :", error);
+        addToastErreur("Erreur lors de la modification de la saisie");
     });
 }
 
-// function async APIModifier(element) {
-//     const token = element.querySelector('#ligneToken').value;
-//     const data = {
-//         id: element.dataset.idligne,
-//         ordre: element.querySelector('#ordre').value,
-//         commentaire: element.querySelector('#commentaire').value,
-//         token: token
-//     };
-//     fetch("api/post/modifierLigne",
-//         {
-//             method: 'POST',
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify(data)
-//         }
-//     ).then((response) => {
-//         if (response.ok) {
-//             element.querySelector('.form').forEach((form) => {
-//                 form.classList.add("hidden");
-//             });
-//             element.querySelector('.texte').forEach((form) => {
-//                 form.classList.remove("hidden");
-//             });
-//             addToastSuccess("Saisie modifiée");
-//         } else {
-//             addToastErreur("Erreur lors de la modification de la saisie");
-//         }
-//     }).catch((error) => {
-//         throw new Error("Réponse inattendue du serveur");
-//     });
-// }
+// 
+// * Met à jour les données de la ligne après une modification
+//
+function MAJDonnees(element, data) {
+    element.querySelector(".fa-circle-check").classList.remove("hidden");
+    element.querySelector(".fa-circle-xmark").classList.add("hidden");
+    element.querySelector("#checkbox").disabled = false;
+    element.querySelector("#texte_ordre").innerHTML = data.ordre;
+    element.querySelector("#texte_tache").innerHTML = data.tache;
+    element.querySelector("#texte_operation").innerHTML = data.operation;
+    element.querySelector("#texte_activite").innerHTML = data.activite;
+    element.querySelector("#texte_centrecharge").innerHTML = data.centre_de_charge;
+    element.querySelector("#texte_saisieTemps").innerHTML = data.temps_main_oeuvre;
+}
 
+
+
+//
+//* Effectue la RegEx pour vérifier le champs Ordre
+//
+document.querySelectorAll("#ordre").forEach(element => {
+    element.addEventListener("input", function () {
+        regex = new RegExp("^[0-9A-Z]{9}$");
+        element.classList.remove("input-success");
+        element.classList.remove("input-error");
+        if (regex.test(element.value)) {
+            element.classList.add("input-success");
+        }
+        else {
+            element.classList.add("input-error");
+        }
+        if (element.value == "") {
+            element.classList.remove("input-success");
+            element.classList.remove("input-error");
+        }
+    });
+});
+
+//
+//* Effectue la RegEx pour vérifier le champs Activité 
+//
+var tableActivite = makeAPIActivite();
+document.querySelectorAll("#activite").forEach(element => {
+    element.addEventListener("input", function () {
+        regex = new RegExp("^[0-9]{3}$");
+        element.classList.remove("input-success");
+        element.classList.remove("input-error");
+        if (regex.test(element.value) && tableActivite.find((e) => e.id == element.value)) {
+            const activiteTrouve = tableActivite.find((e) => e.id == element.value);
+            element.classList.add("input-success");
+        }
+        else {
+            element.classList.add("input-error");
+        }
+        if (element.value == "") {
+            element.classList.remove("input-success");
+            element.classList.remove("input-error");
+        }
+    })
+});
+
+//
+//* Retourne toutes les activités pour la regex
+//
+function makeAPIActivite() {
+    var url = "/api/get/activite";
+    var activiteTable = [];
+    fetch(url).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error("Erreur");
+        }
+    }).then(function (activite) {
+        activite.forEach(async (unActivite) => {
+            var activiteObjet = {};
+            activiteObjet.id = unActivite.id;
+            activiteObjet.nom = unActivite.nom;
+            await activiteTable.push(activiteObjet)
+        });
+    }).catch(function (error) {
+        console.log(error);
+    });
+    return activiteTable;
+}
 
 // 
 // * Affiche un toast de succès
@@ -288,25 +412,3 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
-
-
-//
-//* Effectue la RegEx pour vérifier le champs Ordre
-//
-document.querySelectorAll("#ordre").forEach(element => {
-    element.addEventListener("input", function () {
-        regex = new RegExp("^[0-9A-Z]{9}$");
-        element.classList.remove("input-success");
-        element.classList.remove("input-error");
-        if (regex.test(element.value)) {
-            element.classList.add("input-success");
-        }
-        else {
-            element.classList.add("input-error");
-        }
-        if (element.value == "") {
-            element.classList.remove("input-success");
-            element.classList.remove("input-error");
-        }
-    });
-});
