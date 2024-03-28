@@ -44,7 +44,7 @@ stages:
           displayName: "Use PHP version $(phpVersion)"
 
         # Copy ./app vers ./
-        - script: cp -r ./app ./
+        - script: cp -r ./app/* ../
           workingDirectory: $(rootFolder)
           displayName: "Copy ./app vers ./"
 
