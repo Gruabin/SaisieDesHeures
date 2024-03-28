@@ -17,14 +17,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @property LoggerInterface $logger
- * @property CentreDeChargeRepository $CDGRepository
- * @property DetailHeuresRepository $detailHeuresRepository
- * @property DetailHeureService $detailHeureService
- * @property EmployeRepository $employeRepository
- * @property TacheRepository $tacheRepository
+ * @property LoggerInterface           $logger
+ * @property CentreDeChargeRepository  $CDGRepository
+ * @property DetailHeuresRepository    $detailHeuresRepository
+ * @property DetailHeureService        $detailHeureService
+ * @property EmployeRepository         $employeRepository
+ * @property TacheRepository           $tacheRepository
  * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
- * @property TypeHeuresRepository $typeHeuresRepo
+ * @property TypeHeuresRepository      $typeHeuresRepo
  */
 class IndexController extends AbstractController
 {
