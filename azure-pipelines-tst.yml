@@ -19,12 +19,6 @@ variables:
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures"
 
-  # Resource group name
-  rgName: "rg-tst-webapps"
-
-  # Slot name
-  slotName: "temp"
-
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
 
