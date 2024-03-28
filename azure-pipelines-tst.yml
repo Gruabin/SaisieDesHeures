@@ -4,20 +4,20 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-  - PRE-PROD
+  - Docker
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: "app-azuredevops-groupegruau-pipelines-tst"
+  azureSubscription: "app-azuredevops-groupegruau-pipelines-prd"
 
   # Web app name
-  webAppName: "app-gruau-tst-saisie-heures"
+  webAppName: "app-gruau-prd-test-slot"
 
   # Agent VM image name
   vmImageName: "ubuntu-latest"
 
   # Environment name
-  environmentName: "app-gruau-tst-saisie-heures"
+  environmentName: "app-gruau-prd-saisie-heures"
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
