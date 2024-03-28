@@ -43,8 +43,8 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "Use PHP version $(phpVersion)"
 
-        # Copy ./app vers ./
-        - script: cp -vr ./app/ ../
+        # Move ./app vers ../
+        - script: mv -v ./app/* ../
           workingDirectory: $(rootFolder)
           displayName: "Copy ./app vers ./"
 
