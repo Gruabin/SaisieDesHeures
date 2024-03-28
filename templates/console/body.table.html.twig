@@ -1,5 +1,5 @@
 {% block tbody %}
-    <tbody>
+    <tbody class="text-center">
         {% for heure in employe.detailHeures %}
             {% if heure.employe.id == employe.id and heure.statut is not null %}
                 {% if heure.statut.id == 2 or heure.statut.id == 3 %}
@@ -12,24 +12,47 @@
                             {{ heure.typeHeures.nomType }}
                         </td>
                         <td>
-                            {{ heure.ordre ?? null }}
+                            <input type="text" class="input w-full form hidden" value="{{ heure.ordre ?? null }}" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">
+                            <p class="texte">{{ heure.ordre ?? null }}</p>
                         </td>
                         <td>
-                            {{ heure.operation ?? null }}
+                            <input type="text" class="input w-full form hidden" value="{{ heure.operation ?? null }}" name="operation" id="operation" max="999" min="0" step="10">
+                            <p class="texte">{{ heure.operation ?? null }}</p>
                         </td>
                         <td>
-                            {% if heure.tache is not empty %}
-                                {{ heure.tache.id }} - {{ heure.tache.nomTache }}
-                            {% elseif heure.tacheSpecifique is not empty %}
-                                {{ heure.tacheSpecifique.id }} - {{ heure.tacheSpecifique.description }}
-                            {% endif %}
+                            <input type="text" class="input w-full form hidden" value="{{ heure.activite.id ?? null }}" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
+                            <p class="texte">{{ heure.activite.id ?? null }}</p>
                         </td>
                         <td>
-                            {{ heure.centreDeCharge.id ?? null }}
+                            <select class="select mx-3 w-full form hidden" name="tacheSpe" id="tacheSpe">
+                                <option value="-1"></option>
+                                {% for tache in taches %}
+                                    <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}" {% if tache.id == heure.tache.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.nomTache }}</option>
+                                {% endfor %}
+                                {% for tache in tachesSpe %}
+                                    <option value="{{ tache.id }}" {% if tache.id == heure.tacheSpecifique.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.description }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="texte">
+                                {% if heure.tache is not empty %}
+                                    {{ heure.tache.id }} - {{ heure.tache.nomTache }}
+                                {% elseif heure.tacheSpecifique is not empty %}
+                                    {{ heure.tacheSpecifique.id }} - {{ heure.tacheSpecifique.description }}
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td>
+                            <select class="select w-full form hidden" name="centrecharge" id="centrecharge">
+                                <option value="-1"></option>
+                                {% for centre_charge in CDG %}
+                                    <option value="{{ centre_charge.id ?? null }}" {% if centre_charge.id == heure.centreDeCharge.id ?? null %}selected{% endif %}>{{ centre_charge.id }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="texte">{{ heure.centreDeCharge.id ?? null }}</p>
                         </td>
                         <th>
-
-                            {{ heure.tempsMainOeuvre }}
+                            <input type="number" class="input w-full form hidden" value="{{ heure.tempsMainOeuvre }}" max="100" step=".25" name="saisieTemps" id="saisieTemps">
+                            <p class="texte">{{ heure.tempsMainOeuvre }}</p>
                         </th>
                         <td >
                         {% if heure.statut.id == 3 %}
@@ -39,7 +62,7 @@
                         {% endif %}
                         </td>
                         <td>
-                            {{ heure.motifErreur ?? null }}
+                            <p class="texte">{{ heure.motifErreur ?? null }}</p>
                         </td>
                         <td>
                             <button type="button" data-ligne="{{ heure.id }}" id="check" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>

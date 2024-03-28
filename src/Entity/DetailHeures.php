@@ -2,17 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\DetailHeuresRepository;
+use Ramsey\Uuid\Uuid;
 use Doctrine\DBAL\Types\Types;
+use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use App\Repository\DetailHeuresRepository;
 
 #[ORM\Entity(repositoryClass: DetailHeuresRepository::class)]
 class DetailHeures
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\CustomIdGenerator(class: 'Ramsey\Uuid\Doctrine\UuidGenerator')]
+    private ?UuidInterface $id;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
@@ -55,7 +59,7 @@ class DetailHeures
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $motif_erreur = null;
 
-    public function getId(): ?int
+    public function getId(): ?UuidInterface
     {
         return $this->id;
     }

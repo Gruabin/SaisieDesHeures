@@ -105,11 +105,11 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
     const state = await formSubmit();
     if (!state) {
         alert("Une erreur s'est produite")
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     }
     else {
         window.location.href = '/api/post/deconnexion';
     }
-    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -117,11 +117,11 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
 
     if (!state) {
         alert("Une erreur s'est produite")
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     }
     else {
         window.location.href = '/temps';
     }
-    document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 })
 
 // 
@@ -137,7 +137,7 @@ async function formSubmit() {
     const tacheSpecifique = document.getElementById("tacheSpe").value;
     const activite = document.getElementById("activite").value;
     const centre_de_charge = document.getElementById("centrecharge").value;
-    const temps_main_oeuvre = document.getElementById("saisitemps").value;
+    const temps_main_oeuvre = document.getElementById("saisieTemps").value;
     const token = document.getElementById("saisieToken").value;
     const data = {
         'type_heures': type_heures,
@@ -182,14 +182,11 @@ async function formSubmit() {
             },
             body: JSON.stringify(data),
         })
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         if (!response.ok) {
-            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
             return response;
         }
         return true;
     } catch (error) {
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue")
         console.error("Une erreur s'est produite :", error);
     }
 
