@@ -32,10 +32,7 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - script: |
-        cp .env.prod .env
-      displayName: 'Copy .env.prod to .env'
-
+    # Install php
     - script: |
         sudo update-alternatives --set php /usr/bin/php$(phpVersion)
         sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
@@ -46,7 +43,17 @@ stages:
       workingDirectory: $(rootFolder)
       displayName: "Use PHP version $(phpVersion)"
 
-    #install les packages Symfony
+    # Copy ./app vers ./
+    - script: cp -r ./app ./
+      workingDirectory: $(rootFolder)
+      displayName: "Copy ./app vers ./"
+
+      # Copy .env.tst to .env
+    - script: cp .env.tst .env
+      workingDirectory: $(rootFolder)
+      displayName: "Copy .env.tst to .env"
+
+    # Install the PHP Composer packages
     - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
       workingDirectory: $(rootFolder)
       displayName: "Composer install"

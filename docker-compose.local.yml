@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/node/Dockerfile
-    container_name: helloworld-node
+    container_name: saisieheures-node
     networks:
       - gruau-local_mynetgruau
     restart: unless-stopped

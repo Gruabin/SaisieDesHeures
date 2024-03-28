@@ -4,12 +4,12 @@ services:
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
-    container_name: helloworld-nginx
+    container_name: saisieheures-nginx
     depends_on:
       - php
     labels:
       - traefik.enable=${TRAEFIK:-''}
-      - traefik.http.routers.helloworld.rule=Host(`${SERVICE_URL:-''}`)
+      - traefik.http.routers.saisieheures.rule=Host(`${SERVICE_URL:-''}`)
     restart: unless-stopped
 
   php:
@@ -28,5 +28,5 @@ services:
         - DATABASE_USER=${DATABASE_USER:-''}
         - MAILER_DSN=${MAILER_DSN:-''}
         - PHP_INI_ENV=${PHP_INI_ENV:-''}
-    container_name: helloworld-php
+    container_name: saisieheures-php
     restart: unless-stopped
