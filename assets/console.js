@@ -53,6 +53,7 @@ document.getElementById('btnModalSuppr').addEventListener("click", () => {
 });
 
 
+
 // 
 // * Gestion des couleurs des boutons du tableau
 // 
@@ -67,12 +68,25 @@ buttons.forEach(button => {
             button.classList.add('text-secondary');
         }
     });
-
+    
     button.addEventListener('mouseout', function () {
         button.classList.remove('text-success', 'text-accent', 'text-secondary');
     });
 });
 
+// 
+// * Affiche uniquement les anomalies
+//
+document.getElementById("select_anomalies").addEventListener("click", () => {
+    ligne.forEach(element => {
+        if (document.getElementById("select_anomalies").checked && element.dataset.statut == 3) {
+            element.classList.add("hidden");
+        } else {
+            element.classList.remove("hidden");
+        }
+    
+    })
+});
 
 // 
 // * Sélection de tout les checkboxs
@@ -285,6 +299,9 @@ async function APIModification(element) {
         element.querySelector('#pen').classList.remove('hidden');
         element.querySelector('#trash').classList.remove('hidden');
         MAJDonnees(element, data);
+        if (statut == 2) {
+            document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
+        }
         resetModif(element)
 
     }).catch((error) => {

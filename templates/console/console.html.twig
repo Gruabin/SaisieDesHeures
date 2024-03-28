@@ -48,10 +48,14 @@ Console d'approbation
         </div>
     </section>
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
-        <div class="p-5 flex">
+        <div class="p-5 flex justify-between">
             <label class="label">
                 <input type="checkbox" class="checkbox checkbox-primary" id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
+            </label>
+            <label class="cursor-pointer label">
+                <span class="label-text">Anomalies uniquement &nbsp;</span> 
+                <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
