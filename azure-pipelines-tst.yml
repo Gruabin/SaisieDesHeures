@@ -44,7 +44,7 @@ stages:
           displayName: "Use PHP version $(phpVersion)"
 
         # Move ./app vers ../
-        - script: mv -v ./app/* ../ && mv -v ./app/. ../ && ls -al
+        - script: mv -v ./app/{.,}* ../ && ls -al
           workingDirectory: $(rootFolder)
           displayName: "Copy ./app vers ./"
 
