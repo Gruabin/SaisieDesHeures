@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\FiltreResponsableType;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\EmployeRepository;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property LoggerInterface           $logger
- * @property CentreDeChargeRepository  $CDGRepository
+* @property CentreDeChargeRepository  $CDGRepository
  * @property DetailHeuresRepository    $detailHeuresRepository
  * @property DetailHeureService        $detailHeureService
  * @property EmployeRepository         $employeRepository
@@ -30,7 +31,7 @@ class IndexController extends AbstractController
 {
     public function __construct(
         LoggerInterface $logger,
-        CentreDeChargeRepository $CDGRepository,
+CentreDeChargeRepository $CDGRepository,
         DetailHeuresRepository $detailHeuresRepository,
         DetailHeureService $detailHeureService,
         EmployeRepository $employeRepository,
@@ -39,7 +40,7 @@ class IndexController extends AbstractController
         TypeHeuresRepository $typeHeuresRepo
     ) {
         $this->logger = $logger;
-        $this->CDGRepository = $CDGRepository;
+$this->CDGRepository = $CDGRepository;
         $this->detailHeuresRepository = $detailHeuresRepository;
         $this->detailHeureService = $detailHeureService;
         $this->employeRepository = $employeRepository;
@@ -106,13 +107,20 @@ class IndexController extends AbstractController
         if (!$this->employeRepository->estResponsable($user)) {
             return $this->redirectToRoute('temps');
         }
-
+        
+        //Création d'un formulaire composé d'un select proposant la liste 
+        //de tous les responsables du même site que l'utilisateur connecté
+        $form = $this->createForm(FiltreResponsableType::class, null, [
+            'user' => $user,
+        ]);
+    
         return $this->render('console/console.html.twig', [
+            'form' => $form->createView(),
             'user' => $user,
             'site' => substr((string) $user->getId(), 0, 2),
             'nbAnomalie' => $this->detailHeuresRepository->findNbAnomalie(),
             'employes' => $this->employeRepository->findHeuresControle($user->getId()),
-            'taches' => $this->tacheRepository->findAll(),
+'taches' => $this->tacheRepository->findAll(),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
         ]);
