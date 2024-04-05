@@ -2,19 +2,24 @@
 
 namespace App\Controller;
 
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\EmployeRepository;
-use App\Repository\TacheRepository;
-use App\Repository\TacheSpecifiqueRepository;
-use App\Repository\TypeHeuresRepository;
-use App\Service\DetailHeureService;
-use App\Service\ExportService;
+use App\Entity\Employe;
+use App\Form\TestFormType;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\ExportService;
+use App\Form\FiltreResponsableType;
+use App\Repository\TacheRepository;
+use App\Service\DetailHeureService;
+use App\Repository\EmployeRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\CentreDeChargeRepository;
+use Symfony\Component\HttpClient\HttpClient;
+use App\Repository\TacheSpecifiqueRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property LoggerInterface $logger
@@ -79,14 +84,21 @@ class IndexController extends AbstractController
 
     // Affiche la page de console d'approbation
     #[Route('/console', name: 'console')]
-    public function console(DetailHeuresRepository $detailHeuresRepo, EmployeRepository $employeRepo): Response
+    public function console(DetailHeuresRepository $detailHeuresRepo, EmployeRepository $employeRepo, Request $request): Response
     {
         $user = $this->getUser();
         if (!$employeRepo->estResponsable($user)) {
             return $this->redirectToRoute('temps');
         }
-
+        
+        //Création d'un formulaire composé d'un select proposant la liste 
+        //de tous les responsables du même site que l'utilisateur connecté
+        $form = $this->createForm(FiltreResponsableType::class, null, [
+            'user' => $user,
+        ]);
+    
         return $this->render('console/console.html.twig', [
+            'form' => $form->createView(),
             'user' => $user,
             'site' => substr((string) $user->getId(), 0, 2),
             'nbAnomalie' => $detailHeuresRepo->findNbAnomalie(),

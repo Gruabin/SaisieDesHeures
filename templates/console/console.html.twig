@@ -32,6 +32,16 @@ Console d'approbation
                     {% endif %}
                 </div>
             </div>
+            <div class="m-2 flex-1">
+                <div class="m-2 font-bold">Liste de responsables</div>
+                <div class="m-2">
+                    {{ form_start(form) }}
+                        {{ form_row(form.responsables, {'attr': {'class': 'select select-bordered select-sm w-full max-w-xs'}}) }}
+                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
+                        {{ form_row(form.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
         </div>
     </section>
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">

@@ -102,7 +102,53 @@ document.getElementById('validation').addEventListener('click', function () {
     });
 });
 
+//
+// * Connexion en un autre responsable selon une liste
+//
 
+document.querySelector("form[name='filtre_responsable']").addEventListener("submit", function (event) {
+    event.preventDefault();
+    submitForm();
+})
+
+function submitForm() {
+        // Sélection de l'élément select
+        const selectElement = document.getElementById("filtre_responsable_responsables");
+
+        // Récupération de la ligne sélectionnée
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        // Récupérez l'ID de l'utilisateur depuis le champ input
+        const idEmploye = selectedOption.value.toUpperCase();
+        const token = document.getElementById("loginToken").value;
+
+        // Créez un objet JSON avec l'ID de l'utilisateur
+        const data = {
+            id: idEmploye,
+            token: token
+        };
+        // Envoyez la requête AJAX
+        fetch("/api/post/connexion", {
+            method: "POST",
+            credentials: 'same-origin',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error("Réponse inattendue du serveur");
+            } else {
+                // Rediriger l'utilisateur en cas de succès
+                window.location.href = response.url;
+            }
+        }).catch((error) => {
+            // Afficher un message d'erreur
+            alert(error);
+            // Gérer d'autres statuts d'erreur ici
+            throw new Error("Réponse inattendue du serveur");
+        });
+}
 
 //
 // * Affiche le formulaire sur une ligne
