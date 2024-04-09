@@ -33,7 +33,7 @@ class FiltreResponsableType extends AbstractType
                 'mapped' => false,
             ])
             ->add('button', SubmitType::class, [
-                'label' => "Changer d'utilisateur"
+                'label' => "Appliquer le filtre"
             ]);
     }
 
