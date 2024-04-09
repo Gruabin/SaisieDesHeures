@@ -2,36 +2,34 @@
 
 namespace App\Form;
 
-use App\Entity\Employe;
-use Doctrine\ORM\EntityRepository;
+use App\Entity\CentreDeCharge;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class FiltreResponsableType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('responsables', EntityType::class, [
-                'class' => Employe::class,
+            ->add('responsable', EntityType::class, [
+                'class' => CentreDeCharge::class,
                 'query_builder' => function (EntityRepository $er) use ($options): QueryBuilder {
-                    return $er->createQueryBuilder('r')
-                        ->innerJoin('r.centre_de_charge', 'cc', 'WITH', 'cc.id = r.centre_de_charge')
-                        ->andWhere('cc.responsable = r.id')
+                    return $er->createQueryBuilder('cc')
+                        ->innerJoin('cc.responsable', 'r', 'WITH', 'cc.id = r.centre_de_charge')
                         ->andWhere('r.id LIKE :codeSite')
-                        ->andWhere('r.nom_employe != :utilisateur')
                         ->setParameter('codeSite', '%' . substr($options['user']->getId(), 0, 2) .'%')
-                        ->setParameter('utilisateur', $options['user']->getNomEmploye())
                         ->orderBy('r.nom_employe')
                         ;
                 },
-                'choice_label' => 'nom_employe',
-                'choice_value' => 'id',
+                'choice_label' => 'responsable.nom_employe',
+                'choice_value' => 'responsable.id',
                 'label' => false,
+                'multiple' => true,
                 'mapped' => false,
             ])
             ->add('button', SubmitType::class, [
@@ -42,7 +40,7 @@ class FiltreResponsableType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Employe::class,
+            'data_class' => CentreDeCharge::class,
         ]);
         $resolver->setRequired('user');
     }

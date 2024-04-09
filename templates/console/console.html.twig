@@ -49,7 +49,7 @@ Console d'approbation
                 <div class="m-2 font-bold">Liste de responsables</div>
                 <div class="m-2">
                     {{ form_start(form) }}
-                        {{ form_row(form.responsables, {'attr': {'class': 'select select-bordered select-sm w-full max-w-xs'}}) }}
+                        {{ form_row(form.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
                         {{ form_row(form.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
                     {{ form_end(form) }}
@@ -63,7 +63,7 @@ Console d'approbation
                 <input type="checkbox" class="checkbox checkbox-primary" id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
-<label class="cursor-pointer label">
+        <label class="cursor-pointer label">
                 <span class="label-text">Anomalies uniquement &nbsp;</span> 
                 <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>

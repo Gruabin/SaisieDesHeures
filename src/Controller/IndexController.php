@@ -13,13 +13,14 @@ use App\Service\DetailHeureService;
 use App\Service\ExportService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property LoggerInterface           $logger
-* @property CentreDeChargeRepository  $CDGRepository
+ * @property CentreDeChargeRepository  $CDGRepository
  * @property DetailHeuresRepository    $detailHeuresRepository
  * @property DetailHeureService        $detailHeureService
  * @property EmployeRepository         $employeRepository
@@ -31,16 +32,16 @@ class IndexController extends AbstractController
 {
     public function __construct(
         LoggerInterface $logger,
-CentreDeChargeRepository $CDGRepository,
+        CentreDeChargeRepository $CDGRepository,
         DetailHeuresRepository $detailHeuresRepository,
         DetailHeureService $detailHeureService,
         EmployeRepository $employeRepository,
         TacheRepository $tacheRepository,
         TacheSpecifiqueRepository $tacheSpecifiqueRepository,
-        TypeHeuresRepository $typeHeuresRepo
+        TypeHeuresRepository $typeHeuresRepo,
     ) {
         $this->logger = $logger;
-$this->CDGRepository = $CDGRepository;
+        $this->CDGRepository = $CDGRepository;
         $this->detailHeuresRepository = $detailHeuresRepository;
         $this->detailHeureService = $detailHeureService;
         $this->employeRepository = $employeRepository;
@@ -101,7 +102,7 @@ $this->CDGRepository = $CDGRepository;
 
     // Affiche la page de console d'approbation
     #[Route('/console', name: 'console')]
-    public function console(): Response
+    public function console(Request $request): Response
     {
         $user = $this->getUser();
         if (!$this->employeRepository->estResponsable($user)) {
@@ -113,6 +114,28 @@ $this->CDGRepository = $CDGRepository;
         $form = $this->createForm(FiltreResponsableType::class, null, [
             'user' => $user,
         ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $responsableSelectionnes = $form->get('responsable')->getData();
+
+            $responsablesId = [];
+            foreach ($responsableSelectionnes as $key => $value) {
+                $responsablesId[$key] = $value->getResponsable()->getId();
+            }
+
+            return $this->render('console/console.html.twig', [
+                'form' => $form->createView(),
+                'user' => $user,
+                'site' => substr((string) $user->getId(), 0, 2),
+                'nbAnomalie' => $this->detailHeuresRepository->findNbAnomalieResponsablesSelectionnes($responsablesId),
+                'employes' => $this->employeRepository->findHeuresControleResponsablesSelectionnes($responsablesId),
+                'taches' => $this->tacheRepository->findAll(),
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $this->CDGRepository->findAllUser(),
+            ]);
+        }
     
         return $this->render('console/console.html.twig', [
             'form' => $form->createView(),
@@ -120,7 +143,7 @@ $this->CDGRepository = $CDGRepository;
             'site' => substr((string) $user->getId(), 0, 2),
             'nbAnomalie' => $this->detailHeuresRepository->findNbAnomalie(),
             'employes' => $this->employeRepository->findHeuresControle($user->getId()),
-'taches' => $this->tacheRepository->findAll(),
+            'taches' => $this->tacheRepository->findAll(),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
         ]);
