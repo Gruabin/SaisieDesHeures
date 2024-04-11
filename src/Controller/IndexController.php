@@ -122,7 +122,7 @@ class IndexController extends AbstractController
 
             $responsablesId = [];
             foreach ($responsableSelectionnes as $key => $value) {
-                $responsablesId[$key] = $value->getResponsable()->getId();
+                $responsablesId[$key] = $value->getId();
             }
 
             return $this->render('console/console.html.twig', [
