@@ -60,6 +60,22 @@ class EmployeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère toute les heures à controller des responsables selectionnés trié par employe.
+     *
+     * @return array Retourne les employées des responsables selectionnés
+     */
+    public function findHeuresControleResponsablesSelectionnes(array $responsables): array
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
+        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable IN (:responsables_id)')
+        ->setParameter('responsables_id', $responsables)
+        ->orderBy('e.id', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Retourne l'employé s'il est un responsable.
      *
      * @return ?Employe Employé ou null

@@ -109,7 +109,7 @@
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="tacheSpe"><b>Tâche spécifique</b></label>
                 </div>
-                <div class="flex-1 flex text-left md:self-center items-center">
+                <div class="flex-1 flex text-left md:flex md:self-center items-center">
                     <input type="checkbox" class="checkbox checkbox-primary" id="cbTacheSpe" />
                     <select class="select mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
                         <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
@@ -134,10 +134,10 @@
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisiTemps">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
-                    <label for="saisitemps"><b>Temps main d'œuvre (en h)</b></label>
+                    <label for="saisieTemps"><b>Temps main d'œuvre (en h)</b></label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
-                    <input class="input focus:ring-primary mx-3" type="number" max="100" step=".25" name="saisitemps" id="saisitemps">
+                    <input class="input focus:ring-primary mx-3" type="number" max="100" step=".25" name="saisieTemps" id="saisieTemps">
                 </div>
             </div>
         </div>
@@ -145,7 +145,7 @@
             <div id="informationSaisiHeures"></div>
         </div>
         <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
-        <div class="flex flex-row flex-wrap justify-center items-center space-x-2 p-2">
+        <div class="flex md:flex-row flex-col-reverse flex-wrap justify-center items-center space-x-2 p-2">
             <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
                 Quitter
             </a>

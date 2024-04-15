@@ -74,7 +74,7 @@ class ConnexionAPIController extends AbstractController
     public function logoutUser(): RedirectResponse
     {
         $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
-        $this->addFlash('success', 'Déconnexion de ' . $this->getUser()->getNomEmploye());
+        $this->addFlash('success', 'Déconnexion de '.$this->getUser()->getNomEmploye());
         $this->logger->info($message);
 
         $tokenStorage = $this->container->get('security.token_storage');
