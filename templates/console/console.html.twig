@@ -5,7 +5,7 @@ Console d'approbation
 {% endblock %}
 
 {% block body %}
-    <dialog id="modalSuppr" class="modal">
+<dialog id="modalSuppr" class="modal">
     <div class="modal-box">
         <h3 class="font-bold text-lg"><i class="fa-solid fa-trash-can"></i> Supprimer</h3>
         <p class="py-4">Voulez vous supprimer cette saisie ?</p>
@@ -45,6 +45,16 @@ Console d'approbation
                     {% endif %}
                 </div>
             </div>
+            <div class="m-2 flex-1">
+                <div class="m-2 font-bold">Liste de responsables</div>
+                <div class="m-2">
+                    {{ form_start(form) }}
+                        {{ form_row(form.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
+                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
+                        {{ form_row(form.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
         </div>
     </section>
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
@@ -53,7 +63,7 @@ Console d'approbation
                 <input type="checkbox" class="checkbox checkbox-primary" id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
-            <label class="cursor-pointer label">
+        <label class="cursor-pointer label">
                 <span class="label-text">Anomalies uniquement &nbsp;</span> 
                 <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
