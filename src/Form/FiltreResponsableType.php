@@ -3,15 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Employe;
-use App\Entity\CentreDeCharge;
-use App\Repository\DetailHeuresRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class FiltreResponsableType extends AbstractType

@@ -186,7 +186,6 @@ function APISuppression(ligneASupprimer) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
             ligneASupprimer.remove();
-            // element = null;
             addToastSuccess("Saisie supprimée");
         } else {
             addToastErreur("Erreur lors de la suppression de la saisie");
@@ -430,17 +429,3 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
-
-//
-// * Affiche le formulaire sur une ligne
-//
-// TODO pour le prochain sprint
-//
-// ligne.forEach(element => {
-//     element.querySelector('#pen').addEventListener("click", () =>{
-//         element.querySelector('#pen').classList.add('hidden');
-//         element.querySelector('#trash').classList.add('hidden');
-//         element.querySelector('#check').classList.remove('hidden');
-//         element.querySelector('#xmark').classList.remove('hidden');
-//     });
-// });

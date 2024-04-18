@@ -136,6 +136,7 @@ class IndexController extends AbstractController
         }
 
         $dates = $this->detailHeuresRepository->findDatesDetail($session->get('responsablesId'));
+        $dates["Toutes les dates"] = -1;
         $nbAnomalie = $this->detailHeuresRepository->findNbAnomalie($session->get('responsablesId'));
         $tabEmployes = $this->employeRepository->findHeuresControle($session->get('responsablesId'));
 
@@ -149,22 +150,42 @@ class IndexController extends AbstractController
 
         if (null != $tabEmployes) {
             if ($formDate->isSubmitted() && $formDate->isValid()) {
-                foreach ($tabEmployes as $unEmploye) {
-                    foreach ($unEmploye->getDetailHeures() as $value) {
-                        if ($value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
-                        && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)){
-                            //  dd($value->getDate()->format('d-m-Y'), $formDate->get('date')->getData());
-                            array_push($heures, $value);
+                if ($formDate->get('date')->getData() == -1) {
+                    foreach ($tabEmployes as $unEmploye) {
+                        foreach ($unEmploye->getDetailHeures() as $value) {
+                            if ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie) {
+                                array_push($heures, $value);
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($tabEmployes as $unEmploye) {
+                        foreach ($unEmploye->getDetailHeures() as $value) {
+                            if ($value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
+                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)){
+                                array_push($heures, $value);
+                            }
                         }
                     }
                 }
             } else {
-                foreach ($tabEmployes[0]->getDetailHeures() as $value ) {
-                    if ($value->getDate()->format('d-m-Y') === date('d-m-Y')
-                        && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)) {
-                        array_push($heures, $value);
+                // dd($user->getDetailHeures(), date('d-m-Y'));
+
+                    foreach ($tabEmployes as $unEmploye) {
+                        foreach ($unEmploye->getDetailHeures() as $value) {
+                            if ($value->getDate()->format('d-m-Y') == date('d-m-Y') 
+                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)) {
+                                array_push($heures, $value);
+                            }
+                        }
                     }
-                }
+
+                // foreach ($user->getDetailHeures() as $value ) {
+                //     if ($value->getDate()->format('d-m-Y') == date('d-m-Y')
+                //         && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)) {
+                //         array_push($heures, $value);
+                //     }
+                // }
             }
         }
         $employesFiltre = [];

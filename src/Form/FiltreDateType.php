@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,9 +19,8 @@ class FiltreDateType extends AbstractType
                 'label' => false,
             ])
             ->add('button', SubmitType::class, [
-                'label' => "Appliquer le filtre"
+                'label' => "Appliquer la date"
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
