@@ -314,6 +314,7 @@ async function APIModification(element) {
 // * Met à jour les données de la ligne après une modification
 //
 function MAJDonnees(element, data) {
+    element.dataset.statut = 3;
     element.querySelector(".fa-circle-check").classList.remove("hidden");
     element.querySelector(".fa-circle-xmark").classList.add("hidden");
     element.querySelector("#checkbox").disabled = false;

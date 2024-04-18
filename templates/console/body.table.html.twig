@@ -1,6 +1,6 @@
 {% block tbody %}
     <tbody class="text-center">
-        {% for heure in employe.detailHeures %}
+        {% for heure in heures %}
             {% if heure.employe.id == employe.id and heure.statut is not null %}
                 {% if heure.statut.id == 2 or heure.statut.id == 3 %}
                     <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}">
