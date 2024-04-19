@@ -50,7 +50,6 @@ Console d'approbation
                 <div class="m-2">
                     {{ form_start(form) }}
                         {{ form_row(form.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
-                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
                         {{ form_row(form.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
                     {{ form_end(form) }}
                 </div>
@@ -64,7 +63,7 @@ Console d'approbation
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
         <label class="cursor-pointer label">
-                <span class="label-text">Anomalies uniquement &nbsp;</span> 
+                <span class="label-text">Anomalies uniquement &nbsp;</span>
                 <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>
@@ -93,7 +92,7 @@ Console d'approbation
     </section>
     <input type="hidden" name="token" id="approbationToken" value="{{ csrf_token('approbationToken') }}">
     <div class="flex gap-10 justify-center text-center m-16">
-        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('api_post_deconnexion') }}">Quitter</a>
+        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('deconnexion') }}">Quitter</a>
         <span id="loading" class=""></span>
         <button type="button" id="validation" class="btn btn-primary btn-wide ">Approuver la selection</button>
     </div>

@@ -4,7 +4,7 @@
             <img src="https://cdn.gruau.com/image/logo/grp-reversed.svg" class="mr-3" alt="Logo Gruau">
         </a>
         <div class="flex md:order-2 w-56 justify-end max-sm:justify-center items-center max-sm:mt-1">
-            {% if user.roles[0] is defined %}
+            {% if user is not null %}
                 <div class="dropdown md:dropdown-end dropdown-bottom" >
                     <div  tabindex="0" role="button" class="btn btn-circle m-1">
                         <span class="sr-only">Open user menu</span>
@@ -28,7 +28,7 @@
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('api_post_deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Déconnexion</a>
+                                <a id="deconnexion" href="{{ path('deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Déconnexion</a>
                             </li>
                         </ul>
                     </div>

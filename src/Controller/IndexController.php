@@ -10,12 +10,10 @@ use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
-use App\Service\ExportService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -52,17 +50,27 @@ class IndexController extends AbstractController
 
     // Affiche la page d'identification
     #[Route('/', name: 'home')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->render('identification.html.twig', [
+        $session = $request->getSession();
+        if (null !== $session->get('user_roles')) {
+            return $this->redirectToRoute('temps');
+        }
+
+        return $this->render('connexion/identification.html.twig', [
             'user' => $this->getUser(),
         ]);
     }
 
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
-    public function temps(): Response
+    public function temps(Request $request): Response
     {
+        $session = $request->getSession();
+        if (null === $session->get('user_roles')) {
+            return $this->redirectToRoute('home');
+        }
+
         $nbHeures = $this->detailHeuresRepository->getNbHeures();
         if ($nbHeures['total'] >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
@@ -84,8 +92,13 @@ class IndexController extends AbstractController
 
     // Affiche la page d'historique
     #[Route('/historique', name: 'historique')]
-    public function historique(): Response
+    public function historique(Request $request): Response
     {
+        $session = $request->getSession();
+        if (null === $session->get('user_roles')) {
+            return $this->redirectToRoute('home');
+        }
+
         $nbHeures = $this->detailHeuresRepository->getNbHeures();
         if ($nbHeures['total'] >= 10) {
             $message = "Votre nombre d'heure est trop élevé";
@@ -105,12 +118,13 @@ class IndexController extends AbstractController
     public function console(Request $request): Response
     {
         $user = $this->getUser();
-        if (!$this->employeRepository->estResponsable($user)) {
+        $session = $request->getSession();
+        if ($session->get('user_roles') !== ['ROLE_RESPONSABLE']) {
             return $this->redirectToRoute('temps');
         }
-        
-        //Création d'un formulaire composé d'un select proposant la liste 
-        //de tous les responsables du même site que l'utilisateur connecté
+
+        // Création d'un formulaire composé d'un select proposant la liste
+        // de tous les responsables du même site que l'utilisateur connecté
         $form = $this->createForm(FiltreResponsableType::class, null, [
             'user' => $user,
         ]);
@@ -136,7 +150,7 @@ class IndexController extends AbstractController
                 'CDG' => $this->CDGRepository->findAllUser(),
             ]);
         }
-    
+
         return $this->render('console/console.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
@@ -147,12 +161,5 @@ class IndexController extends AbstractController
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
         ]);
-    }
-
-    // Exporte le fichier Excel
-    #[Route('/export', name: 'export')]
-    public function export(ExportService $exportService): StreamedResponse
-    {
-        return $exportService->exportExcel();
     }
 }

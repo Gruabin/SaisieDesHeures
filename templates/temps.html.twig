@@ -146,7 +146,7 @@
         </div>
         <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
         <div class="flex md:flex-row flex-col-reverse flex-wrap justify-center items-center space-x-2 p-2">
-            <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('api_post_deconnexion') }}">
+            <a class="btn btn-primary mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
                 Quitter
             </a>
             <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerQuitter">

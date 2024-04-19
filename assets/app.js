@@ -7,11 +7,18 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
+import { startStimulusApp } from '@symfony/stimulus-bridge';
 
 require('@fortawesome/fontawesome-free/css/fontawesome.min.css');
 require('@fortawesome/fontawesome-free/css/solid.min.css');
 require('@fortawesome/fontawesome-free/js/fontawesome.min.js');
 require('@fortawesome/fontawesome-free/js/solid.min.js');
+
+// export const app = startStimulusApp(require.context(
+//     '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+//     true,
+//     /\.[jt]sx?$/
+// ));
 
 document.addEventListener('DOMContentLoaded', () => {
 
