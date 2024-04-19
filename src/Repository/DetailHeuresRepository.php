@@ -167,7 +167,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
         }
     }
 
-        /**
+    /**
      * Récupère le nombre total d'anomalies pour plusieurs responsables selectionnés.
      *
      * @return int le nombre total d'anomalies des responsables selectionnés

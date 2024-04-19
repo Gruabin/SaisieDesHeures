@@ -1,0 +1,16 @@
+<turbo-frame id="identification">
+    <form id="identificationForm" action="{{ path('connexion') }}" method="post">
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+                <span class="label-text">Matricule ?</span>
+                <span id="informationEmploye" class="label-text-alt">Non identifié</span>
+            </div>
+            {{ form_widget(form.id, {'attr': {'class': 'input input-bordered input-primary w-full max-w-xs'}}) }}
+            <div class="label">
+                <span class="label-text-alt text-gruau-red">{{ form_errors(form) }}</span>
+            </div>
+        </label>
+        {{ form_row(form.bouton, {'attr': {'class': 'btn btn-primary btn-outline btn-disabled noLoading'}}) }}
+        {{ form_rest(form) }}
+    </form>
+</turbo-frame>
