@@ -36,8 +36,8 @@ Console d'approbation
                     {{ form_start(formDate) }}
                 <div class="m-2"><b>Date</b></div>
                 <div class="flex">
-                        {{ form_row(formDate.date, {'attr': {'class': 'select select-ghost', 'id':'selectDate'}}) }}
-                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm m-2', 'id':'submitDate'}}) }}
+                        {{ form_row(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
+                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm m-2', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
                 </div>
                     {{ form_end(formDate) }}
             </div>
@@ -71,7 +71,7 @@ Console d'approbation
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
         <label class="cursor-pointer label">
-                <span class="label-text">Anomalies uniquement &nbsp;</span> 
+                <span class="label-text">Anomalies uniquement &nbsp;</span>
                 <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>

@@ -2,10 +2,10 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          colors="true"
-         bootstrap="tests/bootstrap.php"
          convertDeprecationsToExceptions="false"
 >
     <php>
@@ -25,7 +25,7 @@
 
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix="Test.php">src/tests</directory>
         </include>
     </coverage>
 

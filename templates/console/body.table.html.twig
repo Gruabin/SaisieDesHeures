@@ -3,6 +3,7 @@
         {% for heure in heures %}
             {% if heure.employe.id == employe.id and heure.statut is not null %}
                 {% if heure.statut.id == 2 or heure.statut.id == 3 %}
+                <div class="hidden date">{{ heure.date|date("d-m-Y", "Europe/Paris") }}</div>
                     <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}">
                         <input type="hidden" name="token" id="ligneToken" value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
                         <td>

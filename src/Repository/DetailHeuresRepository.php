@@ -3,10 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\DetailHeures;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -151,9 +149,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
         }
     }
 
-
     /**
      * Récupère le nombre total d'anomalies pour les responsables selectionnés.
+     * ! Pas utilisé
      *
      * @return int le nombre total d'anomalies des responsables selectionnés
      */
@@ -185,11 +183,11 @@ class DetailHeuresRepository extends ServiceEntityRepository
             ->andWhere('centre_de_charge.responsable IN (:responsables_id)')
             ->setParameter('responsables_id', $responsables)
             ->orderBy('d.date', 'DESC');
-            $dates = $qb->getQuery()->getResult();
+        $dates = $qb->getQuery()->getResult();
         $joursUniques = [];
 
         // Parcourir chaque date du tableau
-        foreach ( $dates as $date) {
+        foreach ($dates as $date) {
             // Obtenir la partie date au format YYYY-MM-DD
             $jour = $date['date']->format('d-m-Y');
 
@@ -198,7 +196,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 $joursUniques[$jour] = $jour;
             }
         }
+
         return $joursUniques;
     }
-
 }

@@ -2,24 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Statut;
 use App\Form\FiltreDateType;
-use Psr\Log\LoggerInterface;
-use App\Service\ExportService;
 use App\Form\FiltreResponsableType;
-use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\StatutRepository;
-use App\Repository\EmployeRepository;
-use App\Repository\TypeHeuresRepository;
-use App\Repository\DetailHeuresRepository;
 use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\EmployeRepository;
+use App\Repository\StatutRepository;
+use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
+use App\Service\ExportService;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @property LoggerInterface           $logger
@@ -111,12 +110,12 @@ class IndexController extends AbstractController
     public function console(Request $request): Response
     {
         $session = $request->getSession();
+        //  Utilisateur responsable par défaut
         if (!$session->has('responsablesId')) {
             $responsablesId[0] = $this->getUser()->getId();
             $session->set('responsablesId', $responsablesId);
         }
         $user = $this->getUser();
-        $responsablesId = [];
         $heures = [];
         if (!$this->employeRepository->estResponsable($user)) {
             return $this->redirectToRoute('temps');
@@ -126,22 +125,14 @@ class IndexController extends AbstractController
             'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
         ]);
 
-        $formResponsable->handleRequest($request);
-        if ($formResponsable->isSubmitted() && $formResponsable->isValid()) {
-            $responsableSelectionnes = $formResponsable->get('responsable')->getData();
-            foreach ($responsableSelectionnes as $key => $value) {
-                $responsables[$key] = $value->getId();
-            }
-            $session->set('responsablesId', $responsables);
-        }
+        $this->setResponsables($formResponsable, $request, $session);
 
         $dates = $this->detailHeuresRepository->findDatesDetail($session->get('responsablesId'));
-        $dates["Toutes les dates"] = -1;
-        $nbAnomalie = $this->detailHeuresRepository->findNbAnomalie($session->get('responsablesId'));
+        $dates['Toutes les dates'] = -1;
         $tabEmployes = $this->employeRepository->findHeuresControle($session->get('responsablesId'));
-
+        $nbAnomalie = 0;
         $formDate = $this->createForm(FiltreDateType::class, null, [
-            'dates' => $dates
+            'dates' => $dates,
         ]);
         $formDate->handleRequest($request);
 
@@ -150,66 +141,85 @@ class IndexController extends AbstractController
 
         if (null != $tabEmployes) {
             if ($formDate->isSubmitted() && $formDate->isValid()) {
-                if ($formDate->get('date')->getData() == -1) {
+                if (-1 == $formDate->get('date')->getData()) {
                     foreach ($tabEmployes as $unEmploye) {
                         foreach ($unEmploye->getDetailHeures() as $value) {
                             if ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie) {
                                 array_push($heures, $value);
+                                $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
                         }
                     }
                 } else {
                     foreach ($tabEmployes as $unEmploye) {
                         foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
-                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)){
+                            if (
+                                $value->getDate()->format('d-m-Y') == $formDate->get('date')->getData()
+                                && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)
+                                ) {
                                 array_push($heures, $value);
+                                $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
                         }
                     }
                 }
             } else {
-                // dd($user->getDetailHeures(), date('d-m-Y'));
-
-                    foreach ($tabEmployes as $unEmploye) {
-                        foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getDate()->format('d-m-Y') == date('d-m-Y') 
-                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)) {
-                                array_push($heures, $value);
-                            }
+                foreach ($tabEmployes as $unEmploye) {
+                    foreach ($unEmploye->getDetailHeures() as $value) {
+                        if (
+                            $value->getDate()->format('d-m-Y') == date('d-m-Y')
+                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)
+                        ) {
+                            array_push($heures, $value);
+                            $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                         }
                     }
-
-                // foreach ($user->getDetailHeures() as $value ) {
-                //     if ($value->getDate()->format('d-m-Y') == date('d-m-Y')
-                //         && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)) {
-                //         array_push($heures, $value);
-                //     }
-                // }
-            }
-        }
-        $employesFiltre = [];
-        // Filtre les employés possédant des heures.
-        foreach ($heures as $uneHeure) {
-            if (!in_array($uneHeure->getEmploye(), $employesFiltre)){
-                array_push($employesFiltre, $uneHeure->getEmploye());
+                }
             }
         }
 
-
+        $employes = $this->FiltreEmploye($heures);
+        
         return $this->render('console/console.html.twig', [
             'formResponsable' => $formResponsable->createView(),
             'formDate' => $formDate->createView(),
             'user' => $user,
             'site' => substr((string) $user->getId(), 0, 2),
             'nbAnomalie' => $nbAnomalie,
-            'employes' => $employesFiltre,
+            'employes' => $employes,
             'heures' => $heures,
             'taches' => $this->tacheRepository->findAll(),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
         ]);
     }
+
+    // Défini les responsables
+    public function setResponsables($formResponsable, $request, $session): void
+    {
+        $formResponsable->handleRequest($request);
+        if ($formResponsable->isSubmitted() && $formResponsable->isValid()) {
+            $responsableSelectionnes = $formResponsable->get('responsable')->getData();
+            foreach ($responsableSelectionnes as $key => $value) {
+                $responsables[$key] = $value->getId();
+            }
+            $session->set('responsablesId', $responsables);
+        }
+    }
+    
+    
+    // Filtre les employés possédant des heures.
+    public function FiltreEmploye($heures): array
+    {
+        $employesFiltre = [];
+        foreach ($heures as $uneHeure) {
+            if (!in_array($uneHeure->getEmploye(), $employesFiltre)) {
+                array_push($employesFiltre, $uneHeure->getEmploye());
+            }
+        }
+        return $employesFiltre;
+    }
+
 
     // Exporte le fichier Excel
     #[Route('/export', name: 'export')]
