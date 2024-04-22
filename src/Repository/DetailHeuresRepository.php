@@ -188,7 +188,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
         // Parcourir chaque date du tableau
         foreach ($dates as $date) {
-            // Obtenir la partie date au format YYYY-MM-DD
+            // Obtenir la partie date au format DD-MM-YYYY
             $jour = $date['date']->format('d-m-Y');
 
             // Ajouter le jour au tableau des jours uniques s'il n'existe pas déjà

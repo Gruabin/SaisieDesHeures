@@ -141,10 +141,10 @@ class IndexController extends AbstractController
 
         if (null != $tabEmployes) {
             if ($formDate->isSubmitted() && $formDate->isValid()) {
-                if (-1 == $formDate->get('date')->getData()) {
+                if (-1 === $formDate->get('date')->getData()) {
                     foreach ($tabEmployes as $unEmploye) {
                         foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie) {
+                            if ($value->getStatut() === $statutConforme || $value->getStatut() == $statutAnomalie) {
                                 array_push($heures, $value);
                                 $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
@@ -154,11 +154,11 @@ class IndexController extends AbstractController
                     foreach ($tabEmployes as $unEmploye) {
                         foreach ($unEmploye->getDetailHeures() as $value) {
                             if (
-                                $value->getDate()->format('d-m-Y') == $formDate->get('date')->getData()
-                                && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)
+                                $value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
+                                && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
                                 ) {
                                 array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
+                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
                         }
                     }
@@ -167,11 +167,11 @@ class IndexController extends AbstractController
                 foreach ($tabEmployes as $unEmploye) {
                     foreach ($unEmploye->getDetailHeures() as $value) {
                         if (
-                            $value->getDate()->format('d-m-Y') == date('d-m-Y')
-                            && ($value->getStatut() == $statutConforme || $value->getStatut() == $statutAnomalie)
+                            $value->getDate()->format('d-m-Y') === date('d-m-Y')
+                            && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
                         ) {
                             array_push($heures, $value);
-                            $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
+                            $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                         }
                     }
                 }
