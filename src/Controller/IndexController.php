@@ -181,7 +181,7 @@ class IndexController extends AbstractController
                 foreach ($tabEmployes as $unEmploye) {
                     foreach ($unEmploye->getDetailHeures() as $value) {
                         if (
-                            $value->getDate()->format('d-m-Y') == date('d-m-Y')
+                            $value->getDate()->format('d-m-Y') === date('d-m-Y')
                             && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
                         ) {
                             array_push($heures, $value);
