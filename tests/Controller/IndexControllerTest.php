@@ -9,7 +9,6 @@ class IndexControllerTest extends WebTestCase
 {
     public function testConsoleResponsable(): void
     {
-
         // login
         $client = static::createClient();
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
@@ -24,7 +23,6 @@ class IndexControllerTest extends WebTestCase
 
     public function testConsoleEmploye(): void
     {
-
         // login
         $client = static::createClient();
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
@@ -34,7 +32,6 @@ class IndexControllerTest extends WebTestCase
         $client->followRedirects();
         $client->request('GET', '/console');
         $client->followRedirects();
-
 
         $this->assertRouteSame('temps');
     }
@@ -46,7 +43,6 @@ class IndexControllerTest extends WebTestCase
         $client->followRedirects();
         $client->request('GET', '/console');
         $client->followRedirects();
-
 
         $this->assertRouteSame('home');
     }

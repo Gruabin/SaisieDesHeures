@@ -208,9 +208,9 @@ document.getElementById("tache").addEventListener("change", function () {
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
 //
-inputOrdre = document.getElementById("ordre");
+let inputOrdre = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
-    regex = new RegExp("^[0-9A-Z]{9}$");
+    let regex = new RegExp("^[0-9A-Za-z]{9}$");
     inputOrdre.classList.remove("input-success");
     inputOrdre.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {
