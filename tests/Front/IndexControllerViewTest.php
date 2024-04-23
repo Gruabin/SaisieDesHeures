@@ -23,7 +23,7 @@ class IndexControllerViewTest extends WebTestCase
 
         // Vérification des labels du formulaire de connexion
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('label div span.label-text', 'Matricule ?');
+        $this->assertSelectorTextContains('label div span.label-text', 'Code employé');
         $this->assertSelectorTextContains('label div span.label-text-alt', 'Non identifié');
 
         // Vérification de la présence de l'input de matricule

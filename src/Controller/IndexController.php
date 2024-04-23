@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Form\FiltreDateType;
-use App\Form\FiltreResponsableType;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\EmployeRepository;
-use App\Repository\StatutRepository;
-use App\Repository\TacheRepository;
-use App\Repository\TacheSpecifiqueRepository;
-use App\Repository\TypeHeuresRepository;
-use App\Service\DetailHeureService;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\FiltreResponsableType;
+use App\Repository\TacheRepository;
+use App\Service\DetailHeureService;
+use App\Repository\EmployeRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Repository\DetailHeuresRepository;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use App\Repository\CentreDeChargeRepository;
+use App\Repository\TacheSpecifiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property LoggerInterface           $logger
@@ -55,16 +55,20 @@ class IndexController extends AbstractController
 
     // Affiche la page d'identification
     #[Route('/', name: 'home')]
-    public function index(Request $request): Response
+    public function index(Request $request, CacheInterface $cache): Response
     {
-        $session = $request->getSession();
-        if (null !== $session->get('user_roles')) {
-            return $this->redirectToRoute('temps');
-        }
-
-        return $this->render('connexion/identification.html.twig', [
-            'user' => $this->getUser(),
-        ]);
+        return $cache->get('index_page', function (ItemInterface $item) use ($request) {
+            $item->expiresAfter(43200);
+    
+            $session = $request->getSession();
+            if (null !== $session->get('user_roles')) {
+                return $this->redirectToRoute('temps');
+            }
+    
+            return $this->render('connexion/identification.html.twig', [
+                'user' => $this->getUser(),
+            ]);
+        });
     }
 
     // Affiche la page de saisie des temps

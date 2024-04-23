@@ -17,7 +17,6 @@ class ConnexionType extends AbstractType
             ->add('id', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'LVXXXXXXX',
                     'maxlength' => '9',
                     'name' => 'inputEmploye',
                 ],
