@@ -24,7 +24,6 @@ Encore
 .addEntry("app", "./assets/app.js")
 .addEntry("connexion", "./assets/connexion.js")
 .addEntry("temps", "./assets/temps.js")
-.addEntry("export", "./assets/export.js")
 .addEntry("console", "./assets/console.js")
 
 

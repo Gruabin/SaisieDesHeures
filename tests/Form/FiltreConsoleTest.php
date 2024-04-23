@@ -2,9 +2,9 @@
 
 namespace App\Tests\Form;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\Employe;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class FiltreConsoleTest extends WebTestCase
 {
@@ -22,14 +22,14 @@ class FiltreConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Récupérer le formulaire
-        $form = $crawler->selectButton('Appliquer la date')->form(array());
+        $form = $crawler->selectButton('Appliquer la date')->form([]);
 
         // Remplir le formulaire
         $form['filtre_date[date]']->setValue('19-04-2024');
 
         // Soumettre le formulaire
         $client->submit($form);
-        
+
         // Vérifier la redirection
         $client->followRedirects();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -54,7 +54,7 @@ class FiltreConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Récupérer le formulaire
-        $form = $crawler->selectButton('Appliquer la date')->form(array());
+        $form = $crawler->selectButton('Appliquer la date')->form([]);
 
         // Remplir le formulaire
         $form['filtre_date[date]']->setValue('-1');

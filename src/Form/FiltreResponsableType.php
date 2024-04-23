@@ -22,7 +22,7 @@ class FiltreResponsableType extends AbstractType
                 ->distinct('r.nom_employe')
                 ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
                 ->andWhere('r.id LIKE :codeSite')
-                ->setParameter('codeSite', '%'.substr($options['user']->getId(), 0, 2).'%')
+                ->setParameter('codeSite', '%'.substr((string) $options['user']->getId(), 0, 2).'%')
                 ->orderBy('r.nom_employe'),
 
                 'choice_label' => 'nom_employe',

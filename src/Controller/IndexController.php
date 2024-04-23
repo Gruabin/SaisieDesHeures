@@ -124,15 +124,16 @@ class IndexController extends AbstractController
     {
         $session = $request->getSession();
         //  Utilisateur responsable par défaut
+        if ($session->get('user_roles') !== ['ROLE_RESPONSABLE']) {
+            return $this->redirectToRoute('temps');
+        }
         if (!$session->has('responsablesId')) {
             $responsablesId[0] = $this->getUser()->getId();
             $session->set('responsablesId', $responsablesId);
         }
         $user = $this->getUser();
         $heures = [];
-        if ($session->get('user_roles') !== ['ROLE_RESPONSABLE']) {
-            return $this->redirectToRoute('temps');
-        }
+
         $formResponsable = $this->createForm(FiltreResponsableType::class, null, [
             'user' => $user,
             'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
@@ -157,9 +158,9 @@ class IndexController extends AbstractController
                 if (-1 === $formDate->get('date')->getData()) {
                     foreach ($tabEmployes as $unEmploye) {
                         foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getStatut() === $statutConforme || $value->getStatut() == $statutAnomalie) {
+                            if ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie) {
                                 array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() == $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
+                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
                         }
                     }
@@ -169,7 +170,7 @@ class IndexController extends AbstractController
                             if (
                                 $value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
                                 && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
-                                ) {
+                            ) {
                                 array_push($heures, $value);
                                 $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
                             }
@@ -180,7 +181,7 @@ class IndexController extends AbstractController
                 foreach ($tabEmployes as $unEmploye) {
                     foreach ($unEmploye->getDetailHeures() as $value) {
                         if (
-                            $value->getDate()->format('d-m-Y') === date('d-m-Y')
+                            $value->getDate()->format('d-m-Y') == date('d-m-Y')
                             && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
                         ) {
                             array_push($heures, $value);
@@ -190,9 +191,8 @@ class IndexController extends AbstractController
                 }
             }
         }
-
         $employes = $this->FiltreEmploye($heures);
-        
+
         return $this->render('console/console.html.twig', [
             'formResponsable' => $formResponsable->createView(),
             'formDate' => $formDate->createView(),
@@ -219,7 +219,7 @@ class IndexController extends AbstractController
             $session->set('responsablesId', $responsables);
         }
     }
-    
+
     // Filtre les employés possédant des heures.
     public function FiltreEmploye($heures): array
     {
@@ -229,8 +229,7 @@ class IndexController extends AbstractController
                 array_push($employesFiltre, $uneHeure->getEmploye());
             }
         }
+
         return $employesFiltre;
     }
-
-
 }
