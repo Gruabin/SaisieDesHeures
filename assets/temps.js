@@ -35,7 +35,7 @@ function formChange() {
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
-            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.remove("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 2:
@@ -192,18 +192,6 @@ async function formSubmit() {
 
     return false;
 }
-
-// 
-//* Affiche les centres de charges si la tache 111 est sélectionné
-// 
-document.getElementById("tache").addEventListener("change", function () {
-    if (parseInt(document.getElementById("tache").value) === 111) {
-        document.getElementById("divCentreCharge").classList.remove("hidden");
-    } else {
-        document.getElementById("divCentreCharge").classList.add("hidden");
-        document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
-    }
-})
 
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
