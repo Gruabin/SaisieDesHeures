@@ -55,7 +55,6 @@ Console d'approbation
             <div class="m-2 flex-1">
                 <div class="m-2 font-bold">Liste de responsables</div>
                 <div class="m-2">
-
                     {{ form_start(formResponsable) }}
                         {{ form_row(formResponsable.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
@@ -77,6 +76,9 @@ Console d'approbation
             </label>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
+        {% if employes is empty %}
+            <h1 class="text-center m-5">Aucune saisie pour ce jour</h1>
+        {% endif %}
             {% for employe in employes %}
                     <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full">
                         <div class="flex justify-between m-3">
