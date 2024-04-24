@@ -50,7 +50,7 @@
         <div class="flex flex-col flex-wrap text-center p-2">
             <div class="my-3 flex md:flex-row flex-col" id="divType">
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
-                    <label for="selectTemps"><b>Type d'heures</b></label>
+                    <label for="type"><b>Type d'heures</b></label>
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
@@ -61,7 +61,6 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="mx-3 md:self-center" id="infoType"></div>
                 </div>
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divOrdre">
@@ -70,7 +69,6 @@
                 </div>
                 <div class="flex-1 text-left items-center">
                     <input class="input focus:ring-primary mx-3" type="text" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Za-z]{9}$">
-                    <p class="mx-3" id="infoOrdre"></p>
                 </div>
             </div>
             <div class="my-3 hidden flex md:flex-row flex-col" id="divActivite">

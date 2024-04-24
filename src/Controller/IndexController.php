@@ -3,22 +3,22 @@
 namespace App\Controller;
 
 use App\Form\FiltreDateType;
-use Psr\Log\LoggerInterface;
 use App\Form\FiltreResponsableType;
-use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\StatutRepository;
-use App\Repository\EmployeRepository;
-use App\Repository\TypeHeuresRepository;
-use App\Repository\DetailHeuresRepository;
-use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\EmployeRepository;
+use App\Repository\StatutRepository;
+use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @property LoggerInterface           $logger
@@ -61,12 +61,12 @@ class IndexController extends AbstractController
     {
         return $cache->get('index_page', function (ItemInterface $item) use ($request) {
             $item->expiresAfter(43200);
-    
+
             $session = $request->getSession();
             if (null !== $session->get('user_roles')) {
                 return $this->redirectToRoute('temps');
             }
-    
+
             return $this->render('connexion/identification.html.twig', [
                 'user' => $this->getUser(),
             ]);
@@ -148,7 +148,6 @@ class IndexController extends AbstractController
         $this->setResponsables($formResponsable, $request, $session);
 
         $dates = $this->detailHeuresRepository->findDatesDetail($session->get('responsablesId'));
-        $dates['Toutes les dates'] = -1;
         $tabEmployes = $this->employeRepository->findHeuresControle($session->get('responsablesId'));
         $nbAnomalie = 0;
         $formDate = $this->createForm(FiltreDateType::class, null, [

@@ -42,18 +42,6 @@ class DetailHeuresRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAllSite(): array
-    {
-        $user = $this->security->getUser();
-        if (!empty($user)) {
-            return $this->createQueryBuilder('d')
-                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
-                ->orderBy('d.id', 'ASC')
-                ->getQuery()
-                ->getResult();
-        }
-    }
-
     /**
      * @return DetailHeures[] retourne tout les detailheures de l'utilisateur sur la journée actuelle
      */
@@ -198,6 +186,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $dates = $qb->getQuery()->getResult();
         $joursUniques = [];
 
+        //  Ajout de la date du jour
+        $joursUniques[date('d-m-Y')] = date('d-m-Y');
+        
         // Parcourir chaque date du tableau
         foreach ($dates as $date) {
             // Obtenir la partie date au format DD-MM-YYYY
@@ -208,6 +199,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 $joursUniques[$jour] = $jour;
             }
         }
+
+        // Ajout du choix "Toutes les dates"
+        $joursUniques['Toutes les dates'] = -1;
 
         return $joursUniques;
     }
