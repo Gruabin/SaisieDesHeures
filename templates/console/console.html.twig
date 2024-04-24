@@ -5,20 +5,22 @@ Console d'approbation
 {% endblock %}
 
 {% block body %}
-<dialog id="modalSuppr" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg"><i class="fa-solid fa-trash-can"></i> Supprimer</h3>
-        <p class="py-4">Voulez vous supprimer cette saisie ?</p>
-        <div class="modal-action">
-            <button class="btn btn-accent" id="btnModalSuppr">Supprimer</button>
-            <button class="btn noLoading" id="btnModalAnnuler" >Annuler</button>
+    {# Modal #}
+    <dialog id="modalSuppr" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg"><i class="fa-solid fa-trash-can"></i> Supprimer</h3>
+            <p class="py-4">Voulez vous supprimer cette saisie ?</p>
+            <div class="modal-action">
+                <button class="btn btn-accent" id="btnModalSuppr">Supprimer</button>
+                <button class="btn noLoading" id="btnModalAnnuler" >Annuler</button>
+            </div>
+            <div class="text-center">
+                <span id="modalLoading"></span>
+            </div>
         </div>
-        <div class="text-center">
-            <span id="modalLoading"></span>
-        </div>
-    </div>
     </dialog>
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
+    {# --- #}
+    <section data-turbo="false" class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
         <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Console d'approbation</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col lg:flex-row lg:items-center p-2">
@@ -31,8 +33,13 @@ Console d'approbation
                 <div class="m-2" id="CDGUser">{{ user.id }} - {{ user.nomEmploye }} </div>
             </div>
             <div class="m-2 flex-1">
+                    {{ form_start(formDate) }}
                 <div class="m-2"><b>Date</b></div>
-                <div class="m-2">{{ "now"|date("d/m/Y", "Europe/Paris") }}</div>
+                <div class="flex">
+                        {{ form_row(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
+                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm m-2', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+                </div>
+                    {{ form_end(formDate) }}
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2"></div>
@@ -48,11 +55,12 @@ Console d'approbation
             <div class="m-2 flex-1">
                 <div class="m-2 font-bold">Liste de responsables</div>
                 <div class="m-2">
-                    {{ form_start(form) }}
-                        {{ form_row(form.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
+
+                    {{ form_start(formResponsable) }}
+                        {{ form_row(formResponsable.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
-                        {{ form_row(form.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
-                    {{ form_end(form) }}
+                        {{ form_row(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
+                    {{ form_end(formResponsable) }}
                 </div>
             </div>
         </div>
@@ -64,36 +72,36 @@ Console d'approbation
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
         <label class="cursor-pointer label">
-                <span class="label-text">Anomalies uniquement &nbsp;</span> 
+                <span class="label-text">Anomalies uniquement &nbsp;</span>
                 <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
             {% for employe in employes %}
-                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full">
-                    <div class="flex justify-between m-3">
-                        <div class="flex flex-col">
-                            <h1 class="text-primary">{{ employe.id }} - {{ employe.nomEmploye }} </h1>
+                    <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full">
+                        <div class="flex justify-between m-3">
+                            <div class="flex flex-col">
+                                <h1 class="text-primary">{{ employe.id }} - {{ employe.nomEmploye }} </h1>
+                            </div>
+                        </div>
+                        {# Tableau #}
+                        <div class="overflow-x-auto">
+                            <table class="table table-fixed">
+                            {% block thead %}
+                                {% include 'console/head.table.html.twig' %}
+                            {% endblock %}
+                            {% block tbody %}
+                                {% include 'console/body.table.html.twig' %}
+                            {% endblock %}
+                            </table>
                         </div>
                     </div>
-                    {# Tableau #}
-                    <div class="overflow-x-auto">
-                        <table class="table table-fixed" id="">
-                        {% block thead %}
-                            {% include 'console/head.table.html.twig' %}
-                        {% endblock %}
-                        {% block tbody %}
-                            {% include 'console/body.table.html.twig' %}
-                        {% endblock %}
-                        </table>
-                    </div>
-                </div>
             {% endfor %}
         </div>
     </section>
     <input type="hidden" name="token" id="approbationToken" value="{{ csrf_token('approbationToken') }}">
     <div class="flex gap-10 justify-center text-center m-16">
-        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('api_post_deconnexion') }}">Quitter</a>
+        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('deconnexion') }}">Quitter</a>
         <span id="loading" class=""></span>
         <button type="button" id="validation" class="btn btn-primary btn-wide ">Approuver la selection</button>
     </div>

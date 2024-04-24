@@ -17,6 +17,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  * @method DetailHeures[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
  * @property EntityManagerInterface $entityManager
+ * @property EmployeRepository      $employeRepository
  * @property Security               $security
  */
 class DetailHeuresRepository extends ServiceEntityRepository
@@ -25,10 +26,12 @@ class DetailHeuresRepository extends ServiceEntityRepository
         EntityManagerInterface $entityManager,
         ManagerRegistry $registry,
         Security $security,
+        EmployeRepository $employeRepository
     ) {
         parent::__construct($registry, DetailHeures::class);
         $this->security = $security;
         $this->entityManager = $entityManager;
+        $this->employeRepository = $employeRepository;
     }
 
     public function findAll(): array
@@ -159,32 +162,12 @@ class DetailHeuresRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère le nombre total d'anomalies pour l'utilisateur connecté.
-     *
-     * @return int le nombre total d'anomalies
-     */
-    public function findNbAnomalie(): int
-    {
-        $user = $this->security->getUser();
-        if (!empty($user)) {
-            $qb = $this->createQueryBuilder('d');
-            $qb->select('COUNT(d.id)')
-                ->innerJoin('d.employe', 'employe')
-                ->innerJoin('employe.centre_de_charge', 'centre_de_charge')
-                ->where('d.statut =  2')
-                ->andWhere('centre_de_charge.responsable = :responsable_id')
-                ->setParameter('responsable_id', $user->getId());
-
-            return $qb->getQuery()->getSingleScalarResult();
-        }
-    }
-
-        /**
-     * Récupère le nombre total d'anomalies pour plusieurs responsables selectionnés.
+     * Récupère le nombre total d'anomalies pour les responsables selectionnés.
+     * ! Pas utilisé.
      *
      * @return int le nombre total d'anomalies des responsables selectionnés
      */
-    public function findNbAnomalieResponsablesSelectionnes(array $responsables): int
+    public function findNbAnomalie(array $responsables): int
     {
         $qb = $this->createQueryBuilder('d');
         $qb->select('COUNT(d.id)')
@@ -195,5 +178,37 @@ class DetailHeuresRepository extends ServiceEntityRepository
             ->setParameter('responsables_id', $responsables);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère Les dates qui ont des détails d'heures non validées.
+     *
+     * @return array|string dates possédant des détails d'heures non validées
+     */
+    public function findDatesDetail($responsables): array|string
+    {
+        $qb = $this->createQueryBuilder('d');
+        $qb->select('d.date')
+            ->innerJoin('d.employe', 'employe')
+            ->innerJoin('employe.centre_de_charge', 'centre_de_charge')
+            ->where('d.statut IN (2, 3)')
+            ->andWhere('centre_de_charge.responsable IN (:responsables_id)')
+            ->setParameter('responsables_id', $responsables)
+            ->orderBy('d.date', 'DESC');
+        $dates = $qb->getQuery()->getResult();
+        $joursUniques = [];
+
+        // Parcourir chaque date du tableau
+        foreach ($dates as $date) {
+            // Obtenir la partie date au format DD-MM-YYYY
+            $jour = $date['date']->format('d-m-Y');
+
+            // Ajouter le jour au tableau des jours uniques s'il n'existe pas déjà
+            if (!in_array($jour, $joursUniques)) {
+                $joursUniques[$jour] = $jour;
+            }
+        }
+
+        return $joursUniques;
     }
 }
