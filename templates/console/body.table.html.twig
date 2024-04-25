@@ -1,77 +1,73 @@
 {% block tbody %}
     <tbody class="text-center">
-        {% for heure in heures %}
-            {% if heure.employe.id == employe.id and heure.statut is not null %}
-                {% if heure.statut.id == 2 or heure.statut.id == 3 %}
-                <div class="hidden date">{{ heure.date|date("d-m-Y", "Europe/Paris") }}</div>
-                    <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}">
-                        <input type="hidden" name="token" id="ligneToken" value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
-                        <td>
-                            <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="" id="checkbox">
-                        </td>
-                        <td>
-                            {{ heure.typeHeures.nomType }}
-                        </td>
-                        <td>
-                            <input type="text" class="input w-full form hidden" value="{{ heure.ordre ?? null }}" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">
-                            <p class="texte" id="texte_ordre">{{ heure.ordre ?? null }}</p>
-                        </td>
-                        <td>
-                            <input type="text" class="input w-full form hidden" value="{{ heure.operation ?? null }}" name="operation" id="operation" max="999" min="0" step="10">
-                            <p class="texte" id="texte_operation">{{ heure.operation ?? null }}</p>
-                        </td>
-                        <td>
-                            <input type="text" class="input w-full form hidden" value="{{ heure.activite.id ?? null }}" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
-                            <p class="texte" id="texte_activite">{{ heure.activite.id ?? null }}</p>
-                        </td>
-                        <td>
-                            <select class="select mx-3 w-full form hidden" name="tache" id="tache">
-                                <option value="-1"></option>
-                                {% for tache in taches %}
-                                    <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}" {% if tache.id == heure.tache.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.nomTache }}</option>
-                                {% endfor %}
-                                {% for tache in tachesSpe %}
-                                    <option value="{{ tache.id }}" {% if tache.id == heure.tacheSpecifique.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.description }}</option>
-                                {% endfor %}
-                            </select>
-                            <p class="texte" id="texte_tache">
-                                {% if heure.tache is not empty %}
-                                    {{ heure.tache.id }} - {{ heure.tache.nomTache }}
-                                {% elseif heure.tacheSpecifique is not empty %}
-                                    {{ heure.tacheSpecifique.id }} - {{ heure.tacheSpecifique.description }}
-                                {% endif %}
-                            </p>
-                        </td>
-                        <td>
-                            <select class="select w-full form hidden" name="centrecharge" id="centrecharge">
-                                <option value="-1"></option>
-                                {% for centre_charge in CDG %}
-                                    <option value="{{ centre_charge.id ?? null }}" {% if centre_charge.id == heure.centreDeCharge.id ?? null %}selected{% endif %}>{{ centre_charge.id }}</option>
-                                {% endfor %}
-                            </select>
-                            <p class="texte" id="texte_centrecharge">{{ heure.centreDeCharge.id ?? null }}</p>
-                        </td>
-                        <th>
-                            <input type="number" class="input w-full form hidden" value="{{ heure.tempsMainOeuvre }}" max="100" step=".25" name="saisieTemps" id="saisieTemps">
-                            <p class="texte" id="texte_saisieTemps">{{ heure.tempsMainOeuvre }}</p>
-                        </th>
-                        <td>
-                            <i class="fa-solid fa-circle-check fa-xl text-success {% if heure.statut.id == 2 %}hidden{% endif %}"></i>
-                            <i class="fa-solid fa-circle-xmark fa-xl text-accent {% if heure.statut.id == 3 %}hidden{% endif %}"></i>
-                        </td>
-                        <td>
-                            <p class="texte">{{ heure.motifErreur ?? null }}</p>
-                        </td>
-                        <td>
-                            <span id="loading" class="loading loading-dots loading-lg text-gruau-dark-blue hidden"></span>
-                            <button type="button" data-ligne="{{ heure.id }}" id="check" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>
-                            <button type="button" data-ligne="{{ heure.id }}" id="xmark" class="btn btn-link xmark hidden" value="" ><i class="fa-solid fa-xmark fa-xl"></i></button>
-                            <button type="button" data-ligne="{{ heure.id }}" id="pen" class="btn btn-link pen" value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
-                            <button type="button" data-ligne="{{ heure.id }}" id="trash" class="btn btn-link xmark" value=""><i class="fa-solid fa-trash-can fa-xl"></i></button>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endif %}
+        {% for heure in employe.heures %}
+        <div class="hidden date">{{ heure.date|date("d-m-Y", "Europe/Paris") }}</div>
+            <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}">
+                <input type="hidden" name="token" id="ligneToken" value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
+                <td>
+                    <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="" id="checkbox">
+                </td>
+                <td>
+                    {{ heure.typeHeures.nomType }}
+                </td>
+                <td>
+                    <input type="text" class="input w-full form hidden" value="{{ heure.ordre ?? null }}" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">
+                    <p class="texte" id="texte_ordre">{{ heure.ordre ?? null }}</p>
+                </td>
+                <td>
+                    <input type="text" class="input w-full form hidden" value="{{ heure.operation ?? null }}" name="operation" id="operation" max="999" min="0" step="10">
+                    <p class="texte" id="texte_operation">{{ heure.operation ?? null }}</p>
+                </td>
+                <td>
+                    <input type="text" class="input w-full form hidden" value="{{ heure.activite.id ?? null }}" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
+                    <p class="texte" id="texte_activite">{{ heure.activite.id ?? null }}</p>
+                </td>
+                <td>
+                    <select class="select mx-3 w-full form hidden" name="tache" id="tache">
+                        <option value="-1"></option>
+                        {% for tache in taches %}
+                            <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}" {% if tache.id == heure.tache.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.nomTache }}</option>
+                        {% endfor %}
+                        {% for tache in tachesSpe %}
+                            <option value="{{ tache.id }}" {% if tache.id == heure.tacheSpecifique.id ?? null %}selected{% endif %}>{{ tache.id }} - {{ tache.description }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="texte" id="texte_tache">
+                        {% if heure.tache is not empty %}
+                            {{ heure.tache.id }} - {{ heure.tache.nomTache }}
+                        {% elseif heure.tacheSpecifique is not empty %}
+                            {{ heure.tacheSpecifique.id }} - {{ heure.tacheSpecifique.description }}
+                        {% endif %}
+                    </p>
+                </td>
+                <td>
+                    <select class="select w-full form hidden" name="centrecharge" id="centrecharge">
+                        <option value="-1"></option>
+                        {% for centre_charge in CDG %}
+                            <option value="{{ centre_charge.id ?? null }}" {% if centre_charge.id == heure.centreDeCharge.id ?? null %}selected{% endif %}>{{ centre_charge.id }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="texte" id="texte_centrecharge">{{ heure.centreDeCharge.id ?? null }}</p>
+                </td>
+                <th>
+                    <input type="number" class="input w-full form hidden" value="{{ heure.tempsMainOeuvre }}" max="100" step=".25" name="saisieTemps" id="saisieTemps">
+                    <p class="texte" id="texte_saisieTemps">{{ heure.tempsMainOeuvre }}</p>
+                </th>
+                <td>
+                    <i class="fa-solid fa-circle-check fa-xl text-success {% if heure.statut.id == 2 %}hidden{% endif %}"></i>
+                    <i class="fa-solid fa-circle-xmark fa-xl text-accent {% if heure.statut.id == 3 %}hidden{% endif %}"></i>
+                </td>
+                <td>
+                    <p class="texte">{{ heure.motifErreur ?? null }}</p>
+                </td>
+                <td>
+                    <span id="loading" class="loading loading-dots loading-lg text-gruau-dark-blue hidden"></span>
+                    <button type="button" data-ligne="{{ heure.id }}" id="check" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>
+                    <button type="button" data-ligne="{{ heure.id }}" id="xmark" class="btn btn-link xmark hidden" value="" ><i class="fa-solid fa-xmark fa-xl"></i></button>
+                    <button type="button" data-ligne="{{ heure.id }}" id="pen" class="btn btn-link pen" value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
+                    <button type="button" data-ligne="{{ heure.id }}" id="trash" class="btn btn-link xmark" value=""><i class="fa-solid fa-trash-can fa-xl"></i></button>
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 {% endblock %}

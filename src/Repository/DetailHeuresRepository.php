@@ -2,11 +2,12 @@
 
 namespace App\Repository;
 
+use DateTime;
 use App\Entity\DetailHeures;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<DetailHeures>
@@ -91,7 +92,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->join('d.employe', 'employe')
                 ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
+                ->setParameter('employe', substr((string) $user->getId(), 0, 2) . '%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -188,7 +189,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
         //  Ajout de la date du jour
         $joursUniques[date('d-m-Y')] = date('d-m-Y');
-        
+
         // Parcourir chaque date du tableau
         foreach ($dates as $date) {
             // Obtenir la partie date au format DD-MM-YYYY
