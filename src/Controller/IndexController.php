@@ -129,10 +129,10 @@ class IndexController extends AbstractController
     public function console(Request $request): Response
     {
         $session = $request->getSession();
-        //  Utilisateur responsable par défaut
         if ($session->get('user_roles') !== ['ROLE_RESPONSABLE']) {
             return $this->redirectToRoute('temps');
         }
+        //  Utilisateur responsable par défaut
         if (!$session->has('responsablesId')) {
             $responsablesId[0] = $this->getUser()->getId();
             $session->set('responsablesId', $responsablesId);
@@ -140,6 +140,7 @@ class IndexController extends AbstractController
         $user = $this->getUser();
         $heures = [];
 
+        // Formulaire de filtre des responsables
         $formResponsable = $this->createForm(FiltreResponsableType::class, null, [
             'user' => $user,
             'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
@@ -157,46 +158,29 @@ class IndexController extends AbstractController
 
         $statutAnomalie = $this->statutRepository->getStatutAnomalie();
         $statutConforme = $this->statutRepository->getStatutConforme();
+        $dateSelectionnee = null;
 
-        if (null != $tabEmployes) {
-            if ($formDate->isSubmitted() && $formDate->isValid()) {
-                if (-1 === $formDate->get('date')->getData()) {
-                    foreach ($tabEmployes as $unEmploye) {
-                        foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie) {
-                                array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($tabEmployes as $unEmploye) {
-                        foreach ($unEmploye->getDetailHeures() as $value) {
-                            if (
-                                $value->getDate()->format('d-m-Y') === $formDate->get('date')->getData()
-                                && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
-                            ) {
-                                array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                            }
-                        }
-                    }
-                }
-            } else {
-                foreach ($tabEmployes as $unEmploye) {
-                    foreach ($unEmploye->getDetailHeures() as $value) {
-                        if (
-                            $value->getDate()->format('d-m-Y') === date('d-m-Y')
-                            && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
-                        ) {
-                            array_push($heures, $value);
-                            $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                        }
-                    }
+        if (null === $tabEmployes) {
+            $dateSelectionnee = -1;
+        } elseif ($formDate->isSubmitted() && $formDate->isValid()) {
+            $dateSelectionnee = $formDate->get('date')->getData();
+        } else {
+            $dateSelectionnee = -1;
+        }
+
+        foreach ($tabEmployes as $unEmploye) {
+            foreach ($unEmploye->getDetailHeures() as $value) {
+                if (
+                    (-1 === $dateSelectionnee || $value->getDate()->format('d-m-Y') === $dateSelectionnee)
+                    && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
+                ) {
+                    array_push($heures, $value);
+                    $nbAnomalie += ($value->getStatut() === $statutAnomalie) ? 1 : 0;
                 }
             }
         }
-        $employes = $this->FiltreEmploye($heures);
+
+        $employes = $this->filtreEmploye($heures);
 
         return $this->render('console/console.html.twig', [
             'formResponsable' => $formResponsable->createView(),
@@ -213,7 +197,7 @@ class IndexController extends AbstractController
     }
 
     // Défini les responsables
-    public function setResponsables($formResponsable, $request, $session): void
+    private function setResponsables($formResponsable, $request, $session): void
     {
         $formResponsable->handleRequest($request);
         if ($formResponsable->isSubmitted() && $formResponsable->isValid()) {
@@ -226,15 +210,28 @@ class IndexController extends AbstractController
     }
 
     // Filtre les employés possédant des heures.
-    public function FiltreEmploye($heures): array
+    private function filtreEmploye($heures): array
     {
-        $employesFiltre = [];
+        $i = 0;
+        $j = 0;
+        $tab[$i] = null;
+        $tab = [[]];
         foreach ($heures as $uneHeure) {
-            if (!in_array($uneHeure->getEmploye(), $employesFiltre)) {
-                array_push($employesFiltre, $uneHeure->getEmploye());
+            if (!in_array($uneHeure->getEmploye()->getId(), $tab[$i])) {
+                ++$i;
+                $j = 0;
+                $tab[$i]['id'] = $uneHeure->getEmploye()->getId();
+                $tab[$i]['nom'] = $uneHeure->getEmploye()->getNomEmploye();
+                $tab[$i]['heures'][$j] = $uneHeure;
+                $tab[$i]['total'] = $uneHeure->getTempsMainOeuvre();
+            } else {
+                $tab[$i]['heures'][$j] = $uneHeure;
+                $tab[$i]['total'] += $uneHeure->getTempsMainOeuvre();
             }
+            ++$j;
         }
+        array_shift($tab);
 
-        return $employesFiltre;
+        return $tab;
     }
 }

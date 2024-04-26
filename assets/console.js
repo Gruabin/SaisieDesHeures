@@ -124,7 +124,6 @@ document.getElementById('validation').addEventListener('click', function () {
     ligne.forEach(element => {
         if (element.querySelector('input[type=checkbox]').checked) {
             donnees.push(element.dataset.idligne)
-
         }
     })
     const token = document.getElementById("approbationToken").value;

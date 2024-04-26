@@ -7,43 +7,26 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class IndexControllerTest extends WebTestCase
 {
-    public function testConsoleResponsable(): void
+    public function testFiltreDate(): void
     {
-        // login
+        // Tester la connexion
         $client = static::createClient();
-        $entityManager = $client->getContainer()->get('doctrine')->getManager();
-        $user = $entityManager->getRepository(Employe::class)->find('LV0000002');
-        $client->loginUser($user);
-
-        $client->followRedirects();
-        $client->request('GET', '/console');
+        $client->followRedirects(true);
+        $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
-    }
 
-    public function testConsoleEmploye(): void
-    {
-        // login
-        $client = static::createClient();
-        $entityManager = $client->getContainer()->get('doctrine')->getManager();
-        $user = $entityManager->getRepository(Employe::class)->find('LV0000001');
-        $client->loginUser($user);
+        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000002');
+        $client->submit($form);
 
-        $client->followRedirects();
-        $client->request('GET', '/console');
-        $client->followRedirects();
+        $crawler = $client->request('GET', '/console');
 
-        $this->assertRouteSame('temps');
-    }
+        $this->assertResponseIsSuccessful();
 
-    public function testConsoleNonConnecte(): void
-    {
-        $client = static::createClient();
-
-        $client->followRedirects();
-        $client->request('GET', '/console');
-        $client->followRedirects();
-
-        $this->assertRouteSame('home');
+        // vérification de l'affichage des données
+        $this->assertSelectorExists('#dateLigne', '22-04-2024');
+        $this->assertSelectorExists('#dateLigne', '19-04-2024');
     }
 }

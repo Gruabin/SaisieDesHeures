@@ -186,9 +186,12 @@ class DetailHeuresRepository extends ServiceEntityRepository
         $dates = $qb->getQuery()->getResult();
         $joursUniques = [];
 
+        // Ajout du choix "Toutes les dates"
+        $joursUniques['Toutes les dates'] = -1;
+
         //  Ajout de la date du jour
         $joursUniques[date('d-m-Y')] = date('d-m-Y');
-        
+
         // Parcourir chaque date du tableau
         foreach ($dates as $date) {
             // Obtenir la partie date au format DD-MM-YYYY
@@ -199,9 +202,6 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 $joursUniques[$jour] = $jour;
             }
         }
-
-        // Ajout du choix "Toutes les dates"
-        $joursUniques['Toutes les dates'] = -1;
 
         return $joursUniques;
     }
