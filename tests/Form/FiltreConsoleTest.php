@@ -29,7 +29,6 @@ class FiltreConsoleTest extends WebTestCase
         // Récupérer le formulaire
         $form = $crawler->selectButton('Appliquer la date')->form([]);
 
-        // * Test pour le filtre "19-04-2024"
         // Remplir le formulaire
         $form['filtre_date[date]']->setValue('19-04-2024');
 

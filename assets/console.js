@@ -124,7 +124,6 @@ document.getElementById('validation').addEventListener('click', function () {
     ligne.forEach(element => {
         if (element.querySelector('input[type=checkbox]').checked) {
             donnees.push(element.dataset.idligne)
-
         }
     })
     const token = document.getElementById("approbationToken").value;
@@ -185,7 +184,6 @@ function APISuppression(ligneASupprimer) {
             if (ligneASupprimer.dataset.statut == 2) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
-            console.log(ligneASupprimer);
             ligneASupprimer.remove();
             addToastSuccess("Saisie supprimée");
         } else {
