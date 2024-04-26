@@ -31,5 +31,5 @@ steps:
   displayName: 'Install Dependencies'
 
 - script: |
-    vendor/bin/phpunit
+    php bin/phpunit
   displayName: 'Run PHPUnit Tests'
