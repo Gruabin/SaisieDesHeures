@@ -37,7 +37,7 @@ class ConnexionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $cache->get('user_'.$form->getData()->getId(), fn() => $employeRepo->findOneBy(['id' => $form->getData()->getId()]));
+            $user = $cache->get('user_'.$form->getData()->getId(), fn () => $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getId())]));
 
             if ($user) {
                 $userAuth->authenticateUser(

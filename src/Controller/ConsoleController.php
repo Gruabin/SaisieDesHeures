@@ -103,6 +103,7 @@ class ConsoleController extends AbstractController
     #[Route('/api/post/supprimerligne', name: 'supprimerligne', methods: ['POST'])]
     public function supprimerligne(Request $request): Response
     {
+        return new Response('ok', Response::HTTP_OK);
         try {
             // Récupérer les données JSON envoyées dans la requête POST de manière sécurisée
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);

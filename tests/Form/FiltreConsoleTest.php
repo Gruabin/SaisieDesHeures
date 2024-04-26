@@ -10,13 +10,18 @@ class FiltreConsoleTest extends WebTestCase
 {
     public function testFiltreDate(): void
     {
-        // Connexion en tant que responsable
+        // Tester la connexion
         $client = static::createClient();
-        $entityManager = $client->getContainer()->get('doctrine')->getManager();
-        $user = $entityManager->getRepository(Employe::class)->find('LV0000002');
-        $client->loginUser($user);
+        $client->followRedirects(true);
+        $crawler = $client->request('GET', '/_connexion');
 
-        $client->followRedirects();
+        $this->assertResponseIsSuccessful();
+
+        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000002');
+        $client->submit($form);
+
         $crawler = $client->request('GET', '/console');
 
         $this->assertResponseIsSuccessful();
@@ -24,6 +29,7 @@ class FiltreConsoleTest extends WebTestCase
         // Récupérer le formulaire
         $form = $crawler->selectButton('Appliquer la date')->form([]);
 
+        // * Test pour le filtre "19-04-2024"
         // Remplir le formulaire
         $form['filtre_date[date]']->setValue('19-04-2024');
 
@@ -36,19 +42,24 @@ class FiltreConsoleTest extends WebTestCase
         $this->assertRouteSame('console');
         $client->followRedirects();
 
-        $this->assertSelectorExists('.ligne');
-        $this->assertSelectorTextContains('.date', '19-04-2024');
+        // vérification de l'affichage des données
+        $this->assertSelectorExists('#dateLigne', '19-04-2024');
     }
 
     public function testFiltreToutesDate(): void
     {
-        // Connexion en tant que responsable
+        // Tester la connexion
         $client = static::createClient();
-        $entityManager = $client->getContainer()->get('doctrine')->getManager();
-        $user = $entityManager->getRepository(Employe::class)->find('LV0000002');
-        $client->loginUser($user);
+        $client->followRedirects(true);
+        $crawler = $client->request('GET', '/_connexion');
 
-        $client->followRedirects();
+        $this->assertResponseIsSuccessful();
+
+        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000002');
+        $client->submit($form);
+
         $crawler = $client->request('GET', '/console');
 
         $this->assertResponseIsSuccessful();
@@ -68,7 +79,8 @@ class FiltreConsoleTest extends WebTestCase
         $this->assertRouteSame('console');
         $client->followRedirects();
 
-        $this->assertSelectorExists('.ligne');
-        $this->assertSelectorTextContains('.date', '19-04-2024');
+        // vérification de l'affichage des données
+        $this->assertSelectorExists('#dateLigne', '22-04-2024');
+        $this->assertSelectorExists('#dateLigne', '19-04-2024');
     }
 }

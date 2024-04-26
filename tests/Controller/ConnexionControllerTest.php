@@ -46,7 +46,15 @@ class ConnexionControllerTest extends WebTestCase
         $client->submit($form);
 
         // Vérifier la redirection
-        $this->assertStringEndsWith('/temps', $client->getRequest()->getUri());
+        $this->assertRouteSame('temps');
+
+        $client->request('GET', '/console');
+
+        $this->assertRouteSame('temps');
+
+        $client->request('GET', '/historique');
+
+        $this->assertRouteSame('historique');
     }
 
     public function testConnexionResponsable(): void
@@ -64,7 +72,15 @@ class ConnexionControllerTest extends WebTestCase
         $client->submit($form);
 
         // Vérifier la redirection
-        $this->assertStringEndsWith('/console', $client->getRequest()->getUri());
+        $this->assertRouteSame('console');
+
+        $client->request('GET', '/console');
+
+        $this->assertRouteSame('console');
+
+        $client->request('GET', '/historique');
+
+        $this->assertRouteSame('historique');
     }
 
     public function testDeconnexion(): void

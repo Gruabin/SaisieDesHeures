@@ -158,49 +158,30 @@ class IndexController extends AbstractController
 
         $statutAnomalie = $this->statutRepository->getStatutAnomalie();
         $statutConforme = $this->statutRepository->getStatutConforme();
-        if (null != $tabEmployes) {
-            if ($formDate->isSubmitted() && $formDate->isValid()) {
-                $dateSelectionnee = $formDate->get('date')->getData();
-                if (-1 === $dateSelectionnee) {
-                    foreach ($tabEmployes as $unEmploye) {
-                        foreach ($unEmploye->getDetailHeures() as $value) {
-                            if ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie) {
-                                array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($tabEmployes as $unEmploye) {
-                        foreach ($unEmploye->getDetailHeures() as $value) {
-                            if (
-                                $value->getDate()->format('d-m-Y') === $dateSelectionnee
-                                && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
-                            ) {
-                                array_push($heures, $value);
-                                $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                            }
-                        }
-                    }
-                }
-            } else {
-                $dateSelectionnee = date('d-m-Y');
-                foreach ($tabEmployes as $unEmploye) {
-                    foreach ($unEmploye->getDetailHeures() as $value) {
-                        if (
-                            $value->getDate()->format('d-m-Y') ===  $dateSelectionnee
-                            && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
-                        ) {
-                            array_push($heures, $value);
-                            $nbAnomalie = ($value->getStatut() === $statutAnomalie) ? $nbAnomalie + 1 : $nbAnomalie;
-                        }
-                    }
+        $dateSelectionnee = null;
+
+        if (null === $tabEmployes) {
+            $dateSelectionnee = -1;
+        } elseif ($formDate->isSubmitted() && $formDate->isValid()) {
+            $dateSelectionnee = $formDate->get('date')->getData();
+        } else {
+            $dateSelectionnee = -1;
+        }
+
+        foreach ($tabEmployes as $unEmploye) {
+            foreach ($unEmploye->getDetailHeures() as $value) {
+                if (
+                    (-1 === $dateSelectionnee || $value->getDate()->format('d-m-Y') === $dateSelectionnee)
+                    && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
+                ) {
+                    array_push($heures, $value);
+                    $nbAnomalie += ($value->getStatut() === $statutAnomalie) ? 1 : 0;
                 }
             }
-        } else {
-            $dateSelectionnee = date('d-m-Y');
         }
+
         $employes = $this->filtreEmploye($heures);
+
         return $this->render('console/console.html.twig', [
             'formResponsable' => $formResponsable->createView(),
             'formDate' => $formDate->createView(),
@@ -237,19 +218,20 @@ class IndexController extends AbstractController
         $tab = [[]];
         foreach ($heures as $uneHeure) {
             if (!in_array($uneHeure->getEmploye()->getId(), $tab[$i])) {
-                $i++;
+                ++$i;
                 $j = 0;
                 $tab[$i]['id'] = $uneHeure->getEmploye()->getId();
                 $tab[$i]['nom'] = $uneHeure->getEmploye()->getNomEmploye();
                 $tab[$i]['heures'][$j] = $uneHeure;
                 $tab[$i]['total'] = $uneHeure->getTempsMainOeuvre();
-            }else {
+            } else {
                 $tab[$i]['heures'][$j] = $uneHeure;
                 $tab[$i]['total'] += $uneHeure->getTempsMainOeuvre();
             }
-            $j++;
+            ++$j;
         }
         array_shift($tab);
+
         return $tab;
     }
 }

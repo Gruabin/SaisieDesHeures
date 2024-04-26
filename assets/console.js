@@ -185,6 +185,7 @@ function APISuppression(ligneASupprimer) {
             if (ligneASupprimer.dataset.statut == 2) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
+            console.log(ligneASupprimer);
             ligneASupprimer.remove();
             addToastSuccess("Saisie supprimée");
         } else {
