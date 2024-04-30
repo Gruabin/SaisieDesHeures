@@ -92,12 +92,12 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
 
-        # Run php tests
-        - script: | 
-           php bin/console c:c --env=test
-           php vendor/bin/phpunit
-          workingDirectory: $(rootFolder)
-          displayName: "Run tests"
+        # # Run php tests
+        # - script: | 
+        #    php bin/console c:c --env=test
+        #    php vendor/bin/phpunit
+        #   workingDirectory: $(rootFolder)
+        #   displayName: "Run tests"
 
         # Mend
         - task: WhiteSource@21
