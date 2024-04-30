@@ -93,8 +93,9 @@ stages:
           displayName: "Linter twig CS fixer"
 
         # Run php tests
-        - script: php vendor/bin/phpunit
-        - script: php bin/console c:c --env=test
+        - script: | 
+           php bin/console c:c --env=test
+           php vendor/bin/phpunit
           workingDirectory: $(rootFolder)
           displayName: "Run tests"
 
