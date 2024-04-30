@@ -94,6 +94,7 @@ stages:
 
         # Run php tests
         - script: php vendor/bin/phpunit
+        - script: php bin/console c:c --env=test
           workingDirectory: $(rootFolder)
           displayName: "Run tests"
 
