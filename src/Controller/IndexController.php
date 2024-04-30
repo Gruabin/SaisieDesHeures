@@ -65,27 +65,30 @@ class IndexController extends AbstractController
     {
         return $cache->get('index_page', function (ItemInterface $item) {
             $item->expiresAfter(43200);
-
-            // $session = $request->getSession();
-            // if (null !== $session->get('user_roles')) {
-            //     return $this->redirectToRoute('temps');
-            // }
-
             return $this->render('connexion/identification.html.twig', [
                 'user' => $this->getUser(),
             ]);
         });
     }
 
+    // Redirige lors de l'accès refusé
+    #[Route('/access_denied', name: 'access_denied')]
+    public function accessDenied(): Response
+    {
+        $route = 'home';
+        if ($this->isGranted('ROLE_EMPLOYE')) {
+            $route = 'temps';
+        } elseif ($this->isGranted('ROLE_RESPONSABLE') || $this->isGranted('ROLE_ADMIN')) {
+            $route = 'console';
+        }
+        return $this->redirectToRoute($route);
+    }
+
+
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
     public function temps() : Response
     {
-        // $session = $request->getSession();
-        // if (null === $session->get('user_roles')) {
-        //     return $this->redirectToRoute('home');
-        // }
-        // dd($this->getUser()->getid());
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getId());
         if ($nbHeures['total'] >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
@@ -108,10 +111,6 @@ class IndexController extends AbstractController
     #[Route('/historique', name: 'historique')]
     public function historique() : Response
     {
-        // $session = $request->getSession();
-        // if (null === $session->get('user_roles')) {
-        //     return $this->redirectToRoute('home');
-        // }
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser());
         if ($nbHeures['total'] >= 10) {
             $message = "Votre nombre d'heure est trop élevé";
@@ -130,9 +129,6 @@ class IndexController extends AbstractController
     public function console(Request $request): Response
     {
         $session = $request->getSession();
-        // if ($session->get('user_roles') !== ['ROLE_RESPONSABLE'] && $session->get('user_roles') !== ['ROLE_ADMIN']){
-        //     return $this->redirectToRoute('temps');
-        // }
         //  Utilisateur responsable par défaut
         if (!$session->has('responsablesId')) {
             $responsablesId[0] = $this->getUser()->getId();

@@ -5,3 +5,7 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+errors:
+    path: /access-denied
+    controller: App\Controller\indexController::accessDenied
