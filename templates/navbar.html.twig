@@ -22,7 +22,7 @@
                             <li>
                                 <a href="{{ path('historique') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
                             </li>
-                            {% if user.responsable|length > 0 %}
+                            {% if is_granted('ROLE_MANAGER') %}
                                 <li>
                                     <a href="{{ path('console') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
                                 </li>

@@ -18,13 +18,21 @@ class FiltreResponsableType extends AbstractType
         $builder
             ->add('responsable', EntityType::class, [
                 'class' => Employe::class,
-                'query_builder' => fn (EntityRepository $er): QueryBuilder => $er->createQueryBuilder('r')
-                ->distinct('r.nom_employe')
-                ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
-                ->andWhere('r.id LIKE :codeSite')
-                ->setParameter('codeSite', '%'.substr((string) $options['user']->getId(), 0, 2).'%')
-                ->orderBy('r.nom_employe'),
+                'query_builder' => function (EntityRepository $er) use ($options): QueryBuilder {
+                    if ('ROLE_ADMIN' === $options['user']->getRoles()[0]) {
+                        $result = $er->createQueryBuilder('r')
+                        ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
+                        ->orderBy('r.nom_employe');
+                    } else {
+                        $result = $er->createQueryBuilder('r')
+                        ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
+                        ->andWhere('r.id LIKE :codeSite')
+                        ->setParameter('codeSite', '%'.substr((string) $options['user']->getId(), 0, 2).'%')
+                        ->orderBy('r.nom_employe');
+                    }
 
+                    return $result;
+                },
                 'choice_label' => 'nom_employe',
                 'choice_value' => 'id',
                 'label' => false,

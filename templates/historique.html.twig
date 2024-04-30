@@ -52,14 +52,6 @@
                     Saisie des heures
                 </a>
             </div>
-            {% if user.accesExport %}
-            <div class="m-2 flex-1">
-                <a class="btn btn-success noLoading text-white mt-5" href="{{ path('api_get_export') }}">
-                    <i class="fa-solid fa-file-excel"></i>
-                    Exporter
-                </a>
-            </div>
-            {% endif %}
         </div>
     </section>
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">

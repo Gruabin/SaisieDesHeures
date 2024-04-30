@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Form\ConnexionType;
 use App\Repository\EmployeRepository;
 use App\Security\AuthSecurity;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +17,20 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 /**
- * @property LoggerInterface $logger
+ * @property EntityManagerInterface $entityManager
+ * @property LoggerInterface        $logger
+ * @property Security               $security
  */
 class ConnexionController extends AbstractController
 {
     public function __construct(
-        LoggerInterface $logger
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        Security $security
     ) {
+        $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->security = $security;
     }
 
     #[Route('/_connexion', name: 'connexion')]
@@ -40,28 +48,26 @@ class ConnexionController extends AbstractController
             $user = $cache->get('user_'.$form->getData()->getId(), fn () => $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getId())]));
 
             if ($user) {
+                // Met à jour le role du manager
+                if ($employeRepo->estResponsable($user) && 'ROLE_EMPLOYE' === $user->getRoles()[0]) {
+                    $employe = $employeRepo->find($user->getId());
+                    $employe->setRoles(['ROLE_MANAGER']);
+                    $this->entityManager->persist($employe);
+                    $this->entityManager->flush();
+                }
                 $userAuth->authenticateUser(
                     $user,
                     $authSecurity,
                     $request
                 );
-
+                $route = 'temps';
+                if ('ROLE_MANAGER' === $user->getRoles()[0]) {
+                    $route = 'console';
+                }
                 $message = 'Connexion de '.$user->getNomEmploye();
                 $this->logger->info($message);
 
-                $session = $request->getSession();
-
-                if ($employeRepo->estResponsable($user)) {
-                    $user->setRoles(['ROLE_RESPONSABLE']);
-                    $session->set('user_roles', $user->getRoles());
-
-                    return $this->redirectToRoute('console');
-                }
-
-                $user->setRoles(['ROLE_EMPLOYE']);
-                $session->set('user_roles', $user->getRoles());
-
-                return $this->redirectToRoute('temps');
+                return $this->redirectToRoute($route);
             }
         }
 
@@ -74,7 +80,7 @@ class ConnexionController extends AbstractController
     public function logoutUser(): RedirectResponse
     {
         $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
-        $this->addFlash('success', 'Déconnexion de '.$this->getUser()->getNomEmploye());
+        $this->addFlash('success', $message);
         $this->logger->info($message);
 
         $tokenStorage = $this->container->get('security.token_storage');

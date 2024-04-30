@@ -133,17 +133,16 @@ class DetailHeuresRepository extends ServiceEntityRepository
      *
      * @return array|null le nombre total d'heures
      */
-    public function getNbHeures(): array
+    public function getNbHeures($user): array
     {
         $dateAjd = strtotime('now');
-        $user = $this->security->getUser();
         if (!empty($user)) {
             return $this->createQueryBuilder('d')
                 ->select('SUM(d.temps_main_oeuvre) AS total')
                 ->where('d.date >= :date')
                 ->andWhere('d.employe IN (:employe)')
                 ->setParameter('date', date('Y-m-d', $dateAjd))
-                ->setParameter('employe', $user->getId())
+                ->setParameter('employe', $user)
                 ->getQuery()
                 ->getSingleResult();
         }
