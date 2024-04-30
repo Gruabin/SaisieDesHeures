@@ -14,6 +14,7 @@ use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +27,7 @@ use Symfony\Contracts\Cache\ItemInterface;
  * @property DetailHeuresRepository    $detailHeuresRepository
  * @property DetailHeureService        $detailHeureService
  * @property EmployeRepository         $employeRepository
+ * @property Security                  $security
  * @property StatutRepository          $statutRepository
  * @property TacheRepository           $tacheRepository
  * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
@@ -39,6 +41,7 @@ class IndexController extends AbstractController
         DetailHeuresRepository $detailHeuresRepository,
         DetailHeureService $detailHeureService,
         EmployeRepository $employeRepository,
+        Security $security,
         StatutRepository $statutRepository,
         TacheRepository $tacheRepository,
         TacheSpecifiqueRepository $tacheSpecifiqueRepository,
@@ -49,6 +52,7 @@ class IndexController extends AbstractController
         $this->detailHeuresRepository = $detailHeuresRepository;
         $this->detailHeureService = $detailHeureService;
         $this->employeRepository = $employeRepository;
+        $this->security = $security;
         $this->statutRepository = $statutRepository;
         $this->tacheRepository = $tacheRepository;
         $this->tacheSpecifiqueRepository = $tacheSpecifiqueRepository;
@@ -57,38 +61,40 @@ class IndexController extends AbstractController
 
     // Affiche la page d'identification
     #[Route('/', name: 'home')]
-    public function index(Request $request, CacheInterface $cache): Response
+    public function index(CacheInterface $cache): Response
     {
-        return $cache->get('index_page', function (ItemInterface $item) use ($request) {
+        return $cache->get('index_page', function (ItemInterface $item) {
             $item->expiresAfter(43200);
-
-            $session = $request->getSession();
-            if (null !== $session->get('user_roles')) {
-                return $this->redirectToRoute('temps');
-            }
-
             return $this->render('connexion/identification.html.twig', [
                 'user' => $this->getUser(),
             ]);
         });
     }
 
+    // Redirige lors de l'accès refusé
+    #[Route('/access_denied', name: 'access_denied')]
+    public function accessDenied(): Response
+    {
+        $route = 'home';
+        if ($this->isGranted('ROLE_EMPLOYE')) {
+            $route = 'temps';
+        } elseif ($this->isGranted('ROLE_RESPONSABLE') || $this->isGranted('ROLE_ADMIN')) {
+            $route = 'console';
+        }
+        return $this->redirectToRoute($route);
+    }
+
+
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
-    public function temps(Request $request): Response
+    public function temps() : Response
     {
-        $session = $request->getSession();
-        if (null === $session->get('user_roles')) {
-            return $this->redirectToRoute('home');
-        }
-
-        $nbHeures = $this->detailHeuresRepository->getNbHeures();
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getId());
         if ($nbHeures['total'] >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
-
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
             'details' => $this->detailHeuresRepository->findAllTodayUser(),
@@ -103,20 +109,14 @@ class IndexController extends AbstractController
 
     // Affiche la page d'historique
     #[Route('/historique', name: 'historique')]
-    public function historique(Request $request): Response
+    public function historique() : Response
     {
-        $session = $request->getSession();
-        if (null === $session->get('user_roles')) {
-            return $this->redirectToRoute('home');
-        }
-
-        $nbHeures = $this->detailHeuresRepository->getNbHeures();
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser());
         if ($nbHeures['total'] >= 10) {
             $message = "Votre nombre d'heure est trop élevé";
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
-
         return $this->render('historique.html.twig', [
             'details' => $this->detailHeuresRepository->findAllTodayUser(),
             'user' => $this->getUser(),
@@ -129,9 +129,6 @@ class IndexController extends AbstractController
     public function console(Request $request): Response
     {
         $session = $request->getSession();
-        if ($session->get('user_roles') !== ['ROLE_RESPONSABLE']) {
-            return $this->redirectToRoute('temps');
-        }
         //  Utilisateur responsable par défaut
         if (!$session->has('responsablesId')) {
             $responsablesId[0] = $this->getUser()->getId();

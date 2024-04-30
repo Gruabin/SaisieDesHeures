@@ -98,7 +98,7 @@ class DetailHeuresAPIController extends AbstractController
         $token = $data['token'];
 
         // Vérifie que l'utilisateur n'a pas trop d'heures journalières
-        $nbHeures = $detailHeuresRepo->getNbHeures();
+        $nbHeures = $detailHeuresRepo->getNbHeures($this->getUser());
         if ($nbHeures['total'] + $data['temps_main_oeuvre'] > 12) {
             $message = 'Nombre d\'heures maximal dépassé. Saisie non prise en compte';
             $this->addFlash('error', $message);

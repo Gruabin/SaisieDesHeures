@@ -82,11 +82,9 @@ class EmployeRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e')
             ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :user')
             ->setParameter('user', $user)
-            ->addGroupBy('e')
             ->getQuery()
             ->getResult();
-        $return = (null == $qb) ? false : true;
 
-        return $return;
+        return (null == $qb) ? false : true;
     }
 }

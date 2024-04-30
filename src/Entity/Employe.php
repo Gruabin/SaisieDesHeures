@@ -29,13 +29,11 @@ class Employe implements UserInterface
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $acces_export = false;
-
     #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
     private Collection $responsable;
 
-    private ?array $roles = [];
+    #[ORM\Column(options: ['default' => ['ROLE_EMPLOYE']])]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -43,16 +41,22 @@ class Employe implements UserInterface
         $this->responsable = new ArrayCollection();
     }
 
-    public function setRoles(array $roles): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        // $roles[] = 'ROLE_EMPLOYE';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
         return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return $this->roles;
     }
 
     public function eraseCredentials(): string
@@ -127,18 +131,6 @@ class Employe implements UserInterface
                 $detailheure->setEmploye(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isAccesExport(): ?bool
-    {
-        return $this->acces_export;
-    }
-
-    public function setAccesExport(bool $acces_export): static
-    {
-        $this->acces_export = $acces_export;
 
         return $this;
     }
