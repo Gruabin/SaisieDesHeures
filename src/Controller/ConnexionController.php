@@ -44,7 +44,7 @@ class ConnexionController extends AbstractController
         $form = $this->createForm(ConnexionType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $cache->get('user_'.$form->getData()->getId(), fn () => $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getId())]));
+            $user = $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getId())]);
             if ($user) {
                 // Met à jour le role du manager
                 if ($employeRepo->estResponsable($user) && 'ROLE_EMPLOYE' === $user->getRoles()[0]) {

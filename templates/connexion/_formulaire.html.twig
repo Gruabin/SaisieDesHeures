@@ -10,7 +10,7 @@
                 <span class="label-text-alt text-gruau-red">{{ form_errors(form) }}</span>
             </div>
         </label>
-        {{ form_row(form.bouton, {'attr': {'class': 'btn btn-primary btn-outline btn-disabled'}}) }}
+        {{ form_row(form.bouton, {'attr': {'class': 'btn btn-primary btn-outline btn-disabled noLoading'}}) }}
         {{ form_rest(form) }}
     </form>
 </turbo-frame>
