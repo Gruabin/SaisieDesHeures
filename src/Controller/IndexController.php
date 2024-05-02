@@ -148,27 +148,36 @@ class IndexController extends AbstractController
         $dates = $this->detailHeuresRepository->findDatesDetail($session->get('responsablesId'));
         $tabEmployes = $this->employeRepository->findHeuresControle($session->get('responsablesId'));
         $nbAnomalie = 0;
+
+        //  Date par défaut
+        if (!$session->has('date')) {
+            $session->set('date', -1);
+        }
+
+        if (!in_array($session->get('date'), $dates)) {
+            $data = [-1];
+            $session->set('date', -1);
+        }else{
+            $data = [$session->get('date')];
+        }
+
         $formDate = $this->createForm(FiltreDateType::class, null, [
             'dates' => $dates,
+            'data' => $data,
         ]);
         $formDate->handleRequest($request);
-
+        
         $statutAnomalie = $this->statutRepository->getStatutAnomalie();
         $statutConforme = $this->statutRepository->getStatutConforme();
-        $dateSelectionnee = null;
-
-        if (null === $tabEmployes) {
-            $dateSelectionnee = -1;
-        } elseif ($formDate->isSubmitted() && $formDate->isValid()) {
-            $dateSelectionnee = $formDate->get('date')->getData();
-        } else {
-            $dateSelectionnee = -1;
+        
+        if ($formDate->isSubmitted() && $formDate->isValid()) {
+            $session->set('date', $formDate->get('date')->getData());
         }
 
         foreach ($tabEmployes as $unEmploye) {
             foreach ($unEmploye->getDetailHeures() as $value) {
                 if (
-                    (-1 === $dateSelectionnee || $value->getDate()->format('d-m-Y') === $dateSelectionnee)
+                    (-1 === $session->get('date') || $value->getDate()->format('d-m-Y') === $session->get('date'))
                     && ($value->getStatut() === $statutConforme || $value->getStatut() === $statutAnomalie)
                 ) {
                     array_push($heures, $value);
