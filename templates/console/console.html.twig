@@ -87,7 +87,8 @@ Console d'approbation
                                 <h1 class="text-primary">{{ employe.id }} - {{ employe.nom }} </h1>
                             </div>
                             <div class="mx-3">
-                                <b>{{ employe.total }} h </b>
+                            {# +0 permet de faire un calcul pour arrondir la donnée #}
+                                <b>{{ employe.total + 0 }} h </b>
                             </div>
                         </div>
                         {# Tableau #}
