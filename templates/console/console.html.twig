@@ -81,13 +81,14 @@ Console d'approbation
         {% endif %}
         {# {% set lesEmployes = value %} #}
             {% for employe in employes %}
-                    <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full">
+                    <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full" id="tabEmploye" data-employe="{{ employe.id }}">
                         <div class="flex justify-between m-3">
                             <div class="flex flex-col mx-3">
                                 <h1 class="text-primary">{{ employe.id }} - {{ employe.nom }} </h1>
                             </div>
                             <div class="mx-3">
-                                <b>{{ employe.total }} h </b>
+                            {# +0 permet de faire un calcul pour arrondir la donnée #}
+                                <b id="tempsTotal">{{ employe.total + 0 }} h </b>
                             </div>
                         </div>
                         {# Tableau #}

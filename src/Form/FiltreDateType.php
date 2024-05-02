@@ -16,6 +16,7 @@ class FiltreDateType extends AbstractType
             ->add('date', ChoiceType::class, [
                 'choices' => $options['dates'],
                 'label' => false,
+                'data' => $options['data'][0],
             ])
             ->add('button', SubmitType::class, [
                 'label' => 'Appliquer la date',
@@ -28,5 +29,6 @@ class FiltreDateType extends AbstractType
             // Configure your form options here
         ]);
         $resolver->setRequired('dates');
+        $resolver->setRequired('data');
     }
 }

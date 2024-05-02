@@ -157,7 +157,7 @@ async function formSubmit() {
         return respnse.status = 400;
     }
     if (ordre !== "") {
-        data.ordre = ordre;
+        data.ordre = ordre.toUpperCase();
     }
     if (tache !== "-1") {
         data.tache = tache;
