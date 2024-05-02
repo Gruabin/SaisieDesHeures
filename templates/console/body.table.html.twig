@@ -8,7 +8,7 @@
                     <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="" id="checkbox">
                 </td>
                 <td>
-                    {{ heure.typeHeures.nomType }} {{ heure.date|date("d-m-Y", "Europe/Paris") }}
+                    {{ heure.typeHeures.nomType }}
                 </td>
                 <td>
                     <input type="text" class="input w-full form hidden" value="{{ heure.ordre ?? null }}" name="ordre" id="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">
