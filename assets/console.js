@@ -92,7 +92,7 @@ document.getElementById("select_anomalies").addEventListener("click", () => {
 // * Sélection de tout les checkboxs
 // 
 let checkbox = document.getElementById("select_all");
-if (!!checkbox) {
+if (checkbox) {
     checkbox.addEventListener("click", (event) => {
         let checkboxDiv = document.getElementById("select_all_checkboxes");
 
@@ -185,6 +185,7 @@ function APISuppression(ligneASupprimer) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
             ligneASupprimer.remove();
+            MAJTempsJourna(ligneASupprimer.dataset.employe)
             addToastSuccess("Saisie supprimée");
         } else {
             addToastErreur("Erreur lors de la suppression de la saisie");
@@ -322,8 +323,20 @@ function MAJDonnees(element, data) {
     element.querySelector("#texte_activite").innerHTML = data.activite;
     element.querySelector("#texte_centrecharge").innerHTML = data.centre_de_charge;
     element.querySelector("#texte_saisieTemps").innerHTML = data.temps_main_oeuvre;
+    MAJTempsJourna(element.dataset.employe)
 }
 
+// 
+// * Met à jour le temps total de l'employé pour la saisie modifiée/supprimée
+// 
+function MAJTempsJourna(employe) {
+    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]')
+    let temps = 0;
+    tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
+        temps += parseFloat(element.innerHTML);
+    });
+    tab.querySelector("#tempsTotal").innerHTML = temps;
+}
 
 
 //

@@ -65,6 +65,7 @@ class IndexController extends AbstractController
     {
         return $cache->get('index_page', function (ItemInterface $item) {
             $item->expiresAfter(43200);
+
             return $this->render('connexion/identification.html.twig', [
                 'user' => $this->getUser(),
             ]);
@@ -81,13 +82,13 @@ class IndexController extends AbstractController
         } elseif ($this->isGranted('ROLE_RESPONSABLE') || $this->isGranted('ROLE_ADMIN')) {
             $route = 'console';
         }
+
         return $this->redirectToRoute($route);
     }
 
-
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
-    public function temps() : Response
+    public function temps(): Response
     {
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getId());
         if ($nbHeures['total'] >= 12) {
@@ -95,6 +96,7 @@ class IndexController extends AbstractController
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
+
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
             'details' => $this->detailHeuresRepository->findAllTodayUser(),
@@ -109,7 +111,7 @@ class IndexController extends AbstractController
 
     // Affiche la page d'historique
     #[Route('/historique', name: 'historique')]
-    public function historique() : Response
+    public function historique(): Response
     {
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser());
         if ($nbHeures['total'] >= 10) {
@@ -117,6 +119,7 @@ class IndexController extends AbstractController
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
+
         return $this->render('historique.html.twig', [
             'details' => $this->detailHeuresRepository->findAllTodayUser(),
             'user' => $this->getUser(),
@@ -157,7 +160,7 @@ class IndexController extends AbstractController
         if (!in_array($session->get('date'), $dates)) {
             $data = [-1];
             $session->set('date', -1);
-        }else{
+        } else {
             $data = [$session->get('date')];
         }
 
@@ -166,10 +169,10 @@ class IndexController extends AbstractController
             'data' => $data,
         ]);
         $formDate->handleRequest($request);
-        
+
         $statutAnomalie = $this->statutRepository->getStatutAnomalie();
         $statutConforme = $this->statutRepository->getStatutConforme();
-        
+
         if ($formDate->isSubmitted() && $formDate->isValid()) {
             $session->set('date', $formDate->get('date')->getData());
         }

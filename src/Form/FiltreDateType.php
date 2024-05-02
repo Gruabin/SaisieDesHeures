@@ -12,7 +12,6 @@ class FiltreDateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // dd($options['data']);
         $builder
             ->add('date', ChoiceType::class, [
                 'choices' => $options['dates'],
