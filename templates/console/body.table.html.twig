@@ -1,6 +1,7 @@
 {% block tbody %}
     <tbody class="text-center">
         {% for heure in employe.heures %}
+        <div class="hidden" id="dateLigne"> {{ heure.date|date("d-m-Y","Europe/Paris") }}</div>
             <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}" data-employe="{{ heure.employe.id }}">
                 <input type="hidden" name="token" id="ligneToken" value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
                 <td>

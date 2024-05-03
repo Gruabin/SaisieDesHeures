@@ -68,7 +68,7 @@ buttons.forEach(button => {
             button.classList.add('text-secondary');
         }
     });
-    
+
     button.addEventListener('mouseout', function () {
         button.classList.remove('text-success', 'text-accent', 'text-secondary');
     });
@@ -84,7 +84,6 @@ document.getElementById("select_anomalies").addEventListener("click", () => {
         } else {
             element.classList.remove("hidden");
         }
-    
     })
 });
 
@@ -95,22 +94,60 @@ let checkbox = document.getElementById("select_all");
 if (checkbox) {
     checkbox.addEventListener("click", (event) => {
         let checkboxDiv = document.getElementById("select_all_checkboxes");
+        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
+            if (event.target.checked) {
+                if (!item.checked) {
+                    item.click();
+                }
+            } else {
+                if (item.checked) {
+                    item.click();
+                }
+            }
+        });
+        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
+            item.addEventListener("click", (event) => {
+                if (!event.target.checked) {
+                    checkbox.checked = false;
+                }
+            })
+        });
+    });
+}
 
+// 
+// * Sélection de tout les checkboxs d'un employé
+//
+let checkboxes = document.querySelectorAll("#select_user");
+let i = 0;
+checkboxes.forEach(checkbox => {
+    const tab = document.querySelector('#tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
+    checkbox.addEventListener("click", (event) => {
         if (event.target.checked) {
-            checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-                if (item.checked === false) {
+            tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+                if (!item.checked) {
                     item.click();
                 }
             });
         } else {
-            checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-                if (item.checked === true) {
+            tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+                if (item.checked) {
                     item.click();
                 }
             });
         }
     });
-}
+    tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+        item.addEventListener("click", (event) => {
+            if (!event.target.checked) {
+                checkbox.checked = false;
+            }
+            if (i == 0) {
+               checkbox.checked = false;
+            }
+        })
+    });
+});
 
 // 
 // * Déclenche l'envoie des données valides pour approbation
@@ -205,13 +242,11 @@ function APISuppression(ligneASupprimer) {
 //
 function formModif(element) {
     element.querySelectorAll('.form').forEach((form) => {
-
         form.classList.remove("hidden");
     });
     element.querySelectorAll('.texte').forEach((form) => {
         form.classList.add("hidden");
     });
-
 }
 
 // 
@@ -219,13 +254,11 @@ function formModif(element) {
 //
 function resetModif(element) {
     element.querySelectorAll('.form').forEach((form) => {
-
         form.classList.add("hidden");
     });
     element.querySelectorAll('.texte').forEach((form) => {
         form.classList.remove("hidden");
     });
-
 }
 
 
@@ -330,7 +363,7 @@ function MAJDonnees(element, data) {
 // * Met à jour le temps total de l'employé pour la saisie modifiée/supprimée
 // 
 function MAJTempsJourna(employe) {
-    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]')
+    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]');
     let temps = 0;
     tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
         temps += parseFloat(element.innerHTML);
