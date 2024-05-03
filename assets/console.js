@@ -335,7 +335,7 @@ function MAJTempsJourna(employe) {
     tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
         temps += parseFloat(element.innerHTML);
     });
-    tab.querySelector("#tempsTotal").innerHTML = temps;
+    tab.querySelector("#tempsTotal").innerHTML = temps.toFixed(2) + " h";
 }
 
 

@@ -88,7 +88,7 @@ Console d'approbation
                             </div>
                             <div class="mx-3">
                             {# +0 permet de faire un calcul pour arrondir la donnée #}
-                                <b id="tempsTotal">{{ employe.total + 0 }} h </b>
+                                <b id="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
                             </div>
                         </div>
                         {# Tableau #}
