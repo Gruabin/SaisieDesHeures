@@ -1,8 +1,11 @@
+let codeEmploye;
+
 // 
 //* Détecte un changement de type d'heure
 // 
 document.getElementById("type").addEventListener("change", function () {
     formChange();
+    ordreLabelChange();
 })
 
 document.getElementById("cbTacheSpe").addEventListener("change", function () {
@@ -131,7 +134,7 @@ async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
-    const ordre = document.getElementById("ordre").value;
+    const ordre = codeEmploye + document.getElementById("ordre").value;
     const tache = document.getElementById("tache").value;
     const operation = document.getElementById("operation").value;
     const tacheSpecifique = document.getElementById("tacheSpe").value;
@@ -193,27 +196,45 @@ async function formSubmit() {
     return false;
 }
 
+// 
+//* Affectation du numéro de site sur l'odre
+//
+function ordreLabelChange(){
+    codeEmploye = document.getElementById('codeEmploye').innerText.substring(0, 2);
+    document.getElementById('labelOrdre').innerText = codeEmploye;
+}
+
+//
+//* Vérifie la saisie de l'ordre (Notemment pour les douchettes)
+//
+document.getElementById("ordre").addEventListener("input", function (evt) {
+    if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === codeEmploye.toUpperCase()){
+        evt.target.value = "";
+    }
+});
+
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
 //
 let inputOrdre = document.getElementById("ordre");
+let inputOrdreLabel = document.getElementById("ordre").parentElement;
 document.getElementById("ordre").addEventListener("input", function () {
-    let regex = new RegExp("^[0-9A-Za-z]{9}$");
-    inputOrdre.classList.remove("input-success");
-    inputOrdre.classList.remove("input-error");
+    let regex = new RegExp("^[0-9A-Za-z]{1}[0-9]{6}$");
+    inputOrdreLabel.classList.remove("input-success");
+    inputOrdreLabel.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {
-        inputOrdre.classList.add("input-success");
+        inputOrdreLabel.classList.add("input-success");
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
     else {
-        inputOrdre.classList.add("input-error");
+        inputOrdreLabel.classList.add("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.add("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.add("btn-disabled");
     }
     if (inputOrdre.value == "") {
-        inputOrdre.classList.remove("input-success");
-        inputOrdre.classList.remove("input-error");
+        inputOrdreLabel.classList.remove("input-success");
+        inputOrdreLabel.classList.remove("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
