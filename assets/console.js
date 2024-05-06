@@ -92,7 +92,7 @@ document.getElementById("select_anomalies").addEventListener("click", () => {
 // * Sélection de tout les checkboxs
 // 
 let checkbox = document.getElementById("select_all");
-if (!!checkbox) {
+if (checkbox) {
     checkbox.addEventListener("click", (event) => {
         let checkboxDiv = document.getElementById("select_all_checkboxes");
 
@@ -124,7 +124,6 @@ document.getElementById('validation').addEventListener('click', function () {
     ligne.forEach(element => {
         if (element.querySelector('input[type=checkbox]').checked) {
             donnees.push(element.dataset.idligne)
-
         }
     })
     const token = document.getElementById("approbationToken").value;
@@ -186,7 +185,7 @@ function APISuppression(ligneASupprimer) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
             ligneASupprimer.remove();
-            // element = null;
+            MAJTempsJourna(ligneASupprimer.dataset.employe)
             addToastSuccess("Saisie supprimée");
         } else {
             addToastErreur("Erreur lors de la suppression de la saisie");
@@ -314,6 +313,7 @@ async function APIModification(element) {
 // * Met à jour les données de la ligne après une modification
 //
 function MAJDonnees(element, data) {
+    element.dataset.statut = 3;
     element.querySelector(".fa-circle-check").classList.remove("hidden");
     element.querySelector(".fa-circle-xmark").classList.add("hidden");
     element.querySelector("#checkbox").disabled = false;
@@ -323,8 +323,20 @@ function MAJDonnees(element, data) {
     element.querySelector("#texte_activite").innerHTML = data.activite;
     element.querySelector("#texte_centrecharge").innerHTML = data.centre_de_charge;
     element.querySelector("#texte_saisieTemps").innerHTML = data.temps_main_oeuvre;
+    MAJTempsJourna(element.dataset.employe)
 }
 
+// 
+// * Met à jour le temps total de l'employé pour la saisie modifiée/supprimée
+// 
+function MAJTempsJourna(employe) {
+    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]')
+    let temps = 0;
+    tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
+        temps += parseFloat(element.innerHTML);
+    });
+    tab.querySelector("#tempsTotal").innerHTML = temps.toFixed(2) + " h";
+}
 
 
 //
@@ -429,17 +441,3 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
-
-//
-// * Affiche le formulaire sur une ligne
-//
-// TODO pour le prochain sprint
-//
-// ligne.forEach(element => {
-//     element.querySelector('#pen').addEventListener("click", () =>{
-//         element.querySelector('#pen').classList.add('hidden');
-//         element.querySelector('#trash').classList.add('hidden');
-//         element.querySelector('#check').classList.remove('hidden');
-//         element.querySelector('#xmark').classList.remove('hidden');
-//     });
-// });

@@ -44,19 +44,16 @@ class EmployeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère toute les heures à controller du responsable connecté trié par employe.
-     *
-     * @return array Retourne les employées d'un responsable
+     * @return Employe[] Retourne les employées avec un tableau d'ID
      */
-    public function findHeuresControle($responsable): array
+    public function findEmploye($id): array
     {
-        $qb = $this->createQueryBuilder('e');
-        $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
-        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :responsable_id')
-        ->setParameter('responsable_id', $responsable)
-        ->orderBy('e.id', 'ASC');
-
-        return $qb->getQuery()->getResult();
+        return $this->createQueryBuilder('e')
+            ->where('e.id IN (:id)')
+            ->setParameter('id', $id)
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -64,13 +61,13 @@ class EmployeRepository extends ServiceEntityRepository
      *
      * @return array Retourne les employées des responsables selectionnés
      */
-    public function findHeuresControleResponsablesSelectionnes(array $responsables): array
+    public function findHeuresControle(array $responsables): array
     {
         $qb = $this->createQueryBuilder('e');
         $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
-        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable IN (:responsables_id)')
-        ->setParameter('responsables_id', $responsables)
-        ->orderBy('e.id', 'ASC');
+            ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable IN (:responsables_id)')
+            ->setParameter('responsables_id', $responsables)
+            ->orderBy('e.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -83,13 +80,11 @@ class EmployeRepository extends ServiceEntityRepository
     public function estResponsable($user): bool
     {
         $qb = $this->createQueryBuilder('e')
-        ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :user')
-        ->setParameter('user', $user)
-        ->addGroupBy('e')
-        ->getQuery()
-        ->getResult();
-        $return = (null == $qb) ? false : true;
+            ->innerJoin('e.centre_de_charge', 'centre_de_charge', 'WITH', 'centre_de_charge.responsable = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
 
-        return $return;
+        return (null == $qb) ? false : true;
     }
 }

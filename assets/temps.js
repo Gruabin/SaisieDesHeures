@@ -35,7 +35,7 @@ function formChange() {
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
-            document.getElementById("divCentreCharge").classList.add("hidden");
+            document.getElementById("divCentreCharge").classList.remove("hidden");
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 2:
@@ -157,7 +157,7 @@ async function formSubmit() {
         return respnse.status = 400;
     }
     if (ordre !== "") {
-        data.ordre = ordre;
+        data.ordre = ordre.toUpperCase();
     }
     if (tache !== "-1") {
         data.tache = tache;
@@ -193,24 +193,12 @@ async function formSubmit() {
     return false;
 }
 
-// 
-//* Affiche les centres de charges si la tache 111 est sélectionné
-// 
-document.getElementById("tache").addEventListener("change", function () {
-    if (parseInt(document.getElementById("tache").value) === 111) {
-        document.getElementById("divCentreCharge").classList.remove("hidden");
-    } else {
-        document.getElementById("divCentreCharge").classList.add("hidden");
-        document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
-    }
-})
-
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
 //
-inputOrdre = document.getElementById("ordre");
+let inputOrdre = document.getElementById("ordre");
 document.getElementById("ordre").addEventListener("input", function () {
-    regex = new RegExp("^[0-9A-Z]{9}$");
+    let regex = new RegExp("^[0-9A-Za-z]{9}$");
     inputOrdre.classList.remove("input-success");
     inputOrdre.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Identification
+{% endblock %}
+{% block body %}
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md text-center">
+        <h1 class="text-center text-4xl text-gruau-dark-blue font-bold">Identification</h1>
+        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
+        <div class="flex justify-center">
+            <div class="max-w-56">
+                <turbo-frame id="identification" src="{{ path('connexion') }}" loading="lazy" data-turbo-form-redirect="true">
+                    <div class="flex flex-col gap-4 items-center">
+                        <div class="flex flex-row space-x-14">
+                            <div class="skeleton h-4 w-16"></div>
+                            <div class="skeleton h-4 w-20"></div>
+                        </div>
+                        <div class="skeleton h-12 w-56"></div>
+                        <div class="skeleton h-12 w-28"></div>
+                    </div>
+                </turbo-frame>
+            </div>
+        </div>
+    </section>
+    {{ encore_entry_script_tags('connexion') }}
+{% endblock %}

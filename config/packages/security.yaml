@@ -17,19 +17,22 @@ security:
             provider: my_custom_provider
             custom_authenticator: App\Security\AuthSecurity
             logout:
-                path: api_post_deconnexion
+                path: deconnexion
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+    access_denied_url: /access_denied
+    role_hierarchy: 
+        ROLE_EMPLOYE:       []
+        ROLE_MANAGER:       [ROLE_EMPLOYE]
+        ROLE_ADMIN:         [ROLE_MANAGER]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/temps, roles: ROLE_USER }
-        - { path: ^/historique, roles: ROLE_USER }
-        - { path: ^/console, roles: ROLE_USER }
-
-
+        - { path: ^/temps, roles: ROLE_EMPLOYE }
+        - { path: ^/historique, roles: ROLE_EMPLOYE }
+        - { path: ^/console, roles: ROLE_MANAGER }

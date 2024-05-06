@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\API;
 
 use App\Entity\DetailHeures;
 use App\Entity\Statut;
@@ -13,14 +13,12 @@ use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
-use App\Service\ExportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -100,7 +98,7 @@ class DetailHeuresAPIController extends AbstractController
         $token = $data['token'];
 
         // Vérifie que l'utilisateur n'a pas trop d'heures journalières
-        $nbHeures = $detailHeuresRepo->getNbHeures();
+        $nbHeures = $detailHeuresRepo->getNbHeures($this->getUser());
         if ($nbHeures['total'] + $data['temps_main_oeuvre'] > 12) {
             $message = 'Nombre d\'heures maximal dépassé. Saisie non prise en compte';
             $this->addFlash('error', $message);
@@ -219,30 +217,5 @@ class DetailHeuresAPIController extends AbstractController
         }
 
         return $detailHeures;
-    }
-
-    /**
-     * Exporte les heures créées au format Excel.
-     * Vérifie d'abord si l'utilisateur a accès à l'export.
-     * Si oui, exporte les heures et renvoie le fichier Excel en réponse.
-     * Sinon, redirige vers la page d'historique.
-     *
-     * @return StreamedResponse réponse streamée contenant le fichier Excel exporté
-     */
-    #[Route('/api/get/export', name: 'api_get_export', methods: ['GET'])]
-    public function export(ExportService $exportService): StreamedResponse
-    {
-        try {
-            if ($this->getUser()->isAccesExport()) {
-                $message = 'Export des heures créés avec succès.';
-                $this->logger->info($message);
-
-                return $exportService->exportExcel();
-            }
-        } catch (\Exception) {
-            $message = "L'export saisie des heures a échoué.";
-
-            return $this->redirectToRoute('historique');
-        }
     }
 }

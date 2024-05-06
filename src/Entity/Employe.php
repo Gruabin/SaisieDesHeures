@@ -7,12 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
 class Employe implements UserInterface
 {
     #[ORM\Id]
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 9,
+        max: 9,
+    )]
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
@@ -24,11 +29,11 @@ class Employe implements UserInterface
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $acces_export = false;
-
     #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
     private Collection $responsable;
+
+    #[ORM\Column(options: ['default' => ['ROLE_EMPLOYE']])]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -36,9 +41,22 @@ class Employe implements UserInterface
         $this->responsable = new ArrayCollection();
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+
+        // $roles[] = 'ROLE_EMPLOYE';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials(): string
@@ -113,18 +131,6 @@ class Employe implements UserInterface
                 $detailheure->setEmploye(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isAccesExport(): ?bool
-    {
-        return $this->acces_export;
-    }
-
-    public function setAccesExport(bool $acces_export): static
-    {
-        $this->acces_export = $acces_export;
 
         return $this;
     }
