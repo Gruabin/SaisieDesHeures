@@ -39,7 +39,6 @@ class ConnexionController extends AbstractController
         EmployeRepository $employeRepo,
         AuthSecurity $authSecurity,
         UserAuthenticatorInterface $userAuth,
-        CacheInterface $cache
     ): Response {
         $form = $this->createForm(ConnexionType::class);
         $form->handleRequest($request);
