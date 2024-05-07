@@ -8,7 +8,6 @@
     "autoprefixer": "^10.4.*",
     "core-js": "^3.*",
     "daisyui": "*",
-    "jest": "^29.7.0",
     "postcss": "^8.4.*",
     "regenerator-runtime": "^0.14.1",
     "sass": "^1.*",
