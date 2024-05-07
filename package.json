@@ -5,14 +5,14 @@
     "@symfony/stimulus-bridge": "^3.2.2",
     "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
     "@symfony/webpack-encore": "^4.6.1",
-    "autoprefixer": "^10.4.18",
-    "core-js": "^3.36.1",
+    "autoprefixer": "^10.4.*",
+    "core-js": "^3.*",
     "daisyui": "*",
     "jest": "^29.7.0",
-    "postcss": "^8.4.37",
+    "postcss": "^8.4.*",
     "regenerator-runtime": "^0.14.1",
-    "sass": "^1.72.0",
-    "sass-loader": "^14.1.1",
+    "sass": "^1.*",
+    "sass-loader": "^14.*",
     "tailwindcss": "*",
     "webpack-notifier": "^1.15.0"
   },
@@ -26,8 +26,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/core": "^7.24.1",
-    "@fortawesome/fontawesome-free": "^6.5.1",
+    "@babel/core": "^7.24.*",
+    "@fortawesome/fontawesome-free": "^6.*",
     "postcss-loader": "^7.3.4"
   }
 }

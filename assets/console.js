@@ -119,7 +119,6 @@ if (checkbox) {
 // * Sélection de tout les checkboxs d'un employé
 //
 let checkboxes = document.querySelectorAll("#select_user");
-let i = 0;
 checkboxes.forEach(checkbox => {
     const tab = document.querySelector('#tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
     checkbox.addEventListener("click", (event) => {
@@ -141,9 +140,6 @@ checkboxes.forEach(checkbox => {
         item.addEventListener("click", (event) => {
             if (!event.target.checked) {
                 checkbox.checked = false;
-            }
-            if (i == 0) {
-               checkbox.checked = false;
             }
         })
     });
