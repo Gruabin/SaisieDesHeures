@@ -50,7 +50,6 @@ class ConsoleTest extends PantherTestCase
         }
     }
 
-
     public function testSelectionUser(): void
     {
         $client = static::createPantherClient();
@@ -66,8 +65,8 @@ class ConsoleTest extends PantherTestCase
         $client->waitFor('#console');
 
         $selectAllCheckbox = $client->findElement(WebDriverBy::id('select_user'));
-        $checkboxes = $client->findElements(WebDriverBy::cssSelector('tr[data-employe="'. $selectAllCheckbox->getAttribute("data-employe"). '"] input[type="checkbox"]'));
-        
+        $checkboxes = $client->findElements(WebDriverBy::cssSelector('tr[data-employe="'.$selectAllCheckbox->getAttribute('data-employe').'"] input[type="checkbox"]'));
+
         // Vérifiez qu'aucune case n'est cochée au début
         foreach ($checkboxes as $checkbox) {
             $this->assertFalse($checkbox->isSelected());

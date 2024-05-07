@@ -15,7 +15,6 @@ document.getElementById("cbTacheSpe").addEventListener("change", function () {
     } else {
         document.getElementById("tacheSpe").disabled = true;
     }
-
 })
 
 // 
@@ -39,7 +38,7 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.remove("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 2:
             document.getElementById("centrecharge").value = -1;
@@ -49,7 +48,7 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.remove("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 3:
             document.getElementById("centrecharge").value = -1;
@@ -59,7 +58,7 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 4:
             tacheChange(4);
@@ -70,7 +69,7 @@ function formChange() {
             document.getElementById("divActivite").classList.remove("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         default:
             document.getElementById("centrecharge").value = -1;
@@ -80,7 +79,7 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.add("hidden");
+            document.getElementById("divSaisieTemps").classList.add("hidden");
             break;
     }
 }
@@ -104,34 +103,77 @@ function tacheChange(id) {
 //* Validation du formulaire
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    const state = await formSubmit();
-    if (!state) {
-        alert("Une erreur s'est produite")
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    }
-    else {
-        window.location.href = '/api/post/deconnexion';
+    if (verif()) {
+        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        const state = await formSubmit();
+        if (!state) {
+            alert("Une erreur s'est produite")
+            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        }
+        else {
+            window.location.href = '/api/post/deconnexion';
+        }
     }
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    const state = await formSubmit();
-
-    if (!state) {
-        alert("Une erreur s'est produite")
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    }
-    else {
-        window.location.href = '/temps';
+    if (verif()) {
+        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        const state = await formSubmit();
+        if (!state) {
+            alert("Une erreur s'est produite")
+            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        }
+        else {
+            window.location.href = '/temps';
+        }
     }
 })
+
+// 
+//* Vérifie que tous les champs sont remplis
+//
+function verif() {
+    let response = true;
+    const type_heures = document.getElementById("type").value;
+    const ordre = document.getElementById("ordre").value;
+    const tache = document.getElementById("tache").value;
+    const operation = document.getElementById("operation").value;
+    const activite = document.getElementById("activite").value;
+    const centre_de_charge = document.getElementById("centrecharge").value;
+    const temps_main_oeuvre = document.getElementById("saisieTemps").value;
+
+    switch (parseInt(type_heures)) {
+        case 1:
+            if (tache == "-1" || centre_de_charge == -1 || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        case 2:
+        case 3:
+            if (ordre == "" || operation == "" || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        case 4:
+            if (ordre == "" || tache == -1 || activite == "" || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        default:
+            alert("Veuillez selectionner un type d'heure");
+            response = false;
+    }
+    return response;
+}
 
 // 
 //* Envoie les données du formulaire au serveur
 // 
 async function formSubmit() {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
     const ordre = codeEmploye + document.getElementById("ordre").value;
@@ -149,13 +191,13 @@ async function formSubmit() {
     }
     if (type_heures == "-1") {
         alert("Veuillez selectionner un type d'heure");
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
         alert("Veuillez insérer un temps de main d'oeuvre");
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }

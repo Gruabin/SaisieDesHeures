@@ -32,7 +32,7 @@ class Employe implements UserInterface
     #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
     private Collection $responsable;
 
-    #[ORM\Column(options: ['default' => ['ROLE_EMPLOYE']])]
+    #[ORM\Column]
     private array $roles = [];
 
     public function __construct()
