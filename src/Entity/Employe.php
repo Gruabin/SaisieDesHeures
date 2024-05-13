@@ -32,13 +32,17 @@ class Employe implements UserInterface
     #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
     private Collection $responsable;
 
-    #[ORM\Column(options: ['default' => ['ROLE_EMPLOYE']])]
+    #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\OneToMany(targetEntity: FavoriTypeHeure::class, mappedBy: 'employe')]
+    private Collection $favoriTypeHeures;
 
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
         $this->responsable = new ArrayCollection();
+        $this->favoriTypeHeures = new ArrayCollection();
     }
 
     /**
@@ -141,5 +145,35 @@ class Employe implements UserInterface
     public function getResponsable(): Collection
     {
         return $this->responsable;
+    }
+
+    /**
+     * @return Collection<int, FavoriTypeHeure>
+     */
+    public function getFavoriTypeHeures(): Collection
+    {
+        return $this->favoriTypeHeures;
+    }
+
+    public function addFavoriTypeHeure(FavoriTypeHeure $favoriTypeHeure): static
+    {
+        if (!$this->favoriTypeHeures->contains($favoriTypeHeure)) {
+            $this->favoriTypeHeures->add($favoriTypeHeure);
+            $favoriTypeHeure->setEmploye($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriTypeHeure(FavoriTypeHeure $favoriTypeHeure): static
+    {
+        if ($this->favoriTypeHeures->removeElement($favoriTypeHeure)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriTypeHeure->getEmploye() === $this) {
+                $favoriTypeHeure->setEmploye(null);
+            }
+        }
+
+        return $this;
     }
 }

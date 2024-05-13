@@ -1,8 +1,11 @@
 let codeEmploye;
+var selectedOption = document.getElementById("type").value;
+var selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
 
 // 
-//* Détecte un changement de type d'heure
+//* DÃ©tecte un changement de type d'heure
 // 
+formChange();
 document.getElementById("type").addEventListener("change", function () {
     formChange();
     ordreLabelChange();
@@ -19,7 +22,7 @@ document.getElementById("cbTacheSpe").addEventListener("change", function () {
 })
 
 // 
-//* Affiche les différents champs en fonction du type d'heure
+//* Affiche les diffÃ©rents champs en fonction du type d'heure
 // 
 function formChange() {
     document.getElementById("ordre").value = "";
@@ -31,6 +34,7 @@ function formChange() {
 
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
+            iconChange(1);
             tacheChange(1);
             document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
             document.getElementById("divOrdre").classList.add("hidden");
@@ -42,6 +46,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 2:
+            iconChange(2);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -52,6 +57,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 3:
+            iconChange(3);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -62,6 +68,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         case 4:
+            iconChange(4);
             tacheChange(4);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
@@ -73,6 +80,7 @@ function formChange() {
             document.getElementById("divSaisiTemps").classList.remove("hidden");
             break;
         default:
+            iconChange(-1);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -82,6 +90,16 @@ function formChange() {
             document.getElementById("divCentreCharge").classList.add("hidden");
             document.getElementById("divSaisiTemps").classList.add("hidden");
             break;
+    }
+}
+
+function iconChange(selectedCase){
+    if (parseInt(selectedOption) === parseInt(selectedCase)) {
+        document.getElementById("iconPlein").classList.remove("hidden");
+        document.getElementById("iconTransparent").classList.add("hidden");
+    }else{
+        document.getElementById("iconPlein").classList.add("hidden");
+        document.getElementById("iconTransparent").classList.remove("hidden");
     }
 }
 
@@ -128,7 +146,7 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
 })
 
 // 
-//* Envoie les données du formulaire au serveur
+//* Envoie les donnÃ©es du formulaire au serveur
 // 
 async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -154,7 +172,7 @@ async function formSubmit() {
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
-        alert("Veuillez insérer un temps de main d'oeuvre");
+        alert("Veuillez insÃ©rer un temps de main d'oeuvre");
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
@@ -197,7 +215,7 @@ async function formSubmit() {
 }
 
 // 
-//* Affectation du numéro de site sur l'odre
+//* Affectation du numÃ©ro de site sur l'odre
 //
 function ordreLabelChange(){
     codeEmploye = document.getElementById('codeEmploye').innerText.substring(0, 2);
@@ -205,7 +223,7 @@ function ordreLabelChange(){
 }
 
 //
-//* Vérifie la saisie de l'ordre (Notemment pour les douchettes)
+//* VÃ©rifie la saisie de l'ordre (Notemment pour les douchettes)
 //
 document.getElementById("ordre").addEventListener("input", function (evt) {
     if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === codeEmploye.toUpperCase()){
@@ -214,7 +232,7 @@ document.getElementById("ordre").addEventListener("input", function (evt) {
 });
 
 //
-//* Effectue la RegEx pour vérifier le champs Ordre
+//* Effectue la RegEx pour vÃ©rifier le champs Ordre
 //
 let inputOrdre = document.getElementById("ordre");
 let inputOrdreLabel = document.getElementById("ordre").parentElement;
@@ -241,7 +259,7 @@ document.getElementById("ordre").addEventListener("input", function () {
 })
 
 //
-//* Retourne toutes les activités
+//* Retourne toutes les activitÃ©s
 //
 function makeAPIActivite() {
     var url = "/api/get/activite";
@@ -269,7 +287,7 @@ function makeAPIActivite() {
 var tableActivite = makeAPIActivite();
 
 //
-//* Effectue la RegEx pour vérifier le champs Activité et afffiche le nom de l'activité
+//* Effectue la RegEx pour vÃ©rifier le champs ActivitÃ© et afffiche le nom de l'activitÃ©
 //
 document.getElementById("activite").addEventListener("input", function () {
     inputActivite = document.getElementById("activite");
@@ -297,3 +315,56 @@ document.getElementById("activite").addEventListener("input", function () {
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
 })
+
+//
+//* Enregistre le type d'heure dans la base de donnÃ©es pour la gestion des favoris
+//
+document.getElementById('btnEnregistrerParDefaut').addEventListener('click', function (event) {
+    // Envoie une requÃªte POST contenant le type d'heure sÃ©lectionnÃ© de maniÃ¨re asynchrone avec une animation de chargement pendant l'envoi
+    document.getElementById("btnEnregistrerParDefaut").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
+    document.getElementById("iconPlein").classList.add("hidden");
+    document.getElementById("iconTransparent").classList.add("hidden");
+    document.getElementById("btnEnregistrerParDefautTexte").innerText = "";
+
+    // RequÃªte POST asynchrone Ã  l'URL /api/post/type_heure
+    fetch('/api/post/type_heure', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ type: document.getElementById("type").value })
+    })
+        .then(response => {
+            if (!response.ok) {
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par dÃ©faut";
+
+                document.getElementById("alertError").classList.remove("hidden");
+                setTimeout(function () {
+                    document.getElementById("alertError").classList.add("hidden");
+                    document.getElementById("btnEnregistrerParDefaut").classList.remove("btn-disabled");
+            }, 5000);
+        }
+            else {
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par dÃ©faut";
+
+                document.getElementById("alertSuccess").classList.remove("hidden");
+                selectedOption = document.getElementById("type").value;
+                selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
+                formChange();
+                if(parseInt(selectedOption) < 0){
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Aucun type d'heure par dÃ©faut dÃ©signÃ©";
+                }else{
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Le type d'heure " + selectedOptionText + " a Ã©tÃ© enregistrÃ© comme paramÃ¨tre par dÃ©faut";
+                }
+                setTimeout(function () {
+                    document.getElementById("alertSuccess").classList.add("hidden");
+                    document.getElementById("btnEnregistrerParDefaut").classList.remove("btn-disabled");
+            }, 5000);
+            }
+        })
+})
+
