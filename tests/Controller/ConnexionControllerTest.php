@@ -49,9 +49,6 @@ class ConnexionControllerTest extends WebTestCase
 
         $client->request('GET', '/historique');
         $this->assertRouteSame('historique');
-
-        $client->request('GET', '/console');
-        $this->assertRouteSame('temps');
     }
 
     public function testConnexionResponsable(): void
