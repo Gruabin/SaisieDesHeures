@@ -39,7 +39,7 @@
         "symfony/security-bundle": "6.*",
         "symfony/sendinblue-mailer": "6.*",
         "symfony/twig-bundle": "6.*",
-        "symfony/uid": "7.*",
+        "symfony/uid": "6.*",
         "symfony/ux-turbo": "^2.16",
         "symfony/validator": "6.*",
         "symfony/webpack-encore-bundle": "*",

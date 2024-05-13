@@ -4,7 +4,7 @@
 {% endblock %}
 {% block body %}
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md" id="temps">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">SynthÃ¨se employÃ©</h2>
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col lg:flex-row lg:items-center p-2">
             <div class="m-2 flex-1">
@@ -46,7 +46,7 @@
             <div class="m-2 flex-1">
                 <div class="m-2">
                     <a class="btn btn-primary mt-5" id="btnConsulterDetails" href="{{ path('historique') }}">
-                        Consulter le dÃ©tail
+                        Consulter le détail
                     </a>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
-                            <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>-- SÃ©lectionner un type d'heure --</option>
+                            <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>-- Sélectionner un type d'heure --</option>
                             {% for type in types %}
                                 {% if favoriTypeHeure is defined and favoriTypeHeure.typeHeure is not null %}
                                     <option {% if favoriTypeHeure.typeHeure.id == type.id %}selected{% endif %} value="{{ type.id }}">{{ type.nomType }}</option>
@@ -93,7 +93,7 @@
                             <span id="iconPlein" class="w-4 hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                             </span>
-                            <span id="btnEnregistrerParDefautTexte">Enregistrer par dÃ©faut</span>
+                            <span id="btnEnregistrerParDefautTexte">Enregistrer par défaut</span>
                         </button>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divActivite">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="activite">
-                        <b>ActivitÃ©</b>
+                        <b>Activité</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
@@ -125,13 +125,13 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="tache">
-                        <b>TÃ¢che</b>
+                        <b>Tâche</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" name="tache" id="tache">
-                            <option value="-1">-- SÃ©lectionner une tÃ¢che --</option>
+                            <option value="-1">-- Sélectionner une tâche --</option>
                             {% for tache in taches %}
                                 <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }}
                                     -
@@ -144,7 +144,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divOperation">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="operation">
-                        <b>OpÃ©ration</b>
+                        <b>Opération</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
@@ -154,13 +154,13 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divTacheSpe">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="tacheSpe">
-                        <b>TÃ¢che spÃ©cifique</b>
+                        <b>Tâche spécifique</b>
                     </label>
                 </div>
                 <div class="flex-1 flex text-left md:flex md:self-center items-center">
                     <input type="checkbox" class="checkbox checkbox-primary" id="cbTacheSpe"/>
                     <select class="select mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
-                        <option value="-1" selected>-- SÃ©lectionner une tÃ¢che spÃ©cifique --</option>
+                        <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
                         {% for tache in tachesSpe %}
                             <option value="{{ tache.id }}">{{ tache.id }}
                                 -
@@ -177,7 +177,7 @@
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <select class="select focus:ring-primary mx-3" name="centrecharge" id="centrecharge">
-                        <option value="-1">-- SÃ©lectionner un centre de charge --</option>
+                        <option value="-1">-- Sélectionner un centre de charge --</option>
                         {% for centre_charge in CDG %}
                             <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
                         {% endfor %}

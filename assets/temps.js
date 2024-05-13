@@ -3,7 +3,7 @@ var selectedOption = document.getElementById("type").value;
 var selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
 
 // 
-//* DÃ©tecte un changement de type d'heure
+//* Détecte un changement de type d'heure
 // 
 formChange();
 document.getElementById("type").addEventListener("change", function () {
@@ -22,7 +22,7 @@ document.getElementById("cbTacheSpe").addEventListener("change", function () {
 })
 
 // 
-//* Affiche les diffÃ©rents champs en fonction du type d'heure
+//* Affiche les Différents champs en fonction du type d'heure
 // 
 function formChange() {
     document.getElementById("ordre").value = "";
@@ -146,7 +146,7 @@ document.getElementById('btnEnregistrerContinue').addEventListener('click', asyn
 })
 
 // 
-//* Envoie les donnÃ©es du formulaire au serveur
+//* Envoie les données du formulaire au serveur
 // 
 async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -172,7 +172,7 @@ async function formSubmit() {
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
-        alert("Veuillez insÃ©rer un temps de main d'oeuvre");
+        alert("Veuillez insérer un temps de main d'oeuvre");
         document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
@@ -215,7 +215,7 @@ async function formSubmit() {
 }
 
 // 
-//* Affectation du numÃ©ro de site sur l'odre
+//* Affectation du numéro de site sur l'odre
 //
 function ordreLabelChange(){
     codeEmploye = document.getElementById('codeEmploye').innerText.substring(0, 2);
@@ -223,7 +223,7 @@ function ordreLabelChange(){
 }
 
 //
-//* VÃ©rifie la saisie de l'ordre (Notemment pour les douchettes)
+//* Vérifier la saisie de l'ordre (Notemment pour les douchettes)
 //
 document.getElementById("ordre").addEventListener("input", function (evt) {
     if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === codeEmploye.toUpperCase()){
@@ -232,7 +232,7 @@ document.getElementById("ordre").addEventListener("input", function (evt) {
 });
 
 //
-//* Effectue la RegEx pour vÃ©rifier le champs Ordre
+//* Effectue la RegEx pour vérifier le champs Ordre
 //
 let inputOrdre = document.getElementById("ordre");
 let inputOrdreLabel = document.getElementById("ordre").parentElement;
@@ -259,7 +259,7 @@ document.getElementById("ordre").addEventListener("input", function () {
 })
 
 //
-//* Retourne toutes les activitÃ©s
+//* Retourne toutes les activités
 //
 function makeAPIActivite() {
     var url = "/api/get/activite";
@@ -287,7 +287,7 @@ function makeAPIActivite() {
 var tableActivite = makeAPIActivite();
 
 //
-//* Effectue la RegEx pour vÃ©rifier le champs ActivitÃ© et afffiche le nom de l'activitÃ©
+//* Effectue la RegEx pour vérifiés le champs activité et afffiche le nom de l'activité
 //
 document.getElementById("activite").addEventListener("input", function () {
     inputActivite = document.getElementById("activite");
@@ -317,17 +317,17 @@ document.getElementById("activite").addEventListener("input", function () {
 })
 
 //
-//* Enregistre le type d'heure dans la base de donnÃ©es pour la gestion des favoris
+//* Enregistre le type d'heure dans la base de données pour la gestion des favoris
 //
 document.getElementById('btnEnregistrerParDefaut').addEventListener('click', function (event) {
-    // Envoie une requÃªte POST contenant le type d'heure sÃ©lectionnÃ© de maniÃ¨re asynchrone avec une animation de chargement pendant l'envoi
+    // Envoie une requête POST contenant le type d'heure sélectionné de manière asynchrone avec une animation de chargement pendant l'envoi
     document.getElementById("btnEnregistrerParDefaut").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
     document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
     document.getElementById("iconPlein").classList.add("hidden");
     document.getElementById("iconTransparent").classList.add("hidden");
     document.getElementById("btnEnregistrerParDefautTexte").innerText = "";
 
-    // RequÃªte POST asynchrone Ã  l'URL /api/post/type_heure
+    // Requête POST asynchrone à l'URL /api/post/type_heure
     fetch('/api/post/type_heure', {
         method: 'POST',
         headers: {
@@ -339,7 +339,7 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         .then(response => {
             if (!response.ok) {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par dÃ©faut";
+                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertError").classList.remove("hidden");
                 setTimeout(function () {
@@ -349,16 +349,16 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         }
             else {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par dÃ©faut";
+                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertSuccess").classList.remove("hidden");
                 selectedOption = document.getElementById("type").value;
                 selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
                 formChange();
                 if(parseInt(selectedOption) < 0){
-                    document.getElementById("alertSuccess").querySelector('span').innerText = "Aucun type d'heure par dÃ©faut dÃ©signÃ©";
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Aucun type d'heure par défaut désigné";
                 }else{
-                    document.getElementById("alertSuccess").querySelector('span').innerText = "Le type d'heure " + selectedOptionText + " a Ã©tÃ© enregistrÃ© comme paramÃ¨tre par dÃ©faut";
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Le type d'heure " + selectedOptionText + " a été enregistré comme paramètre par défaut";
                 }
                 setTimeout(function () {
                     document.getElementById("alertSuccess").classList.add("hidden");
