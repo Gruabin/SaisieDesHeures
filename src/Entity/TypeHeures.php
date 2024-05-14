@@ -24,10 +24,14 @@ class TypeHeures
     #[ORM\OneToMany(mappedBy: 'typeHeures', targetEntity: Tache::class)]
     private Collection $taches;
 
+    #[ORM\OneToMany(targetEntity: FavoriTypeHeure::class, mappedBy: 'typeHeure')]
+    private Collection $favoriTypeHeures;
+
     public function __construct()
     {
         $this->detailHeures = new ArrayCollection();
         $this->taches = new ArrayCollection();
+        $this->favoriTypeHeures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,6 +105,36 @@ class TypeHeures
             // set the owning side to null (unless already changed)
             if ($tach->getTypeHeures() === $this) {
                 $tach->setTypeHeures(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FavoriTypeHeure>
+     */
+    public function getFavoriTypeHeures(): Collection
+    {
+        return $this->favoriTypeHeures;
+    }
+
+    public function addFavoriTypeHeure(FavoriTypeHeure $favoriTypeHeure): static
+    {
+        if (!$this->favoriTypeHeures->contains($favoriTypeHeure)) {
+            $this->favoriTypeHeures->add($favoriTypeHeure);
+            $favoriTypeHeure->setTypeHeure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriTypeHeure(FavoriTypeHeure $favoriTypeHeure): static
+    {
+        if ($this->favoriTypeHeures->removeElement($favoriTypeHeure)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriTypeHeure->getTypeHeure() === $this) {
+                $favoriTypeHeure->setTypeHeure(null);
             }
         }
 
