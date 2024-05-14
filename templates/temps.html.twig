@@ -18,13 +18,17 @@
                 <div class="m-2">
                     <b>Centre de charge</b>
                 </div>
-                <div class="m-2" id="CDGUser">{{ user.centreDeCharge.id }}</div>
+                <div class="m-2" id="CDGUser">
+                    {{ user.centreDeCharge.id }}
+                </div>
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
                     <b>Date</b>
                 </div>
-                <div class="m-2">{{ 'now'|date('d/m/Y', 'Europe/Paris') }}</div>
+                <div class="m-2">
+                    {{ 'now'|date('d/m/Y', 'Europe/Paris') }}
+                </div>
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
@@ -107,7 +111,7 @@
                 <div class="flex-1 text-left items-center">
                     <label class="input input-bordered flex items-center gap-2 max-w-40">
                         <span id="labelOrdre">XX</span>
-                        <input type="text" name="ordre" id="ordre" maxlength="7" pattern="^[0-9A-Za-z]{1}[0-9]{6}$"/>
+                        <input type="text" name="ordre" id="ordre" class="w-28" maxlength="7" pattern="^[0-9A-Za-z]{1}[0-9]{6}$"/>
                     </label>
                 </div>
             </div>
@@ -184,10 +188,10 @@
                     </select>
                 </div>
             </div>
-            <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisiTemps">
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisieTemps">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="saisieTemps">
-                        <b>Temps main d'Å“uvre (en h)</b>
+                        <b>Temps main d'oeuvre (en h)</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
