@@ -81,7 +81,7 @@
                         <select class="select focus:ring-primary mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
                             <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>-- Sélectionner un type d'heure --</option>
                             {% for type in types %}
-                                {% if favoriTypeHeure is defined and favoriTypeHeure.typeHeure is not null %}
+                                {% if favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null %}
                                     <option {% if favoriTypeHeure.typeHeure.id == type.id %}selected{% endif %} value="{{ type.id }}">{{ type.nomType }}</option>
                                 {% else %}
                                     <option value="{{ type.id }}">{{ type.nomType }}</option>
