@@ -42,15 +42,15 @@ Console d'approbation
                     {{ form_end(formDate) }}
             </div>
             <div class="m-2 flex-1">
-                <div class="m-2"></div>
-                <div class="m-2">
+                <label for="select_anomalies" class="m-2 cursor-pointer flex items-center space-x-2">
                     <b id="nbAnomalie">{{ nbAnomalie }}</b>
                     {% if nbAnomalie <= 2 %}
-                        Anomalie
+                        <span>Anomalie</span>
                     {% else %}
-                        Anomalies
+                        <span>Anomalies</span>
                     {% endif %}
-                </div>
+                    <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
+                </label>
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2 font-bold">Liste de responsables</div>
@@ -69,10 +69,6 @@ Console d'approbation
             <label class="label">
                 <input type="checkbox" class="checkbox checkbox-primary"  id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
-            </label>
-        <label class="cursor-pointer label">
-                <span class="label-text">Anomalies uniquement &nbsp;</span>
-                <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
