@@ -1,3 +1,5 @@
+import TomSelect from "tom-select";
+
 let ligne = document.querySelectorAll('.ligne');
 ligne.forEach(element => {
 
@@ -151,7 +153,6 @@ checkboxes.forEach(checkbox => {
 let donnees = [];
 document.getElementById('validation').addEventListener('click', function () {
     document.getElementById('validation').classList.add("hidden");
-    document.getElementById('quitter').classList.add("hidden");
     document.getElementById("loading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     ligne.forEach(element => {
@@ -175,14 +176,12 @@ document.getElementById('validation').addEventListener('click', function () {
     ).then((response) => {
         if (!response.ok) {
             document.getElementById('validation').classList.remove("hidden");
-            document.getElementById('quitter').classList.remove("hidden");
             document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             throw new Error("Réponse inattendue du serveur");
         }
         window.location.href = '/console';
     }).catch((error) => {
         document.getElementById('validation').classList.remove("hidden");
-        document.getElementById('quitter').classList.remove("hidden");
         document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/console';
         throw new Error("Réponse inattendue du serveur");
@@ -470,3 +469,33 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
+
+//
+// * Amélioration du select multiple avec Tom Select
+//
+
+const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
+    plugins: {
+        'clear_button':{
+            'title':'Retirer tous les managers sélectionnés'
+        },
+        'remove_button':{
+            'title':'Retirer ce manager'
+        }
+    },
+    onInitialize: function() {
+        const element = this.input.parentElement.querySelector('.ts-control');
+        this.input.parentElement.classList.add('w-full');
+        this.input.parentElement.classList.remove('mb-6');
+        element.style.maxHeight = '6rem';
+        element.style.overflow = 'auto';
+    }
+});
+
+document.getElementById('check-all').addEventListener('click', function(event) {
+    const allValues = tomSelectInstance.options;
+    var valuesToSelect = Object.keys(allValues).map(function(key) {
+        return allValues[key].value;
+    });
+    tomSelectInstance.setValue(valuesToSelect);
+});

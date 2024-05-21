@@ -27,6 +27,7 @@
   "dependencies": {
     "@babel/core": "^7.24.*",
     "@fortawesome/fontawesome-free": "^6.*",
-    "postcss-loader": "^7.3.4"
+    "postcss-loader": "^7.3.4",
+    "tom-select": "^2.3.1"
   }
 }

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let aBalises = document.querySelectorAll('a');
 
         aBalises.forEach(element => {
-            if (!element.classList.contains('supprimer') && element.getAttribute("href") !== '#' && !element.classList.contains('noLoading') && element.getAttribute("href") !== '#') {
+            if (!element.classList.contains('supprimer') && element.getAttribute("href") !== '#' && !element.classList.contains('noLoading') && element.getAttribute("href") !== '#' && !element.classList.contains('remove')) {
                 element.addEventListener('click', loading);
             }
         });
