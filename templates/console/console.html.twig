@@ -6,6 +6,7 @@ Console d'approbation
 
 {% block body %}
     {# Modal #}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
     <dialog id="modalSuppr" class="modal">
         <div class="modal-box">
             <h3 class="font-bold text-lg"><i class="fa-solid fa-trash-can"></i> Supprimer</h3>
@@ -30,7 +31,18 @@ Console d'approbation
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2"><b>Responsable</b></div>
-                <div class="m-2" id="CDGUser">{{ user.id }} - {{ user.nomEmploye }} </div>
+                <div class="m-2">
+                    {{ form_start(formResponsable) }}
+                    <div class="flex space-x-2 items-center">
+                        {{ form_row(formResponsable.responsable) }}
+                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
+                        <div class="join join-vertical">
+                            <button type="button" class="btn join-item btn-primary btn-sm" id="check-all">Tout sélectionner</button>
+                            {{ form_widget(formResponsable.button, {'attr': {'class': 'btn join-item btn-primary btn-sm w-max'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(formResponsable) }}
+                </div>
             </div>
             <div class="m-2 flex-1">
                     {{ form_start(formDate) }}
@@ -51,16 +63,6 @@ Console d'approbation
                     {% endif %}
                     <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
                 </label>
-            </div>
-            <div class="m-2 flex-1">
-                <div class="m-2 font-bold">Liste de responsables</div>
-                <div class="m-2">
-                    {{ form_start(formResponsable) }}
-                        {{ form_row(formResponsable.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
-                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
-                        {{ form_row(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
-                    {{ form_end(formResponsable) }}
-                </div>
             </div>
         </div>
     </section>

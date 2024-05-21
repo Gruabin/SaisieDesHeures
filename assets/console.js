@@ -1,3 +1,5 @@
+import TomSelect from "tom-select";
+
 let ligne = document.querySelectorAll('.ligne');
 ligne.forEach(element => {
 
@@ -470,3 +472,33 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
+
+//
+// * Amélioration du select multiple avec Tom Select
+//
+
+const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
+    plugins: {
+        'clear_button':{
+            'title':'Retirer tous les managers sélectionnés'
+        },
+        'remove_button':{
+            'title':'Retirer ce manager'
+        }
+    },
+    onInitialize: function() {
+        const element = this.input.parentElement.querySelector('.ts-control');
+        this.input.parentElement.classList.add('w-full');
+        this.input.parentElement.classList.remove('mb-6');
+        element.style.maxHeight = '6rem';
+        element.style.overflow = 'auto';
+    }
+});
+
+document.getElementById('check-all').addEventListener('click', function(event) {
+    const allValues = tomSelectInstance.options;
+    var valuesToSelect = Object.keys(allValues).map(function(key) {
+        return allValues[key].value;
+    });
+    tomSelectInstance.setValue(valuesToSelect);
+});
