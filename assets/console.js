@@ -153,7 +153,6 @@ checkboxes.forEach(checkbox => {
 let donnees = [];
 document.getElementById('validation').addEventListener('click', function () {
     document.getElementById('validation').classList.add("hidden");
-    document.getElementById('quitter').classList.add("hidden");
     document.getElementById("loading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     ligne.forEach(element => {
@@ -177,14 +176,12 @@ document.getElementById('validation').addEventListener('click', function () {
     ).then((response) => {
         if (!response.ok) {
             document.getElementById('validation').classList.remove("hidden");
-            document.getElementById('quitter').classList.remove("hidden");
             document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             throw new Error("Réponse inattendue du serveur");
         }
         window.location.href = '/console';
     }).catch((error) => {
         document.getElementById('validation').classList.remove("hidden");
-        document.getElementById('quitter').classList.remove("hidden");
         document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/console';
         throw new Error("Réponse inattendue du serveur");
