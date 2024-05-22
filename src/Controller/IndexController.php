@@ -99,6 +99,7 @@ class IndexController extends AbstractController
         $this->detailHeureService->cleanLastWeek();
 
         $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $this->getUser()]);
+        $user = $this->getUser();
 
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
@@ -110,6 +111,7 @@ class IndexController extends AbstractController
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
             'favoriTypeHeure' => $favoriTypeHeure,
+            'site' => substr((string) $user->getId(), 0, 2),
         ]);
     }
 

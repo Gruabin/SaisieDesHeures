@@ -8,7 +8,6 @@ var selectedOptionText = document.querySelector('#type option[value="' + selecte
 formChange();
 document.getElementById("type").addEventListener("change", function () {
     formChange();
-    ordreLabelChange();
 })
 
 document.getElementById("cbTacheSpe").addEventListener("change", function () {
@@ -256,14 +255,6 @@ async function formSubmit() {
     }
 
     return false;
-}
-
-// 
-//* Affectation du numéro de site sur l'odre
-//
-function ordreLabelChange(){
-    codeEmploye = document.getElementById('codeEmploye').innerText.substring(0, 2);
-    document.getElementById('labelOrdre').innerText = codeEmploye;
 }
 
 //
