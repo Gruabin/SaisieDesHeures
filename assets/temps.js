@@ -8,7 +8,6 @@ var selectedOptionText = document.querySelector('#type option[value="' + selecte
 formChange();
 document.getElementById("type").addEventListener("change", function () {
     formChange();
-    ordreLabelChange();
 })
 
 document.getElementById("cbTacheSpe").addEventListener("change", function () {
@@ -122,11 +121,12 @@ function tacheChange(id) {
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        console.log(document.getElementById("informationSaisiHeures"));
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         }
         else {
             window.location.href = '/api/post/deconnexion';
@@ -135,11 +135,12 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        console.log(document.getElementById("informationSaisiHeures"));
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         }
         else {
             window.location.href = '/temps';
@@ -191,7 +192,7 @@ function verif() {
 //* Envoie les données du formulaire au serveur
 // 
 async function formSubmit() {
-    document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
     const ordre = codeEmploye + document.getElementById("ordre").value;
@@ -209,13 +210,13 @@ async function formSubmit() {
     }
     if (type_heures == "-1") {
         alert("Veuillez selectionner un type d'heure");
-        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
         alert("Veuillez insérer un temps de main d'oeuvre");
-        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }
@@ -254,14 +255,6 @@ async function formSubmit() {
     }
 
     return false;
-}
-
-// 
-//* Affectation du numéro de site sur l'odre
-//
-function ordreLabelChange(){
-    codeEmploye = document.getElementById('codeEmploye').innerText.substring(0, 2);
-    document.getElementById('labelOrdre').innerText = codeEmploye;
 }
 
 //
@@ -367,7 +360,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
     document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
     document.getElementById("iconPlein").classList.add("hidden");
     document.getElementById("iconTransparent").classList.add("hidden");
-    document.getElementById("btnEnregistrerParDefautTexte").innerText = "";
 
     // Requête POST asynchrone à l'URL /api/post/type_heure
     fetch('/api/post/type_heure', {
@@ -381,7 +373,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         .then(response => {
             if (!response.ok) {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertError").classList.remove("hidden");
                 setTimeout(function () {
@@ -391,7 +382,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         }
             else {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertSuccess").classList.remove("hidden");
                 selectedOption = document.getElementById("type").value;

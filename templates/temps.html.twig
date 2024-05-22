@@ -89,7 +89,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div>
+                    <div class="tooltip" data-tip="Enregistrer par défaut">
                         <button class="btn btn-sm btn-success" id="btnEnregistrerParDefaut">
                             <span id="iconTransparent" class="w-4 hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 96V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V170.5c0-4.2-1.7-8.3-4.7-11.3l33.9-33.9c12 12 18.7 28.3 18.7 45.3V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H309.5c17 0 33.3 6.7 45.3 18.7l74.5 74.5-33.9 33.9L320.8 84.7c-.3-.3-.5-.5-.8-.8V184c0 13.3-10.7 24-24 24H104c-13.3 0-24-10.7-24-24V80H64c-8.8 0-16 7.2-16 16zm80-16v80H272V80H128zm32 240a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"/></svg>
@@ -97,7 +97,6 @@
                             <span id="iconPlein" class="w-4 hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                             </span>
-                            <span id="btnEnregistrerParDefautTexte">Enregistrer par défaut</span>
                         </button>
                     </div>
                 </div>
@@ -110,7 +109,7 @@
                 </div>
                 <div class="flex-1 text-left items-center">
                     <label class="input input-bordered flex items-center gap-2 max-w-40">
-                        <span id="labelOrdre">XX</span>
+                        <span id="labelOrdre">{{ site }}</span>
                         <input type="text" name="ordre" id="ordre" class="w-28" maxlength="7" pattern="^[0-9A-Za-z]{1}[0-9]{6}$"/>
                     </label>
                 </div>
