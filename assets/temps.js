@@ -122,11 +122,12 @@ function tacheChange(id) {
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        console.log(document.getElementById("informationSaisiHeures"));
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         }
         else {
             window.location.href = '/api/post/deconnexion';
@@ -135,11 +136,12 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        console.log(document.getElementById("informationSaisiHeures"));
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         }
         else {
             window.location.href = '/temps';
@@ -191,7 +193,7 @@ function verif() {
 //* Envoie les données du formulaire au serveur
 // 
 async function formSubmit() {
-    document.getElementById("informationSaisieHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
     const ordre = codeEmploye + document.getElementById("ordre").value;
@@ -209,13 +211,13 @@ async function formSubmit() {
     }
     if (type_heures == "-1") {
         alert("Veuillez selectionner un type d'heure");
-        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
         alert("Veuillez insérer un temps de main d'oeuvre");
-        document.getElementById("informationSaisieHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
         return respnse.status = 400;
     }
