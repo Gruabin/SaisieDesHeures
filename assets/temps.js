@@ -367,7 +367,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
     document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
     document.getElementById("iconPlein").classList.add("hidden");
     document.getElementById("iconTransparent").classList.add("hidden");
-    document.getElementById("btnEnregistrerParDefautTexte").innerText = "";
 
     // Requête POST asynchrone à l'URL /api/post/type_heure
     fetch('/api/post/type_heure', {
@@ -381,7 +380,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         .then(response => {
             if (!response.ok) {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertError").classList.remove("hidden");
                 setTimeout(function () {
@@ -391,7 +389,6 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
         }
             else {
                 document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-                document.getElementById("btnEnregistrerParDefautTexte").innerText = "Enregistrer par défaut";
 
                 document.getElementById("alertSuccess").classList.remove("hidden");
                 selectedOption = document.getElementById("type").value;
