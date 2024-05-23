@@ -208,6 +208,7 @@ class IndexController extends AbstractController
             'taches' => $this->tacheRepository->findAll(),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
+            'titrePage' => "Console d'approbation des heures",
         ]);
     }
 

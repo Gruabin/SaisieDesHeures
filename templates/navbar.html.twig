@@ -36,7 +36,11 @@
             {% endif %}
         </div>
         <div class="items-center justify-between w-full md:flex md:w-auto">
-            <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
+            {% if titrePage is defined %}
+                <h1 class="text-4xl text-center text-white font-bold">{{ titrePage }}</h1>
+            {% else %}
+                <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
+            {% endif %}
         </div>
     </div>
 </nav>
