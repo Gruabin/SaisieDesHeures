@@ -1,4 +1,4 @@
-let codeEmploye;
+const labelOrdre = document.getElementById('labelOrdre').innerText;
 var selectedOption = document.getElementById("type").value;
 var selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
 
@@ -121,7 +121,6 @@ function tacheChange(id) {
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     if (verif()) {
-        console.log(document.getElementById("informationSaisiHeures"));
         document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
@@ -135,7 +134,6 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     if (verif()) {
-        console.log(document.getElementById("informationSaisiHeures"));
         document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         const state = await formSubmit();
         if (!state) {
@@ -195,7 +193,10 @@ async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
-    const ordre = codeEmploye + document.getElementById("ordre").value;
+    let ordre = "";
+    if(document.getElementById("ordre").value){
+        ordre = labelOrdre + document.getElementById("ordre").value;
+    }
     const tache = document.getElementById("tache").value;
     const operation = document.getElementById("operation").value;
     const tacheSpecifique = document.getElementById("tacheSpe").value;
@@ -261,7 +262,7 @@ async function formSubmit() {
 //* Vérifier la saisie de l'ordre (Notemment pour les douchettes)
 //
 document.getElementById("ordre").addEventListener("input", function (evt) {
-    if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === codeEmploye.toUpperCase()){
+    if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === labelOrdre.toUpperCase()){
         evt.target.value = "";
     }
 });
