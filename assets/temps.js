@@ -1,6 +1,8 @@
 const labelOrdre = document.getElementById('labelOrdre').innerText;
 var selectedOption = document.getElementById("type").value;
 var selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
+var centreChargeValue = document.getElementById("CDGUser").innerHTML.trim();
+var isValidCentreCharge = Array.from(document.getElementById("centrecharge").options).some(option => option.value === centreChargeValue);
 
 // 
 //* Détecte un changement de type d'heure
@@ -34,7 +36,9 @@ function formChange() {
         case 1:
             iconChange(1);
             tacheChange(1);
-            document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
+            if (isValidCentreCharge) {
+                document.getElementById("centrecharge").value = centreChargeValue;
+            }
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
