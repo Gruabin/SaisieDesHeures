@@ -132,7 +132,7 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
             document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         }
         else {
-            window.location.href = '/api/post/deconnexion';
+            window.location.href = '/deconnexion';
         }
     }
 })
