@@ -22,37 +22,38 @@ Console d'approbation
     </dialog>
     {# --- #}
     <section data-turbo="false" id="console" class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red text-lg max-sm:text-base shadow-md sticky top-0 z-10">
-        <div class="flex space-x-2 flex-col lg:flex-row lg:items-center justify-center">
+        <div class="flex space-x-2 xl:space-x-10 2xl:space-x-16 flex-col lg:flex-row lg:items-center justify-center">
             <div class="flex flex-col justify-center items-center text-center">
-                <div class="m-2"><b>Site</b></div>
-                <div class="m-2">{{ site }}</div>
+                <div ><b>Site</b></div>
+                <div class="h-12 flex items-center justify-center">{{ site }}</div>
             </div>
-            <div class="flex flex-col justify-center items-center">
-                <div class="m-2"><b>Responsable</b></div>
-                <div class="m-2">
+            <div class="flex flex-col justify-center items-center my-2">
+                <div ><b>Responsable</b></div>
+                <div >
                     {{ form_start(formResponsable) }}
                     <div class="flex space-x-2 items-center max-w-[30rem]">
                         {{ form_row(formResponsable.responsable) }}
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
-                        <div class="join join-vertical">
-                            <button type="button" class="btn join-item btn-primary btn-sm" id="check-all">Tout sélectionner</button>
-                            {{ form_widget(formResponsable.button, {'attr': {'class': 'btn join-item btn-primary btn-sm max-xl:w-max'}}) }}
+                        <div class="flex flex-col justify-center items-center space-y-1">
+                            <button type="button" class="btn btn-primary btn-sm" id="check-all">Tout sélectionner</button>
+                            {{ form_widget(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-sm max-xl:w-max'}}) }}
                         </div>
                     </div>
                     {{ form_end(formResponsable) }}
                 </div>
             </div>
             <div class="flex flex-col justify-center items-center">
-                    <div class="m-2"><b>Date</b></div>
+                    <div ><b>Date</b></div>
                 {{ form_start(formDate) }}
-                    <div class="flex">
-                            {{ form_row(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
-                            {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm m-2', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+                    <div class="flex justify-center items-center h-12">
+                            {{ form_widget(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
+                            {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
                     </div>
                 {{ form_end(formDate) }}
             </div>
             <div class="flex flex-col justify-center items-center">
-                <label for="select_anomalies" class="cursor-pointer flex max-xl:flex-col items-center space-x-2">
+                <div class="invisible"><b>x</b></div>
+                <label for="select_anomalies" class="h-12 cursor-pointer flex max-xl:flex-col items-center space-x-2">
                     <b id="nbAnomalie">{{ nbAnomalie }}</b>
                     {% if nbAnomalie <= 2 %}
                         <span>Anomalie</span>
@@ -62,8 +63,9 @@ Console d'approbation
                     <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
                 </label>
             </div>
-            <div class="m-2 flex flex-col justify-center items-center">
-                <div class="flex justify-center text-center">
+            <div class="flex flex-col justify-center items-center">
+                    <div class="invisible"><b>X</b></div>
+                    <div class="flex h-12 justify-center text-center items-center">
                     <span id="loading" class=""></span>
                     <button type="button" id="validation" class="btn btn-primary btn-sm">Approuver la selection</button>
                 </div>
