@@ -265,11 +265,20 @@ async function formSubmit() {
 //
 //* Vérifier la saisie de l'ordre (Notemment pour les douchettes)
 //
-document.getElementById("ordre").addEventListener("input", function (evt) {
+document.getElementById("ordre").addEventListener("input", verifChampOrdre);
+document.getElementById("ordre").addEventListener("paste", verifChampOrdre);
+
+function verifChampOrdre(evt){
     if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === labelOrdre.toUpperCase()){
         evt.target.value = "";
     }
-});
+    if(evt.target.value.slice(0, 2).toUpperCase() === labelOrdre.toUpperCase()){
+        evt.target.value = evt.target.value.slice(2);
+    }
+    if(evt.target.value.length > 7){
+        evt.target.value = evt.target.value.slice(0, -1);
+    }
+}
 
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
