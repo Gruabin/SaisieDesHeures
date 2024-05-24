@@ -1,5 +1,6 @@
 import TomSelect from "tom-select";
-
+let ligneASupprimer;
+let token;
 let ligne = document.querySelectorAll('.ligne');
 ligne.forEach(element => {
 
@@ -33,7 +34,7 @@ ligne.forEach(element => {
     //  Ouvre la modal
     element.querySelector('#trash').addEventListener("click", () => {
         document.getElementById('modalSuppr').showModal();
-        ligneASupprimer = element
+        ligneASupprimer = element;
     });
 
 
@@ -193,8 +194,7 @@ document.getElementById('validation').addEventListener('click', function () {
 // * Envoie le requête de suppression
 //
 function APISuppression(ligneASupprimer) {
-
-    token = ligneASupprimer.querySelector('#ligneToken').value;
+    token = ligneASupprimer.querySelector('input[name="token"]').value;
     document.getElementById('btnModalSuppr').classList.add("hidden");
     document.getElementById('btnModalAnnuler').classList.add("hidden");
     document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
