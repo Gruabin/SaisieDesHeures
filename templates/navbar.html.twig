@@ -17,18 +17,18 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{{ path('temps') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
+                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
                             </li>
                             <li>
-                                <a href="{{ path('historique') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
+                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
                             </li>
                             {% if is_granted('ROLE_MANAGER') %}
                                 <li>
-                                    <a href="{{ path('console') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
+                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
+                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
                             </li>
                         </ul>
                     </div>
