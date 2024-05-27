@@ -10,25 +10,25 @@
                         <span class="sr-only">Open user menu</span>
                         <span class="text-xl font font-bold text-center" id="couleurLettre">{{ user.nomEmploye|slice(0, 1) }}</span>
                     </div>
-                    <div tabindex="0" id="menu" class="dropdown-content z-[1] menu p-2 shadow bg-gruau-dark-blue divide-gruau-dark-blue rounded-box w-60">
+                    <div tabindex="0" id="menu" class="dropdown-content z-20 menu p-2 shadow bg-gruau-dark-blue divide-gruau-dark-blue rounded-box w-60">
                         <div class="px-4 py-3">
                             <span class="block text-sm text-white">{{ user.nomEmploye }}</span>
                             <span class="block text-sm text-gray-300 truncate">{{ user.id }}</span>
                         </div>
                         <ul>
                             <li>
-                                <a href="{{ path('temps') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
+                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
                             </li>
                             <li>
-                                <a href="{{ path('historique') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
+                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
                             </li>
                             {% if is_granted('ROLE_MANAGER') %}
                                 <li>
-                                    <a href="{{ path('console') }}" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
+                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('deconnexion') }}" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
+                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
                             </li>
                         </ul>
                     </div>
@@ -36,7 +36,11 @@
             {% endif %}
         </div>
         <div class="items-center justify-between w-full md:flex md:w-auto">
-            <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
+            {% if titrePage is defined %}
+                <h1 class="text-4xl text-center text-white font-bold">{{ titrePage }}</h1>
+            {% else %}
+                <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
+            {% endif %}
         </div>
     </div>
 </nav>

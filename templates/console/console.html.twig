@@ -6,6 +6,7 @@ Console d'approbation
 
 {% block body %}
     {# Modal #}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
     <dialog id="modalSuppr" class="modal">
         <div class="modal-box">
             <h3 class="font-bold text-lg"><i class="fa-solid fa-trash-can"></i> Supprimer</h3>
@@ -20,46 +21,53 @@ Console d'approbation
         </div>
     </dialog>
     {# --- #}
-    <section data-turbo="false" class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Console d'approbation</h2>
-        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-col lg:flex-row lg:items-center p-2">
-            <div class="m-2 flex-1">
-                <div class="m-2"><b>Site</b></div>
-                <div class="m-2">{{ site }}</div>
+    <section data-turbo="false" id="console" class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red text-lg max-sm:text-base shadow-md lg:sticky lg:top-0 z-10">
+        <div class="flex space-x-2 xl:space-x-10 2xl:space-x-16 flex-col lg:flex-row lg:items-center justify-center">
+            <div class="flex flex-col justify-center items-center text-center">
+                <div ><b>Site</b></div>
+                <div class="h-12 flex items-center justify-center">{{ site }}</div>
             </div>
-            <div class="m-2 flex-1">
-                <div class="m-2"><b>Responsable</b></div>
-                <div class="m-2" id="CDGUser">{{ user.id }} - {{ user.nomEmploye }} </div>
-            </div>
-            <div class="m-2 flex-1">
-                    {{ form_start(formDate) }}
-                <div class="m-2"><b>Date</b></div>
-                <div class="flex">
-                        {{ form_row(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
-                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm m-2', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+            <div class="flex flex-col justify-center items-center my-2">
+                <div ><b>Responsable</b></div>
+                <div >
+                    {{ form_start(formResponsable) }}
+                    <div class="flex space-x-2 items-center max-w-[30rem]">
+                        {{ form_row(formResponsable.responsable) }}
+                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
+                        <div class="flex flex-col justify-center items-center space-y-1">
+                            <button type="button" class="btn btn-primary btn-sm" id="check-all">Tout sélectionner</button>
+                            {{ form_widget(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-sm max-xl:w-max'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(formResponsable) }}
                 </div>
-                    {{ form_end(formDate) }}
             </div>
-            <div class="m-2 flex-1">
-                <div class="m-2"></div>
-                <div class="m-2">
+            <div class="flex flex-col justify-center items-center">
+                    <div ><b>Date</b></div>
+                {{ form_start(formDate) }}
+                    <div class="flex justify-center items-center h-12">
+                            {{ form_widget(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
+                            {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+                    </div>
+                {{ form_end(formDate) }}
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <div class="invisible"><b>x</b></div>
+                <label for="select_anomalies" class="h-12 cursor-pointer flex max-xl:flex-col items-center space-x-2">
                     <b id="nbAnomalie">{{ nbAnomalie }}</b>
                     {% if nbAnomalie <= 2 %}
-                        Anomalie
+                        <span>Anomalie</span>
                     {% else %}
-                        Anomalies
+                        <span>Anomalies</span>
                     {% endif %}
-                </div>
+                    <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
+                </label>
             </div>
-            <div class="m-2 flex-1">
-                <div class="m-2 font-bold">Liste de responsables</div>
-                <div class="m-2">
-                    {{ form_start(formResponsable) }}
-                        {{ form_row(formResponsable.responsable, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
-                        <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
-                        {{ form_row(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-wide btn-sm'}}) }}
-                    {{ form_end(formResponsable) }}
+            <div class="flex flex-col justify-center items-center">
+                    <div class="invisible"><b>X</b></div>
+                    <div class="flex h-12 justify-center text-center items-center">
+                    <span id="loading" class=""></span>
+                    <button type="button" id="validation" class="btn btn-primary btn-sm">Approuver la selection</button>
                 </div>
             </div>
         </div>
@@ -67,12 +75,8 @@ Console d'approbation
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
         <div class="p-5 flex justify-between">
             <label class="label">
-                <input type="checkbox" class="checkbox checkbox-primary" id="select_all"/>
+                <input type="checkbox" class="checkbox checkbox-primary"  id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
-            </label>
-        <label class="cursor-pointer label">
-                <span class="label-text">Anomalies uniquement &nbsp;</span>
-                <input type="checkbox" class="toggle toggle-accent" id="select_anomalies"/>
             </label>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
@@ -81,35 +85,31 @@ Console d'approbation
         {% endif %}
         {# {% set lesEmployes = value %} #}
             {% for employe in employes %}
-                    <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full" id="tabEmploye" data-employe="{{ employe.id }}">
-                        <div class="flex justify-between m-3">
-                            <div class="flex flex-col mx-3">
-                                <h1 class="text-primary">{{ employe.id }} - {{ employe.nom }} </h1>
-                            </div>
-                            <div class="mx-3">
-                            {# +0 permet de faire un calcul pour arrondir la donnée #}
-                                <b id="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
-                            </div>
+                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full" id="tabEmploye" data-employe="{{ employe.id }}">
+                    <div class="flex justify-between m-3">
+                        <div class="flex flex-row ">
+                            <input type="checkbox" class="checkbox checkbox-primary" id="select_user" data-employe="{{ employe.id }}"/>
+                            <h1 class="text-primary mx-3">{{ employe.id }} - {{ employe.nom }} </h1>
                         </div>
-                        {# Tableau #}
-                        <div class="overflow-x-auto">
-                            <table class="table table-fixed">
-                            {% block thead %}
-                                {% include 'console/head.table.html.twig' %}
-                            {% endblock %}
-                            {% block tbody %}
-                                {% include 'console/body.table.html.twig' %}
-                            {% endblock %}
-                            </table>
+                        <div class="mx-3">
+                        {# +0 permet de faire un calcul pour arrondir la donnée #}
+                                <b id="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
                         </div>
                     </div>
+                    {# Tableau #}
+                    <div class="overflow-x-auto">
+                        <table class="table table-fixed">
+                        {% block thead %}
+                            {% include 'console/head.table.html.twig' %}
+                        {% endblock %}
+                        {% block tbody %}
+                            {% include 'console/body.table.html.twig' %}
+                        {% endblock %}
+                        </table>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </section>
     <input type="hidden" name="token" id="approbationToken" value="{{ csrf_token('approbationToken') }}">
-    <div class="flex gap-10 justify-center text-center m-16">
-        <a type="button" id="quitter" class="btn btn-primary btn-wide"  href="{{ path('deconnexion') }}">Quitter</a>
-        <span id="loading" class=""></span>
-        <button type="button" id="validation" class="btn btn-primary btn-wide ">Approuver la selection</button>
-    </div>
 {% endblock %}

@@ -7,6 +7,7 @@ use App\Form\FiltreResponsableType;
 use App\Repository\CentreDeChargeRepository;
 use App\Repository\DetailHeuresRepository;
 use App\Repository\EmployeRepository;
+use App\Repository\FavoriTypeHeureRepository;
 use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
@@ -88,7 +89,7 @@ class IndexController extends AbstractController
 
     // Affiche la page de saisie des temps
     #[Route('/temps', name: 'temps')]
-    public function temps(): Response
+    public function temps(FavoriTypeHeureRepository $favoriTypeHeureRepository): Response
     {
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getId());
         if ($nbHeures['total'] >= 12) {
@@ -96,6 +97,9 @@ class IndexController extends AbstractController
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
+
+        $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $this->getUser()]);
+        $user = $this->getUser();
 
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render('temps.html.twig', [
@@ -106,6 +110,8 @@ class IndexController extends AbstractController
             'CDG' => $this->CDGRepository->findAllUser(),
             'user' => $this->getUser(),
             'nbHeures' => $nbHeures['total'],
+            'favoriTypeHeure' => $favoriTypeHeure,
+            'site' => substr((string) $user->getId(), 0, 2),
         ]);
     }
 
@@ -202,6 +208,7 @@ class IndexController extends AbstractController
             'taches' => $this->tacheRepository->findAll(),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
             'CDG' => $this->CDGRepository->findAllUser(),
+            'titrePage' => "Console d'approbation des heures",
         ]);
     }
 

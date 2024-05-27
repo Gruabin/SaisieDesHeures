@@ -6,7 +6,7 @@ d'enregistrer et de gérer efficacement les heures travaillées sur différents 
 
 [![PHP](https://img.shields.io/badge/PHP-8.0.2-brightgreen.svg?logo=php&logoColor=white)](https://www.php.net/)
 [![Nginx](https://img.shields.io/badge/Nginx-latest-brightgreen.svg?logo=nginx&logoColor=white)](https://www.nginx.com/)
-[![Symfony](https://img.shields.io/badge/Symfony-6.*-brightgreen.svg?logo=symfony&logoColor=white)](https://www.symfony.com/)
+[![Symfony](https://img.shields.io/badge/Symfony-6.4.6-brightgreen.svg?logo=symfony&logoColor=white)](https://www.symfony.com/)
 
 # Sommaire
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -62,6 +62,22 @@ php vendor/bin/twig-cs-fixer lint --fix templates
 ```
 
 ```shell
+php vendor/bin/php-cs-fixer fix
+php vendor/bin/rector process src
+php vendor/bin/twig-cs-fixer lint --fix templates
+```
+
+# Test Php
+Aide pour executer les tests php
+
+```shell
+php bin/phpunit
+```
+
+# Linter + tests
+
+```shell
+php bin/phpunit
 php vendor/bin/php-cs-fixer fix
 php vendor/bin/rector process src
 php vendor/bin/twig-cs-fixer lint --fix templates

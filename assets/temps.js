@@ -1,6 +1,13 @@
+const labelOrdre = document.getElementById('labelOrdre').innerText;
+var selectedOption = document.getElementById("type").value;
+var selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
+var centreChargeValue = document.getElementById("CDGUser").innerHTML.trim();
+var isValidCentreCharge = Array.from(document.getElementById("centrecharge").options).some(option => option.value === centreChargeValue);
+
 // 
 //* Détecte un changement de type d'heure
 // 
+formChange();
 document.getElementById("type").addEventListener("change", function () {
     formChange();
 })
@@ -12,11 +19,10 @@ document.getElementById("cbTacheSpe").addEventListener("change", function () {
     } else {
         document.getElementById("tacheSpe").disabled = true;
     }
-
 })
 
 // 
-//* Affiche les différents champs en fonction du type d'heure
+//* Affiche les Différents champs en fonction du type d'heure
 // 
 function formChange() {
     document.getElementById("ordre").value = "";
@@ -28,17 +34,21 @@ function formChange() {
 
     switch (parseInt(document.getElementById("type").value)) {
         case 1:
+            iconChange(1);
             tacheChange(1);
-            document.getElementById("centrecharge").value = document.getElementById("CDGUser").innerHTML;
+            if (isValidCentreCharge) {
+                document.getElementById("centrecharge").value = centreChargeValue;
+            }
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.remove("hidden");
             document.getElementById("divOperation").classList.add("hidden");
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.remove("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 2:
+            iconChange(2);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -46,9 +56,10 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.remove("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 3:
+            iconChange(3);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -56,9 +67,10 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         case 4:
+            iconChange(4);
             tacheChange(4);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.remove("hidden");
@@ -67,9 +79,10 @@ function formChange() {
             document.getElementById("divActivite").classList.remove("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.remove("hidden");
+            document.getElementById("divSaisieTemps").classList.remove("hidden");
             break;
         default:
+            iconChange(-1);
             document.getElementById("centrecharge").value = -1;
             document.getElementById("divOrdre").classList.add("hidden");
             document.getElementById("divTache").classList.add("hidden");
@@ -77,8 +90,18 @@ function formChange() {
             document.getElementById("divActivite").classList.add("hidden");
             document.getElementById("divTacheSpe").classList.add("hidden");
             document.getElementById("divCentreCharge").classList.add("hidden");
-            document.getElementById("divSaisiTemps").classList.add("hidden");
+            document.getElementById("divSaisieTemps").classList.add("hidden");
             break;
+    }
+}
+
+function iconChange(selectedCase){
+    if (parseInt(selectedOption) === parseInt(selectedCase)) {
+        document.getElementById("iconPlein").classList.remove("hidden");
+        document.getElementById("iconTransparent").classList.add("hidden");
+    }else{
+        document.getElementById("iconPlein").classList.add("hidden");
+        document.getElementById("iconTransparent").classList.remove("hidden");
     }
 }
 
@@ -101,28 +124,71 @@ function tacheChange(id) {
 //* Validation du formulaire
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    const state = await formSubmit();
-    if (!state) {
-        alert("Une erreur s'est produite")
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    }
-    else {
-        window.location.href = '/api/post/deconnexion';
+    if (verif()) {
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        const state = await formSubmit();
+        if (!state) {
+            alert("Une erreur s'est produite")
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        }
+        else {
+            window.location.href = '/deconnexion';
+        }
     }
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    const state = await formSubmit();
-
-    if (!state) {
-        alert("Une erreur s'est produite")
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-    }
-    else {
-        window.location.href = '/temps';
+    if (verif()) {
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        const state = await formSubmit();
+        if (!state) {
+            alert("Une erreur s'est produite")
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        }
+        else {
+            window.location.href = '/temps';
+        }
     }
 })
+
+// 
+//* Vérifie que tous les champs sont remplis
+//
+function verif() {
+    let response = true;
+    const type_heures = document.getElementById("type").value;
+    const ordre = document.getElementById("ordre").value;
+    const tache = document.getElementById("tache").value;
+    const operation = document.getElementById("operation").value;
+    const activite = document.getElementById("activite").value;
+    const centre_de_charge = document.getElementById("centrecharge").value;
+    const temps_main_oeuvre = document.getElementById("saisieTemps").value;
+
+    switch (parseInt(type_heures)) {
+        case 1:
+            if (tache == "-1" || centre_de_charge == -1 || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        case 2:
+        case 3:
+            if (ordre == "" || operation == "" || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        case 4:
+            if (ordre == "" || tache == -1 || activite == "" || temps_main_oeuvre == "") {
+                alert("Veuillez remplir tous les champs");
+                response = false;
+            }
+            break;
+        default:
+            alert("Veuillez selectionner un type d'heure");
+            response = false;
+    }
+    return response;
+}
 
 // 
 //* Envoie les données du formulaire au serveur
@@ -131,7 +197,10 @@ async function formSubmit() {
     document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     const type_heures = document.getElementById("type").value;
-    const ordre = document.getElementById("ordre").value;
+    let ordre = "";
+    if(document.getElementById("ordre").value){
+        ordre = labelOrdre + document.getElementById("ordre").value;
+    }
     const tache = document.getElementById("tache").value;
     const operation = document.getElementById("operation").value;
     const tacheSpecifique = document.getElementById("tacheSpe").value;
@@ -194,26 +263,45 @@ async function formSubmit() {
 }
 
 //
+//* Vérifier la saisie de l'ordre (Notemment pour les douchettes)
+//
+document.getElementById("ordre").addEventListener("input", verifChampOrdre);
+document.getElementById("ordre").addEventListener("paste", verifChampOrdre);
+
+function verifChampOrdre(evt){
+    if(evt.target.value.length === 2 && evt.target.value.toUpperCase() === labelOrdre.toUpperCase()){
+        evt.target.value = "";
+    }
+    if(evt.target.value.slice(0, 2).toUpperCase() === labelOrdre.toUpperCase()){
+        evt.target.value = evt.target.value.slice(2);
+    }
+    if(evt.target.value.length > 7){
+        evt.target.value = evt.target.value.slice(0, -1);
+    }
+}
+
+//
 //* Effectue la RegEx pour vérifier le champs Ordre
 //
 let inputOrdre = document.getElementById("ordre");
+let inputOrdreLabel = document.getElementById("ordre").parentElement;
 document.getElementById("ordre").addEventListener("input", function () {
-    let regex = new RegExp("^[0-9A-Za-z]{9}$");
-    inputOrdre.classList.remove("input-success");
-    inputOrdre.classList.remove("input-error");
+    let regex = new RegExp("^[0-9A-Za-z]{1}[0-9]{6}$");
+    inputOrdreLabel.classList.remove("input-success");
+    inputOrdreLabel.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {
-        inputOrdre.classList.add("input-success");
+        inputOrdreLabel.classList.add("input-success");
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
     else {
-        inputOrdre.classList.add("input-error");
+        inputOrdreLabel.classList.add("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.add("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.add("btn-disabled");
     }
     if (inputOrdre.value == "") {
-        inputOrdre.classList.remove("input-success");
-        inputOrdre.classList.remove("input-error");
+        inputOrdreLabel.classList.remove("input-success");
+        inputOrdreLabel.classList.remove("input-error");
         document.getElementById("btnEnregistrerQuitter").classList.remove("btn-disabled");
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
@@ -248,7 +336,7 @@ function makeAPIActivite() {
 var tableActivite = makeAPIActivite();
 
 //
-//* Effectue la RegEx pour vérifier le champs Activité et afffiche le nom de l'activité
+//* Effectue la RegEx pour vérifiés le champs activité et afffiche le nom de l'activité
 //
 document.getElementById("activite").addEventListener("input", function () {
     inputActivite = document.getElementById("activite");
@@ -276,3 +364,53 @@ document.getElementById("activite").addEventListener("input", function () {
         document.getElementById("btnEnregistrerContinue").classList.remove("btn-disabled");
     }
 })
+
+//
+//* Enregistre le type d'heure dans la base de données pour la gestion des favoris
+//
+document.getElementById('btnEnregistrerParDefaut').addEventListener('click', function (event) {
+    // Envoie une requête POST contenant le type d'heure sélectionné de manière asynchrone avec une animation de chargement pendant l'envoi
+    document.getElementById("btnEnregistrerParDefaut").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
+    document.getElementById("iconPlein").classList.add("hidden");
+    document.getElementById("iconTransparent").classList.add("hidden");
+
+    // Requête POST asynchrone à l'URL /api/post/type_heure
+    fetch('/api/post/type_heure', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ type: document.getElementById("type").value })
+    })
+        .then(response => {
+            if (!response.ok) {
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+                document.getElementById("alertError").classList.remove("hidden");
+                setTimeout(function () {
+                    document.getElementById("alertError").classList.add("hidden");
+                    document.getElementById("btnEnregistrerParDefaut").classList.remove("btn-disabled");
+            }, 5000);
+        }
+            else {
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+
+                document.getElementById("alertSuccess").classList.remove("hidden");
+                selectedOption = document.getElementById("type").value;
+                selectedOptionText = document.querySelector('#type option[value="' + selectedOption + '"]').innerText;
+                formChange();
+                if(parseInt(selectedOption) < 0){
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Aucun type d'heure par défaut désigné";
+                }else{
+                    document.getElementById("alertSuccess").querySelector('span').innerText = "Le type d'heure " + selectedOptionText + " a été enregistré comme paramètre par défaut";
+                }
+                setTimeout(function () {
+                    document.getElementById("alertSuccess").classList.add("hidden");
+                    document.getElementById("btnEnregistrerParDefaut").classList.remove("btn-disabled");
+            }, 5000);
+            }
+        })
+})
+

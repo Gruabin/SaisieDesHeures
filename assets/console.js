@@ -1,3 +1,6 @@
+import TomSelect from "tom-select";
+let ligneASupprimer;
+let token;
 let ligne = document.querySelectorAll('.ligne');
 ligne.forEach(element => {
 
@@ -31,7 +34,7 @@ ligne.forEach(element => {
     //  Ouvre la modal
     element.querySelector('#trash').addEventListener("click", () => {
         document.getElementById('modalSuppr').showModal();
-        ligneASupprimer = element
+        ligneASupprimer = element;
     });
 
 
@@ -68,7 +71,7 @@ buttons.forEach(button => {
             button.classList.add('text-secondary');
         }
     });
-    
+
     button.addEventListener('mouseout', function () {
         button.classList.remove('text-success', 'text-accent', 'text-secondary');
     });
@@ -84,7 +87,6 @@ document.getElementById("select_anomalies").addEventListener("click", () => {
         } else {
             element.classList.remove("hidden");
         }
-    
     })
 });
 
@@ -95,22 +97,56 @@ let checkbox = document.getElementById("select_all");
 if (checkbox) {
     checkbox.addEventListener("click", (event) => {
         let checkboxDiv = document.getElementById("select_all_checkboxes");
+        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
+            if (event.target.checked) {
+                if (!item.checked) {
+                    item.click();
+                }
+            } else {
+                if (item.checked) {
+                    item.click();
+                }
+            }
+        });
+        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
+            item.addEventListener("click", (event) => {
+                if (!event.target.checked) {
+                    checkbox.checked = false;
+                }
+            })
+        });
+    });
+}
 
+// 
+// * Sélection de tout les checkboxs d'un employé
+//
+let checkboxes = document.querySelectorAll("#select_user");
+checkboxes.forEach(checkbox => {
+    const tab = document.querySelector('#tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
+    checkbox.addEventListener("click", (event) => {
         if (event.target.checked) {
-            checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-                if (item.checked === false) {
+            tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+                if (!item.checked) {
                     item.click();
                 }
             });
         } else {
-            checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-                if (item.checked === true) {
+            tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+                if (item.checked) {
                     item.click();
                 }
             });
         }
     });
-}
+    tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
+        item.addEventListener("click", (event) => {
+            if (!event.target.checked) {
+                checkbox.checked = false;
+            }
+        })
+    });
+});
 
 // 
 // * Déclenche l'envoie des données valides pour approbation
@@ -118,7 +154,6 @@ if (checkbox) {
 let donnees = [];
 document.getElementById('validation').addEventListener('click', function () {
     document.getElementById('validation').classList.add("hidden");
-    document.getElementById('quitter').classList.add("hidden");
     document.getElementById("loading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
 
     ligne.forEach(element => {
@@ -142,14 +177,12 @@ document.getElementById('validation').addEventListener('click', function () {
     ).then((response) => {
         if (!response.ok) {
             document.getElementById('validation').classList.remove("hidden");
-            document.getElementById('quitter').classList.remove("hidden");
             document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
             throw new Error("Réponse inattendue du serveur");
         }
         window.location.href = '/console';
     }).catch((error) => {
         document.getElementById('validation').classList.remove("hidden");
-        document.getElementById('quitter').classList.remove("hidden");
         document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
         window.location.href = '/console';
         throw new Error("Réponse inattendue du serveur");
@@ -161,8 +194,7 @@ document.getElementById('validation').addEventListener('click', function () {
 // * Envoie le requête de suppression
 //
 function APISuppression(ligneASupprimer) {
-
-    token = ligneASupprimer.querySelector('#ligneToken').value;
+    token = ligneASupprimer.querySelector('input[name="token"]').value;
     document.getElementById('btnModalSuppr').classList.add("hidden");
     document.getElementById('btnModalAnnuler').classList.add("hidden");
     document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -205,13 +237,11 @@ function APISuppression(ligneASupprimer) {
 //
 function formModif(element) {
     element.querySelectorAll('.form').forEach((form) => {
-
         form.classList.remove("hidden");
     });
     element.querySelectorAll('.texte').forEach((form) => {
         form.classList.add("hidden");
     });
-
 }
 
 // 
@@ -219,13 +249,11 @@ function formModif(element) {
 //
 function resetModif(element) {
     element.querySelectorAll('.form').forEach((form) => {
-
         form.classList.add("hidden");
     });
     element.querySelectorAll('.texte').forEach((form) => {
         form.classList.remove("hidden");
     });
-
 }
 
 
@@ -330,7 +358,7 @@ function MAJDonnees(element, data) {
 // * Met à jour le temps total de l'employé pour la saisie modifiée/supprimée
 // 
 function MAJTempsJourna(employe) {
-    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]')
+    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]');
     let temps = 0;
     tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
         temps += parseFloat(element.innerHTML);
@@ -441,3 +469,33 @@ function addToastErreur(message) {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHTML);
 }
+
+//
+// * Amélioration du select multiple avec Tom Select
+//
+
+const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
+    plugins: {
+        'clear_button':{
+            'title':'Retirer tous les managers sélectionnés'
+        },
+        'remove_button':{
+            'title':'Retirer ce manager'
+        }
+    },
+    onInitialize: function() {
+        const element = this.input.parentElement.querySelector('.ts-control');
+        this.input.parentElement.classList.add('w-full');
+        this.input.parentElement.classList.remove('mb-6');
+        element.style.maxHeight = '6rem';
+        element.style.overflow = 'auto';
+    }
+});
+
+document.getElementById('check-all').addEventListener('click', function(event) {
+    const allValues = tomSelectInstance.options;
+    var valuesToSelect = Object.keys(allValues).map(function(key) {
+        return allValues[key].value;
+    });
+    tomSelectInstance.setValue(valuesToSelect);
+});
