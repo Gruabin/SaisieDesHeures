@@ -14,7 +14,7 @@ variables:
   webAppName: "app-gruau-tst-saisie-heures-tst"
 
   # Agent VM image name
-  vmImageName: "ubuntu-24.04"
+  vmImageName: "ubuntu-20.04"
 
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures-tst"
