@@ -14,7 +14,7 @@ variables:
   webAppName: "app-gruau-tst-saisie-heures-tst"
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: "ubuntu-24.04"
 
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures-tst"
@@ -26,7 +26,7 @@ stages:
 - stage: Build
   displayName: Build stage
   variables:
-    phpVersion: "8.2.14"
+    phpVersion: "8.2"
   jobs:
     - job: BuildJob
       pool:
