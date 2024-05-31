@@ -84,8 +84,7 @@ stages:
     # Linter PHP CS fixer
     - script: php vendor/bin/php-cs-fixer fix
       workingDirectory: $(rootFolder)
-      displayName:
-        "Linter PHP CS fixer"
+      displayName: "Linter PHP CS fixer"
 
     # Linter rector
     - script: php vendor/bin/rector process src
