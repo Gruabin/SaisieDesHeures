@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-  - dev
+  - DEV
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
@@ -26,7 +26,7 @@ stages:
 - stage: Build
   displayName: Build stage
   variables:
-    phpVersion: "8.2"
+    phpVersion: "8.3"
   jobs:
     - job: BuildJob
       pool:
@@ -72,7 +72,7 @@ stages:
           displayName: "Generate cache file structure"
 
         # Clear cache
-        - script: php bin/console cache:clear
+        - script: php bin/console cache:clear --no-warmup
           workingDirectory: $(rootFolder)
           displayName: "Clear cache"
 

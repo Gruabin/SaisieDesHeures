@@ -72,7 +72,7 @@ stages:
           displayName: "Generate cache file structure"
 
         # Clear cache
-        - script: php bin/console cache:clear
+        - script: php bin/console cache:clear --no-warmup
           workingDirectory: $(rootFolder)
           displayName: "Clear cache"
 
