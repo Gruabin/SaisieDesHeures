@@ -3,7 +3,7 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
-#
+
 steps:
 - script: |
     echo "Adresse IP publique de l'agent : $(curl -sS https://checkip.amazonaws.com)"
