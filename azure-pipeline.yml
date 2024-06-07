@@ -4,7 +4,19 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  SERVERNAME: 'db-psql-tst-01.postgres.database.azure.com'          # Nom de votre serveur PostgreSQL
+  DBUSER: 'psqladmin0806@db-psql-tst-01'      # Utilisateur administrateur de la base de données
+  DBPASSWORD: '*b3$PmE7J!c#JtG8f*W#C8'    # Mot de passe de l'utilisateur administrateur
+  DBNAME: 'saisieHeures_test'            # Nom de la base de données à supprimer
+
 steps:
-- script: |
-    echo "Adresse IP publique de l'agent : $(curl -sS https://checkip.amazonaws.com)"
-  displayName: 'Obtenir l adresse IP publique de l agent'
+- task: AzureCLI@2
+  displayName: Drop PostgreSQL Database
+  inputs:
+    azureSubscription: 'app-azuredevops-groupegruau-pipelines-tst'  # Remplacez par le nom de votre connexion de service Azure Resource Manager
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az login --allow-no-subscription
+      PGPASSWORD=$(DBPASSWORD) psql -h $(SERVERNAME).postgres.database.azure.com -U $(DBUSER)@$(SERVERNAME) -c "DROP DATABASE IF EXISTS $(DBNAME);"
