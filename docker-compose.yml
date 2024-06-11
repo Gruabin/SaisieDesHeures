@@ -1,0 +1,23 @@
+services:
+  
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgre_db_saisieHeureAzure
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gruau-local_mynetgruau
+
+networks:
+    gruau-local_mynetgruau:
+
+volumes:
+  postgres_data:
+
+
