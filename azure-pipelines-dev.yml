@@ -91,11 +91,6 @@ stages:
         - script: php vendor/bin/twig-cs-fixer lint --fix templates
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
-        
-        # Clear cache test
-       - script: php bin/console c:c --env=test
-          workingDirectory: $(rootFolder)
-          displayName: "Clear cache test"
       
         # Démarrage du conteneur pour la bdd de test
         - script: |
@@ -103,6 +98,11 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: 'Exécuter docker-compose up'
 
+        # Clear cache test
+       - script: php bin/console c:c --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "Clear cache test"
+          
         # Création de la bdd de test
         - script: php bin/console doctrine:database:create --env=test
           workingDirectory: $(rootFolder)
