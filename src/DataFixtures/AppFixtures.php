@@ -6,6 +6,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\CentreDeCharge;
 use App\Entity\Employe;
+use Doctrine\DBAL\Connection;
+
 
 class AppFixtures extends Fixture
 {
@@ -50,7 +52,7 @@ class AppFixtures extends Fixture
             foreach ($statutsData as $statutData) {
                 $stmt->bindValue('id', $statutData['id']);
                 $stmt->bindValue('libelle', $statutData['libelle']);
-                $stmt->execute();
+                $stmt->executeStatement();
             }
 
             // Exécutez des requêtes SQL natives pour insérer vos données
@@ -60,7 +62,7 @@ class AppFixtures extends Fixture
             foreach ($activitesData as $activiteData) {
                 $stmt->bindValue('id', $activiteData['id']);
                 $stmt->bindValue('description', $activiteData['description']);
-                $stmt->execute();
+                $stmt->executeStatement();
             }
 
             // Exécutez des requêtes SQL natives pour insérer vos données
@@ -69,7 +71,7 @@ class AppFixtures extends Fixture
             $sitesData = $this->getSitesData();
             foreach ($sitesData as $siteData) {
                 $stmt->bindValue('id', $siteData['id']);
-                $stmt->execute();
+                $stmt->executeStatement();
             }
 
               // Exécutez des requêtes SQL natives pour insérer vos données
@@ -79,7 +81,7 @@ class AppFixtures extends Fixture
               foreach ($typesHeuresData as $typeHeureData) {
                   $stmt->bindValue('id', $typeHeureData['id']);
                   $stmt->bindValue('nom_type', $typeHeureData['nom_type']);
-                  $stmt->execute();
+                  $stmt->executeStatement();
               }
 
               // Exécutez des requêtes SQL natives pour insérer vos données
@@ -90,7 +92,7 @@ class AppFixtures extends Fixture
                   $stmt->bindValue('id', $tacheData['id']);
                   $stmt->bindValue('nom_tache', $tacheData['nom_tache']);
                   $stmt->bindValue('type_heures_id', $tacheData['type_heures_id']);
-                  $stmt->execute();
+                  $stmt->executeStatement();
               }
  
                // Exécutez des requêtes SQL natives pour insérer vos données
@@ -100,7 +102,7 @@ class AppFixtures extends Fixture
                foreach ($tachesSpecifiquesData as $tacheSpecifiqueData) {
                    $stmt->bindValue('id', $tacheSpecifiqueData['id']);
                    $stmt->bindValue('description', $tacheSpecifiqueData['description']);
-                   $stmt->execute();
+                   $stmt->executeStatement();
                }
 
             // Exécutez des requêtes SQL natives pour insérer vos données
@@ -110,7 +112,7 @@ class AppFixtures extends Fixture
             foreach ($sitesTachesSpecifiquesData as $siteTacheSpecifiqueData) {
                 $stmt->bindValue('site_id', $siteTacheSpecifiqueData['site_id']);
                 $stmt->bindValue('tache_specifique_id', $siteTacheSpecifiqueData['tache_specifique_id']);
-                $stmt->execute();
+                $stmt->executeStatement();
             }
         
 
@@ -135,7 +137,7 @@ class AppFixtures extends Fixture
                 $stmt->bindValue('date_export', $detailHeureData['date_export']);
                 $stmt->bindValue('motif_erreur', $detailHeureData['motif_erreur']);
 
-                $stmt->execute();
+                $stmt->executeStatement();
             }
 
             // Validez la transaction
