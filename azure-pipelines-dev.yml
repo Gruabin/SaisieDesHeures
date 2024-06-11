@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-  - DEV
+  - pipeline-pr
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
@@ -102,7 +102,7 @@ stages:
        - script: php bin/console c:c --env=test
           workingDirectory: $(rootFolder)
           displayName: "Clear cache test"
-          
+
         # Création de la bdd de test
         - script: php bin/console doctrine:database:create --env=test
           workingDirectory: $(rootFolder)
