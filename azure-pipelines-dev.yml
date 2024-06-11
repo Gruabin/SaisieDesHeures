@@ -91,13 +91,38 @@ stages:
         - script: php vendor/bin/twig-cs-fixer lint --fix templates
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
+      
+        # Démarrage du conteneur pour la bdd de test
+        - script: |
+            docker-compose up -d
+          workingDirectory: $(rootFolder)
+          displayName: 'Exécuter docker-compose up'
+          
+        # Création de la bdd de test
+        - script: php bin/console doctrine:database:create --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "create database test"
 
-        # # Run php tests
-        # - script: | 
-        #    php bin/console c:c --env=test
-        #    php vendor/bin/phpunit
-        #   workingDirectory: $(rootFolder)
-        #   displayName: "Run tests"
+        # Création du schéma en se basant sur les entité
+        - script: php bin/console doctrine:schema:create --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "create schema"
+
+        # Mise en place des données de test
+        - script: |
+            echo "yes" | php bin/console doctrine:fixtures:load --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "Load fixture"
+
+        # Execution des tests
+        - script: php bin/phpunit
+          workingDirectory: $(rootFolder)
+          displayName: "make test"
+
+        # Démontage du conteneur
+        - script: docker compose down
+          workingDirectory: $(rootFolder)
+          displayName: "docker down"
 
         # Mend
         - task: WhiteSource@21
