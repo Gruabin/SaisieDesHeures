@@ -2,7 +2,7 @@
 # Build, package and deploy your PHP project to Azure Linux Web App.
 # Add steps that run tests and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
-
+#
 trigger:
   - none
 
