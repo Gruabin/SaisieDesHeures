@@ -16,6 +16,9 @@ variables:
   # Agent VM image name
   vmImageName: "ubuntu-20.04"
 
+  # PHP version
+  phpVersion: "8.3"
+
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures-tst"
 
@@ -25,8 +28,6 @@ variables:
 stages:
 - stage: Build
   displayName: Build stage
-  variables:
-    phpVersion: "8.3"
   jobs:
     - job: BuildJob
       pool:
@@ -169,3 +170,4 @@ stages:
               WebAppName: '$(webAppName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'
