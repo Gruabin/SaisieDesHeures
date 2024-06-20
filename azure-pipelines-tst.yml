@@ -14,7 +14,10 @@ variables:
   webAppName: "app-gruau-tst-saisie-heures"
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: "ubuntu-20.04"
+
+  # PHP version
+  phpVersion: "8.3"
 
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures"
@@ -25,8 +28,6 @@ variables:
 stages:
 - stage: Build
   displayName: Build stage
-  variables:
-    phpVersion: "8.2.14"
   jobs:
     - job: BuildJob
       pool:
@@ -72,7 +73,7 @@ stages:
           displayName: "Generate cache file structure"
 
         # Clear cache
-        - script: php bin/console cache:clear
+        - script: php bin/console cache:clear --no-warmup
           workingDirectory: $(rootFolder)
           displayName: "Clear cache"
 
@@ -133,3 +134,4 @@ stages:
               WebAppName: '$(webAppName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'

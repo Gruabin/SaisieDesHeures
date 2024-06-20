@@ -17,6 +17,8 @@ framework:
     php_errors:
         log: true
 
+    annotations:
+        enabled: true
     
 
 when@test:

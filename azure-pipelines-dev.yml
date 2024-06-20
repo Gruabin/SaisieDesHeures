@@ -2,9 +2,9 @@
 # Build, package and deploy your PHP project to Azure Linux Web App.
 # Add steps that run tests and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
-
+#
 trigger:
-  - dev
+  - none
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
@@ -14,7 +14,10 @@ variables:
   webAppName: "app-gruau-tst-saisie-heures-tst"
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: "ubuntu-20.04"
+
+  # PHP version
+  phpVersion: "8.3"
 
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures-tst"
@@ -25,8 +28,6 @@ variables:
 stages:
 - stage: Build
   displayName: Build stage
-  variables:
-    phpVersion: "8.2.14"
   jobs:
     - job: BuildJob
       pool:
@@ -45,6 +46,10 @@ stages:
         - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
           workingDirectory: $(rootFolder)
           displayName: "Composer install"
+     
+        - script: composer update
+          workingDirectory: $(rootFolder)
+          displayName: 'Composer update'
 
         # Install the JavaScript packages with npm
         - script: npm install
@@ -72,7 +77,7 @@ stages:
           displayName: "Generate cache file structure"
 
         # Clear cache
-        - script: php bin/console cache:clear
+        - script: php bin/console cache:clear --no-warmup
           workingDirectory: $(rootFolder)
           displayName: "Clear cache"
 
@@ -91,13 +96,38 @@ stages:
         - script: php vendor/bin/twig-cs-fixer lint --fix templates
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
+      
+        # Démarrage du conteneur pour la bdd de test
+        - script: |
+            docker-compose up -d
+          workingDirectory: $(rootFolder)
+          displayName: 'Exécuter docker-compose up'
+          
+        # Création de la bdd de test
+        - script: php bin/console doctrine:database:create --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "create database test"
 
-        # # Run php tests
-        # - script: | 
-        #    php bin/console c:c --env=test
-        #    php vendor/bin/phpunit
-        #   workingDirectory: $(rootFolder)
-        #   displayName: "Run tests"
+        # Création du schéma en se basant sur les entité
+        - script: php bin/console doctrine:schema:create --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "create schema"
+
+        # Mise en place des données de test
+        - script: |
+            echo "yes" | php bin/console doctrine:fixtures:load --env=test
+          workingDirectory: $(rootFolder)
+          displayName: "Load fixture"
+
+        # Execution des tests
+        - script: php bin/phpunit
+          workingDirectory: $(rootFolder)
+          displayName: "make test"
+
+        # Démontage du conteneur
+        - script: docker compose down
+          workingDirectory: $(rootFolder)
+          displayName: "docker down"
 
         # Mend
         - task: WhiteSource@21
@@ -140,3 +170,4 @@ stages:
               WebAppName: '$(webAppName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'
