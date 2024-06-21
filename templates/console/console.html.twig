@@ -85,7 +85,7 @@ Console d'approbation
         {% endif %}
         {# {% set lesEmployes = value %} #}
             {% for employe in employes %}
-                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full" id="tabEmploye" data-employe="{{ employe.id }}">
+                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full tabEmploye"  data-employe="{{ employe.id }}">
                     <div class="flex justify-between m-3">
                         <div class="flex flex-row ">
                             <input type="checkbox" class="checkbox checkbox-primary" id="select_user" data-employe="{{ employe.id }}"/>
