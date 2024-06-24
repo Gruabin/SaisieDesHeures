@@ -2,23 +2,24 @@ import TomSelect from "tom-select";
 let ligneASupprimer;
 let token;
 let ligne = document.querySelectorAll('.ligne');
+let tabEmploye = document.querySelectorAll('.tabEmploye');
 ligne.forEach(element => {
 
     //
     // * Affiche le formulaire sur une ligne
     //
-    element.querySelector('#pen').addEventListener("click", () => {
-        element.querySelector('#pen').classList.add('hidden');
-        element.querySelector('#trash').classList.add('hidden');
-        element.querySelector('#check').classList.remove('hidden');
-        element.querySelector('#xmark').classList.remove('hidden');
+    element.querySelector('.pen').addEventListener("click", () => {
+        element.querySelector('.pen').classList.add('hidden');
+        element.querySelector('.trash').classList.add('hidden');
+        element.querySelector('.check').classList.remove('hidden');
+        element.querySelector('.xmark').classList.remove('hidden');
         formModif(element);
     });
-    element.querySelector('#xmark').addEventListener("click", () => {
-        element.querySelector('#pen').classList.remove('hidden');
-        element.querySelector('#trash').classList.remove('hidden');
-        element.querySelector('#check').classList.add('hidden');
-        element.querySelector('#xmark').classList.add('hidden');
+    element.querySelector('.xmark').addEventListener("click", () => {
+        element.querySelector('.pen').classList.remove('hidden');
+        element.querySelector('.trash').classList.remove('hidden');
+        element.querySelector('.check').classList.add('hidden');
+        element.querySelector('.xmark').classList.add('hidden');
         resetModif(element);
     });
 
@@ -32,7 +33,7 @@ ligne.forEach(element => {
         document.getElementById('modalSuppr').close();
     });
     //  Ouvre la modal
-    element.querySelector('#trash').addEventListener("click", () => {
+    element.querySelector('.trash').addEventListener("click", () => {
         document.getElementById('modalSuppr').showModal();
         ligneASupprimer = element;
     });
@@ -41,10 +42,10 @@ ligne.forEach(element => {
     //
     // * Modifier une ligne
     //
-    element.querySelector('#check').addEventListener("click", () => {
-        element.querySelector('#loading').classList.remove('hidden');
-        element.querySelector('#check').classList.add('hidden');
-        element.querySelector('#xmark').classList.add('hidden');
+    element.querySelector('.check').addEventListener("click", () => {
+        element.querySelector('.loading').classList.remove('hidden');
+        element.querySelector('.check').classList.add('hidden');
+        element.querySelector('.xmark').classList.add('hidden');
         APIModification(element);
     });
 
@@ -60,7 +61,7 @@ document.getElementById('btnModalSuppr').addEventListener("click", () => {
 // 
 // * Gestion des couleurs des boutons du tableau
 // 
-const buttons = document.querySelectorAll('.check, .xmark, .pen');
+const buttons = document.querySelectorAll('.check, .xmark, .pen, .trash');
 buttons.forEach(button => {
     button.addEventListener('mouseover', function () {
         if (button.classList.contains('check')) {
@@ -69,6 +70,8 @@ buttons.forEach(button => {
             button.classList.add('text-accent');
         } else if (button.classList.contains('pen')) {
             button.classList.add('text-secondary');
+        } else if (button.classList.contains('trash')) {
+            button.classList.add('text-accent');
         }
     });
 
@@ -81,13 +84,23 @@ buttons.forEach(button => {
 // * Affiche uniquement les anomalies
 //
 document.getElementById("select_anomalies").addEventListener("click", () => {
-    ligne.forEach(element => {
-        if (document.getElementById("select_anomalies").checked && element.dataset.statut == 3) {
-            element.classList.add("hidden");
-        } else {
-            element.classList.remove("hidden");
+    tabEmploye.forEach(tableau => {
+        let allHidden = true;
+        tableau.querySelectorAll('.ligne').forEach(element => {
+            if (document.getElementById("select_anomalies").checked && element.dataset.statut == 3) {
+                element.classList.add("hidden");
+            } else {
+                element.classList.remove("hidden");
+                allHidden = false;
+            }
+        });
+        if (allHidden && document.getElementById("select_anomalies").checked) {
+            tableau.classList.add("hidden");
         }
-    })
+        else {
+            tableau.classList.remove("hidden");
+        }
+    });
 });
 
 // 
@@ -123,7 +136,7 @@ if (checkbox) {
 //
 let checkboxes = document.querySelectorAll("#select_user");
 checkboxes.forEach(checkbox => {
-    const tab = document.querySelector('#tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
+    const tab = document.querySelector('.tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
     checkbox.addEventListener("click", (event) => {
         if (event.target.checked) {
             tab.querySelectorAll("input[type=checkbox]").forEach((item) => {
@@ -194,7 +207,7 @@ document.getElementById('validation').addEventListener('click', function () {
 // * Envoie le requête de suppression
 //
 function APISuppression(ligneASupprimer) {
-    token = ligneASupprimer.querySelector('input[name="token"]').value;
+    token = ligneASupprimer.querySelector('.ligne').value;
     document.getElementById('btnModalSuppr').classList.add("hidden");
     document.getElementById('btnModalAnnuler').classList.add("hidden");
     document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
@@ -264,13 +277,13 @@ async function APIModification(element) {
 
     const id = element.dataset.idligne;
     const statut = element.dataset.statut;
-    const ordre = element.querySelector("#ordre").value;
-    const tache = element.querySelector("#tache").value;
-    const operation = element.querySelector("#operation").value;
-    const activite = element.querySelector("#activite").value;
-    const centre_de_charge = element.querySelector("#centrecharge").value;
-    const temps_main_oeuvre = element.querySelector("#saisieTemps").value;
-    const token = element.querySelector("#ligneToken").value;
+    const ordre = element.querySelector("input[name='ordre']").value;
+    const tache = element.querySelector("select[name='tache']").value;
+    const operation = element.querySelector("input[name='operation']").value;
+    const activite = element.querySelector("input[name='activite']").value;
+    const centre_de_charge = element.querySelector("select[name='centrecharge']").value;
+    const temps_main_oeuvre = element.querySelector("input[name='saisieTemps']").value;
+    const token = element.querySelector("input[name='ligneToken']").value;
     const data = {
         'id': id,
         'temps_main_oeuvre': temps_main_oeuvre,
@@ -315,16 +328,16 @@ async function APIModification(element) {
         body: JSON.stringify(data),
 
     }).then((response) => {
-        element.querySelector('#loading').classList.add('hidden');
+        element.querySelector('.loading').classList.add('hidden');
         if (!response.ok) {
             addToastErreur("Erreur lors de la modification de la saisie");
-            element.querySelector('#check').classList.remove('hidden');
-            element.querySelector('#xmark').classList.remove('hidden');
+            element.querySelector('.check').classList.remove('hidden');
+            element.querySelector('.xmark').classList.remove('hidden');
 
         }
         addToastSuccess("Saisie modifiée");
-        element.querySelector('#pen').classList.remove('hidden');
-        element.querySelector('#trash').classList.remove('hidden');
+        element.querySelector('.pen').classList.remove('hidden');
+        element.querySelector('.trash').classList.remove('hidden');
         MAJDonnees(element, data);
         if (statut == 2) {
             document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
@@ -344,13 +357,13 @@ function MAJDonnees(element, data) {
     element.dataset.statut = 3;
     element.querySelector(".fa-circle-check").classList.remove("hidden");
     element.querySelector(".fa-circle-xmark").classList.add("hidden");
-    element.querySelector("#checkbox").disabled = false;
-    element.querySelector("#texte_ordre").innerHTML = data.ordre;
-    element.querySelector("#texte_tache").innerHTML = data.tache;
-    element.querySelector("#texte_operation").innerHTML = data.operation;
-    element.querySelector("#texte_activite").innerHTML = data.activite;
-    element.querySelector("#texte_centrecharge").innerHTML = data.centre_de_charge;
-    element.querySelector("#texte_saisieTemps").innerHTML = data.temps_main_oeuvre;
+    element.querySelector("input[name='checkbox_ligne']").disabled = false;
+    element.querySelector("p[name='texte_ordre']").innerHTML = data.ordre;
+    element.querySelector("p[name='texte_tache']").innerHTML = data.tache;
+    element.querySelector("p[name='texte_operation']").innerHTML = data.operation;
+    element.querySelector("p[name='texte_activite']").innerHTML = data.activite;
+    element.querySelector("p[name='texte_centrecharge']").innerHTML = data.centre_de_charge;
+    element.querySelector("p[name='texte_saisieTemps']").innerHTML = data.temps_main_oeuvre;
     MAJTempsJourna(element.dataset.employe)
 }
 
@@ -358,19 +371,19 @@ function MAJDonnees(element, data) {
 // * Met à jour le temps total de l'employé pour la saisie modifiée/supprimée
 // 
 function MAJTempsJourna(employe) {
-    const tab = document.querySelector('#tabEmploye[data-employe="' + employe + '"]');
+    const tab = document.querySelector('.tabEmploye[data-employe="' + employe + '"]');
     let temps = 0;
-    tab.querySelectorAll('#texte_saisieTemps').forEach(element => {
+    tab.querySelectorAll('.texte_saisieTemps').forEach(element => {
         temps += parseFloat(element.innerHTML);
     });
-    tab.querySelector("#tempsTotal").innerHTML = temps.toFixed(2) + " h";
+    tab.querySelector(".tempsTotal").innerHTML = temps.toFixed(2) + " h";
 }
 
 
 //
 //* Effectue la RegEx pour vérifier le champs Ordre
 //
-document.querySelectorAll("#ordre").forEach(element => {
+document.querySelectorAll(".ordre").forEach(element => {
     element.addEventListener("input", function () {
         regex = new RegExp("^[0-9A-Z]{9}$");
         element.classList.remove("input-success");
@@ -392,7 +405,7 @@ document.querySelectorAll("#ordre").forEach(element => {
 //* Effectue la RegEx pour vérifier le champs Activité 
 //
 var tableActivite = makeAPIActivite();
-document.querySelectorAll("#activite").forEach(element => {
+document.querySelectorAll(".activite").forEach(element => {
     element.addEventListener("input", function () {
         regex = new RegExp("^[0-9]{3}$");
         element.classList.remove("input-success");
@@ -476,14 +489,14 @@ function addToastErreur(message) {
 
 const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
     plugins: {
-        'clear_button':{
-            'title':'Retirer tous les managers sélectionnés'
+        'clear_button': {
+            'title': 'Retirer tous les managers sélectionnés'
         },
-        'remove_button':{
-            'title':'Retirer ce manager'
+        'remove_button': {
+            'title': 'Retirer ce manager'
         }
     },
-    onInitialize: function() {
+    onInitialize: function () {
         const element = this.input.parentElement.querySelector('.ts-control');
         this.input.parentElement.classList.add('w-full');
         this.input.parentElement.classList.remove('mb-6');
@@ -492,9 +505,9 @@ const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
     }
 });
 
-document.getElementById('check-all').addEventListener('click', function(event) {
+document.getElementById('check-all').addEventListener('click', function (event) {
     const allValues = tomSelectInstance.options;
-    var valuesToSelect = Object.keys(allValues).map(function(key) {
+    var valuesToSelect = Object.keys(allValues).map(function (key) {
         return allValues[key].value;
     });
     tomSelectInstance.setValue(valuesToSelect);
