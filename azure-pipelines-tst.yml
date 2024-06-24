@@ -47,6 +47,10 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "Composer install"
 
+        - script: composer update
+          workingDirectory: $(rootFolder)
+          displayName: 'Composer update'
+
         # Install the JavaScript packages with npm
         - script: npm install
           workingDirectory: $(rootFolder)
