@@ -23,6 +23,7 @@ class EmployeAPIController extends AbstractController
 
     // *READ
     #[Route('/api/get/employe/{id}', name: 'api_get', methods: ['GET'])]
+    #[Route('/{_locale<%app.supported_locales%>}/api/get/employe/{id}', name: 'api_get_with_locale', methods: ['GET'])]
     public function get(string $id, EmployeRepository $employeRepo, Request $request): Response
     {
         if ('^^u6#h289SrB$!DxDDms55reFZcwWoY2e93TcseYf8^URbaZ%!CS^cHD^6YfyX!e4Lo@oPg3&u8b7dzA*Q9PYCdBRVRVGut3r2$JT2J9kU*FNKbmQ$@8oxtE5!mp7m8#' == $request->headers->get('X-API-Key')) {

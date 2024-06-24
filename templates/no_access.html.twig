@@ -1,15 +1,16 @@
+{% trans_default_domain 'no_access' %}
 {% extends 'base.html.twig' %}
 {% block title %}
-    Accès interdit
+    {{'Accès interdit'|trans}}
 {% endblock %}
 {% block body %}
           <div class="flex flex-col justify-center items-center text-center">
-            <h1 class="text-4xl text-gruau-red font-bold">Une erreur est survenue !</h1>
-            <h3 class="text-2xl text-gruau-dark-blue font-bold">Il semblerait que vous n'ayez pas les droits d'accéder au site.</h3>
-            <h3 class="text-2xl text-gruau-dark-blue font-bold">Si vos permissions viennent de vous être attribué, cliquez sur le bouton "Reconnexion".</h3>
-            <h3 class="text-2xl text-gruau-dark-blue font-bold">Si le problème persiste, vérifier la bonne écriture de votre adresse mail auprès de l'administrateur de l'application.</h3>
+            <h1 class="text-4xl text-gruau-red font-bold">{{'erreur survenue'|trans}}</h1>
+            <h3 class="text-2xl text-gruau-dark-blue font-bold">{{"pas les droits d'accéder au site"|trans}}</h3>
+            <h3 class="text-2xl text-gruau-dark-blue font-bold">{{'permissions attribué'|trans}}</h3>
+            <h3 class="text-2xl text-gruau-dark-blue font-bold">{{"Si le problème persiste"|trans}}</h3>
             <a target="_self" class="text-white bg-gruau-light-blue hover:bg-[#00a0cc] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 cursor-pointer" href="{{ path('disconnect_azure') }}">
-              <span>Reconnexion&thinsp;</span>
+              <span>{{'Reconnexion'|trans}}&thinsp;</span>
               <span class="icon is-small"><i class="fa-solid fa-arrow-rotate-left"></i></span>
             </a>
           </div>

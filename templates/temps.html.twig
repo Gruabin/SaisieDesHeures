@@ -1,22 +1,23 @@
+{% trans_default_domain 'temps' %}
 {% extends 'base.html.twig' %}
 {% block title %}
-    Saisie des heures
+    {{'Saisie des heures'|trans}}
 {% endblock %}
 {% block body %}
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md" id="temps">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">{{'Synthèse employé'|trans}}</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col lg:flex-row lg:items-center p-2">
             <div class="m-2 flex-1">
                 <div class="m-2">
-                    <b>Employé</b>
+                    <b>{{'Employé'|trans}}</b>
                 </div>
                 <div id="codeEmploye" class="m-2">{{ user.id }}
                     {{ user.nomEmploye }}</div>
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
-                    <b>Centre de charge</b>
+                    <b>{{'Centre de charge'|trans}}</b>
                 </div>
                 <div class="m-2" id="CDGUser">
                     {{ user.centreDeCharge.id }}
@@ -24,7 +25,7 @@
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
-                    <b>Date</b>
+                    <b>{{'Date'|trans}}</b>
                 </div>
                 <div class="m-2">
                     {{ 'now'|date('d/m/Y', 'Europe/Paris') }}
@@ -32,16 +33,16 @@
             </div>
             <div class="m-2 flex-1">
                 <div class="m-2">
-                    <b>Temps journalier</b>
+                    <b>{{'Temps journalier'|trans}}</b>
                 </div>
                 <div class="m-2">
                     <span>
                         {% if nbHeures > 0 %}
                             {{ nbHeures }}
                             {% if nbHeures < 2 %}
-                                heure
+                                {{'heure'|trans}}
                             {% else %}
-                                heures
+                                {{'heures'|trans}}
                             {% endif %}
                         {% endif %}
                     </span>
@@ -50,14 +51,14 @@
             <div class="m-2 flex-1">
                 <div class="m-2">
                     <a target="_self" class="btn btn-primary mt-5" id="btnConsulterDetails" href="{{ path('historique') }}">
-                        Consulter le détail
+                        {{'Consulter le détail'|trans}}
                     </a>
                 </div>
             </div>
         </div>
     </section>
     <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
+        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">{{'Saisie des heures'|trans}}</h2>
         <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
         <div class="flex flex-col flex-wrap text-center p-2">
             <div class="w-fit self-center">
@@ -67,19 +68,19 @@
                 </div>
                 <div id="alertError" role="alert" class="alert alert-error hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span>Une erreur est survenue. Veuillez contacter le <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="underline noLoading" target="_blank">Support informatique</a>.</span>
+                    <span>{{'erreur survenue'|trans}} <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="underline noLoading" target="_blank"> {{'Support informatique'|trans}}</a>.</span>
                 </div>
             </div>
             <div class="my-3 flex md:flex-row flex-col" id="divType">
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="type">
-                        <b>Type d'heures</b>
+                        <b>{{"Type d'heures"|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
-                            <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>-- Sélectionner un type d'heure --</option>
+                            <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>{{"Sélectionner type heure"|trans}}</option>
                             {% for type in types %}
                                 {% if favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null %}
                                     <option {% if favoriTypeHeure.typeHeure.id == type.id %}selected{% endif %} value="{{ type.id }}">{{ type.nomType }}</option>
@@ -104,7 +105,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col w-full" id="divOrdre">
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="ordre">
-                        <b>Ordre</b>
+                        <b>{{'Ordre'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left items-center">
@@ -117,7 +118,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divActivite">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="activite">
-                        <b>Activité</b>
+                        <b>{{'Activité'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
@@ -128,13 +129,13 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="tache">
-                        <b>Tâche</b>
+                        <b>{{'Tâche'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" name="tache" id="tache">
-                            <option value="-1">-- Sélectionner une tâche --</option>
+                            <option value="-1">{{'Sélectionner tâche'|trans}}</option>
                             {% for tache in taches %}
                                 <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }}
                                     -
@@ -147,7 +148,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divOperation">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="operation">
-                        <b>Opération</b>
+                        <b>{{'Opération'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
@@ -157,13 +158,13 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divTacheSpe">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="tacheSpe">
-                        <b>Tâche spécifique</b>
+                        <b>{{'Tâche spécifique'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 flex text-left md:flex md:self-center items-center">
                     <input type="checkbox" class="checkbox checkbox-primary" id="cbTacheSpe"/>
                     <select class="select mx-3 focus:ring-primary" disabled name="tacheSpe" id="tacheSpe">
-                        <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
+                        <option value="-1" selected>{{'Sélectionner tâche spécifique'|trans}}</option>
                         {% for tache in tachesSpe %}
                             <option value="{{ tache.id }}">{{ tache.id }}
                                 -
@@ -175,12 +176,12 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divCentreCharge">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="centrecharge">
-                        <b>Centre de charge</b>
+                        <b>{{'Centre de charge'|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:flex md:self-center items-center">
                     <select class="select focus:ring-primary mx-3" name="centrecharge" id="centrecharge">
-                        <option value="-1">-- Sélectionner un centre de charge --</option>
+                        <option value="-1">{{'Sélectionner centre charge'|trans}}</option>
                         {% for centre_charge in CDG %}
                             <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
                         {% endfor %}
@@ -190,7 +191,7 @@
             <div class="my-3 hidden flex md:flex-row flex-col" id="divSaisieTemps">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="saisieTemps">
-                        <b>Temps main d'oeuvre (en h)</b>
+                        <b>{{"Temps main d'oeuvre"|trans}}</b>
                     </label>
                 </div>
                 <div class="flex-1 text-left md:self-center items-center">
@@ -204,13 +205,13 @@
         <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
         <div class="flex md:flex-row flex-col-reverse flex-wrap justify-center items-center space-x-2 p-2">
             <a target="_self" class="btn btn-primary mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
-                Quitter
+                {{'Quitter'|trans}}
             </a>
             <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerQuitter">
-                Enregistrer et quitter
+                {{'Enregistrer et quitter'|trans}}
             </button>
             <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerContinue">
-                Enregistrer et continuer
+                {{'Enregistrer et continuer'|trans}}
             </button>
         </div>
     </section>

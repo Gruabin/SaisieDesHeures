@@ -20,6 +20,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
  * @property LoggerInterface        $logger
  * @property Security               $security
  */
+#[Route('{_locale<%app.supported_locales%>}')]
 class ConnexionController extends AbstractController
 {
     public function __construct(

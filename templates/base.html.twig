@@ -10,14 +10,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="template">
         <link rel="manifest" href="{{ asset('manifest/manifest.webmanifest') }}">
-        <link rel="icon" href="images/favicon_light.ico" media="(prefers-color-scheme: light)">
-        <link rel="icon" href="images/favicon_dark.ico"  media="(prefers-color-scheme: dark)">
+        <link rel="icon" href="{{asset('images/favicon_light.ico')}}" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="{{asset('images/favicon_dark.ico')}}"  media="(prefers-color-scheme: dark)">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
         {% block javascripts %}
             {% include 'javascripts.html.twig' %}
         {% endblock %}
+        {% trans_default_domain 'base' %}
         <!-- Matomo -->
         <script>
             var _paq = window._paq = window._paq || [];
@@ -46,7 +47,7 @@
         </section>
         <div id="loader">
             <img class="scale-down-tl" src="{{ asset('images/logo-symbole-haut.svg') }}">
-            Chargement
+            {{'Chargement'|trans}}
             <img class="scale-down-br" src="{{ asset('images/gruau-symbole-bas.svg') }}">
         </div>
         <main class="invisible">

@@ -38,6 +38,7 @@
         "symfony/runtime": "6.*",
         "symfony/security-bundle": "6.*",
         "symfony/sendinblue-mailer": "6.*",
+        "symfony/translation": "6.*",
         "symfony/twig-bundle": "6.*",
         "symfony/uid": "6.*",
         "symfony/ux-turbo": "2.*",

@@ -48,6 +48,7 @@ class DetailHeuresAPIController extends AbstractController
     }
 
     // * READ
+    #[Route('/{_locale<%app.supported_locales%>}/api/get/detail_heures', name: 'api_get_detail_heures_with_locale', methods: ['GET'])]
     #[Route('/api/get/detail_heures', name: 'api_get_detail_heures', methods: ['GET'])]
     public function get(DetailHeuresRepository $detailHeuresRepo): Response
     {
@@ -91,6 +92,7 @@ class DetailHeuresAPIController extends AbstractController
      */
     // * POST
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
+    #[Route('/{_locale<%app.supported_locales%>}/api/post/get/detail_heures', name: 'api_post_detail_heures_with_locale', methods: ['POST'])]
     public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, StatutRepository $statutRepo, Security $security, DetailHeureService $detailHeureService): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST

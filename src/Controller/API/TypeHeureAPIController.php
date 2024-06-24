@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class TypeHeureAPIController extends AbstractController
 {
     #[Route('/api/post/type_heure', name: 'api_type_heure_post', methods: ['POST'])]
+    #[Route('/{_locale<%app.supported_locales%>}/api/post/type_heure', name: 'api_type_heure_post_with_locale', methods: ['POST'])]
     public function TypeHeurePost(Request $request, FavoriTypeHeureRepository $favoriTypeHeureRepository, TypeHeuresRepository $typeHeuresRepository, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST

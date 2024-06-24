@@ -21,6 +21,7 @@ class ActiviteAPIController extends AbstractController
     }
 
     // *READ
+    #[Route('/{_locale<%app.supported_locales%>}/api/get/activite', name: 'api_get_activite_with_locale', methods: ['GET'])]
     #[Route('/api/get/activite', name: 'api_get_activite', methods: ['GET'])]
     public function get(ActiviteRepository $activiteRepo): Response
     {

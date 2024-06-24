@@ -1,4 +1,17 @@
+{% trans_default_domain 'footer' %}
 <footer class="bg-gruau-dark-blue shadow w-full">
+<script>
+        function changeLocale(locale) {
+        // Obtenez l'URL actuelle
+        var currentUrl = window.location.href;
+
+        // Remplacez la locale dans l'URL par la nouvelle locale
+        var newUrl = currentUrl.replace(/\/(fr|it)\//, '/' + locale + '/');
+
+        // Redirigez vers la nouvelle URL
+        window.location.href = newUrl;
+    }
+    </script>
     <div class="w-full max-w-[2000px] mx-auto p-4 md:py-8 text-white">
         <div class="sm:flex sm:items-center sm:justify-between">
             <a href="{{ path('home') }}" target="_self" class="flex items-center mb-4 sm:mb-0 justify-center">
@@ -6,11 +19,16 @@
             </a>
             <ul class="flex flex-wrap items-center mb-6 text-sm font-medium sm:mb-0 justify-center">
                 <li>
-                    <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="mr-4 underline md:mr-6 noLoading" target="_blank">Support informatique</a>
+                    <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="mr-4 underline md:mr-6 noLoading" target="_blank">{{'Support informatique'|trans}}</a>
+                </li>
+                <li>
+                <button onclick="changeLocale('fr')">{{'Français'|trans}}</button>
+                <span> | </span>
+                <button onclick="changeLocale('it')">{{'Italien'|trans}}</button>
                 </li>
             </ul>
         </div>
         <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
-        <span class="block text-sm text-center">© 2024 <a href="https://www.groupegruau.com/" target="_blank" class="hover:underline noLoading">Groupe Gruau™</a>. Tous droits réservés.</span>
+        <span class="block text-sm text-center">© 2024 <a href="https://www.groupegruau.com/" target="_blank" class="hover:underline noLoading">Groupe Gruau™</a>. {{'Tous droits réservés'|trans}}.</span>
     </div>
 </footer>

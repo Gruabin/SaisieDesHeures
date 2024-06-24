@@ -1,9 +1,10 @@
+{% trans_default_domain 'formulaire' %}
 <turbo-frame id="identification">
     <form id="identificationForm" action="{{ path('connexion') }}" method="post">
         <label class="form-control w-full max-w-xs">
             <div class="label">
-                <span class="label-text">Code employé</span>
-                <span id="informationEmploye" class="label-text-alt">Non identifié</span>
+                <span class="label-text">{{'Code employé'|trans}}</span>
+                <span id="informationEmploye" class="label-text-alt">{{'Non identifié'|trans}}</span>
             </div>
             {{ form_widget(form.id, {'attr': {'class': 'input input-bordered input-primary w-full max-w-xs'}}) }}
             <div class="label">

@@ -1,3 +1,4 @@
+{% trans_default_domain 'navbar' %}
 <nav class="bg-gruau-dark-blue w-full z-20 top-0 left-0">
     <div class=" flex flex-wrap items-center justify-between mx-auto p-4 max-sm:justify-center">
         <a href="{{ path('home') }}" class="w-56">
@@ -7,7 +8,7 @@
             {% if user is not null %}
                 <div class="dropdown md:dropdown-end dropdown-bottom" >
                     <div  tabindex="0" role="button" class="btn btn-circle m-1">
-                        <span class="sr-only">Menu</span>
+                        <span class="sr-only">{{'Menu'|trans}}</span>
                         <span class="text-xl font font-bold text-center" id="couleurLettre">{{ user.nomEmploye|slice(0, 1) }}</span>
                     </div>
                     <div tabindex="0" id="menu" class="dropdown-content z-20 menu p-2 shadow bg-gruau-dark-blue divide-gruau-dark-blue rounded-box w-60">
@@ -17,18 +18,18 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
+                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  {{'Saisie des temps'|trans}}</a>
                             </li>
                             <li>
-                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
+                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  {{'Détail des temps'|trans}}</a>
                             </li>
                             {% if is_granted('ROLE_MANAGER') %}
                                 <li>
-                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
+                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  {{"Console d'approbation"|trans}}</a>
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
+                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  {{'Quitter'|trans}}</a>
                             </li>
                         </ul>
                     </div>
@@ -39,7 +40,7 @@
             {% if titrePage is defined %}
                 <h1 class="text-4xl text-center text-white font-bold">{{ titrePage }}</h1>
             {% else %}
-                <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
+                <h1 class="text-4xl text-center text-white font-bold">{{'Saisie des heures'|trans}}</h1>
             {% endif %}
         </div>
     </div>

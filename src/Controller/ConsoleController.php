@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @property TacheRepository           $tacheRepository
  * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
  */
+#[Route('{_locale<%app.supported_locales%>}')]
 class ConsoleController extends AbstractController
 {
     public function __construct(

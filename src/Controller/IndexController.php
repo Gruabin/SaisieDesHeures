@@ -34,6 +34,7 @@ use Symfony\Contracts\Cache\ItemInterface;
  * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
  * @property TypeHeuresRepository      $typeHeuresRepo
  */
+#[Route('{_locale<%app.supported_locales%>}')]
 class IndexController extends AbstractController
 {
     public function __construct(
@@ -62,15 +63,11 @@ class IndexController extends AbstractController
 
     // Affiche la page d'identification
     #[Route('/', name: 'home')]
-    public function index(CacheInterface $cache): Response
+    public function index(): Response
     {
-        return $cache->get('index_page', function (ItemInterface $item) {
-            $item->expiresAfter(43200);
-
             return $this->render('connexion/identification.html.twig', [
                 'user' => $this->getUser(),
             ]);
-        });
     }
 
     // Redirige lors de l'accès refusé
