@@ -37,6 +37,7 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: 'specific'
+              project: 'Développements Symfony'  # Remplacez par le nom réel de votre projet Azure DevOps
               definition: 'Saisie Heures - CI - PRE-PROD & PROD'  # Nom exact du pipeline CI
               buildVersionToDownload: 'latest'
               downloadPath: '$(Pipeline.Workspace)/drop'
