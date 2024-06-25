@@ -34,6 +34,10 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: drop
+            displayName: "Download Artifact"
+            
           - task: AzureRmWebAppDeployment@4
             displayName: "Déploiement de l'application"
             inputs:
