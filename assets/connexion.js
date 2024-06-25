@@ -1,3 +1,24 @@
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import HttpBackend from 'i18next-http-backend';
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialisation de i18next après que Turbo a chargé la page
+    i18next
+        .use(HttpBackend)
+        .use(LanguageDetector)
+        .init({
+            supportedLngs: ['fr', 'it'],
+            fallbackLng: 'fr',
+            detection: {
+                order: ['path'],
+                lookupFromPathIndex: 0,
+            },
+            backend: {
+                loadPath: '/translation/{{lng}}.json',
+            },
+        });
+});
 
 try {
 
@@ -35,12 +56,12 @@ const config = { childList: true, subtree: true };
 
 function findEmploye() {
 
-    inputEmploye = document.getElementById("connexion_id").value.toUpperCase();
+    let inputEmploye = document.getElementById("connexion_id").value.toUpperCase();
 
     // Vérifie si la valeur est vide
     if (inputEmploye.length !== 9) {
         document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
-        document.getElementById("informationEmploye").innerText = "Non identifié";
+        document.getElementById("informationEmploye").innerText = i18next.t('Non identifié');
         document.getElementById("connexion_bouton").classList.add("btn-disabled");
         document.getElementById("connexion_id").classList.remove('input-success', 'input-error', 'input-primary');
         document.getElementById("connexion_id").disabled = false;
@@ -67,7 +88,7 @@ function findEmploye() {
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error("Employé non trouvé");
+                throw new Error(i18next.t('Employé non trouvé'));
             }
         }).then(function (employe) {
             document.getElementById("informationEmploye").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
