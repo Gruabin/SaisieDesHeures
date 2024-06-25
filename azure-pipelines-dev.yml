@@ -131,45 +131,45 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "docker down"
 
-        # Mend
-        - task: WhiteSource@21
-          displayName: "Mend"
-          inputs:
-            cwd: '$(System.DefaultWorkingDirectory)'
+#         # Mend
+#         - task: WhiteSource@21
+#           displayName: "Mend"
+#           inputs:
+#             cwd: '$(System.DefaultWorkingDirectory)'
 
-        - task: ArchiveFiles@2
-          displayName: "Archive files"
-          inputs:
-            rootFolderOrFile: "$(rootFolder)"
-            includeRootFolder: false
-            archiveType: zip
-            archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-            replaceExistingArchive: true
+#         - task: ArchiveFiles@2
+#           displayName: "Archive files"
+#           inputs:
+#             rootFolderOrFile: "$(rootFolder)"
+#             includeRootFolder: false
+#             archiveType: zip
+#             archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+#             replaceExistingArchive: true
 
-        - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-          displayName: "Upload package"
-          artifact: drop
+#         - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+#           displayName: "Upload package"
+#           artifact: drop
 
-- stage: Deploy
-  displayName: "Deploy Web App"
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: "Déploiement de l'application"
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: '$(azureSubscription)'
-              appType: 'webAppLinux'
-              WebAppName: '$(webAppName)'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              StartupCommand: '/home/site/wwwroot/startup.sh'
-              runtimeStack: 'PHP|$(phpVersion)'
+# - stage: Deploy
+#   displayName: "Deploy Web App"
+#   dependsOn: Build
+#   condition: succeeded()
+#   jobs:
+#   - deployment: DeploymentJob
+#     pool:
+#       vmImage: $(vmImageName)
+#     environment: $(environmentName)
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureRmWebAppDeployment@4
+#             displayName: "Déploiement de l'application"
+#             inputs:
+#               ConnectionType: 'AzureRM'
+#               azureSubscription: '$(azureSubscription)'
+#               appType: 'webAppLinux'
+#               WebAppName: '$(webAppName)'
+#               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+#               StartupCommand: '/home/site/wwwroot/startup.sh'
+#               runtimeStack: 'PHP|$(phpVersion)'
