@@ -41,7 +41,10 @@ stages:
               definition: 'Saisie Heures - CI - PRE-PROD & PROD'  # Nom exact du pipeline CI
               buildVersionToDownload: 'latest'
               downloadPath: '$(Pipeline.Workspace)/drop'
-            
+          
+          - script: ls $(Pipeline.Workspace)/drop
+            displayName: "List contents of drop directory"
+          
           - task: AzureRmWebAppDeployment@4
             displayName: "Déploiement de l'application"
             inputs:

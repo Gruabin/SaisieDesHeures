@@ -123,11 +123,11 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "docker down"
 
-        # Mend
-        - task: WhiteSource@21
-          displayName: "Mend"
-          inputs:
-            cwd: '$(System.DefaultWorkingDirectory)'
+        # # Mend
+        # - task: WhiteSource@21
+        #   displayName: "Mend"
+        #   inputs:
+        #     cwd: '$(System.DefaultWorkingDirectory)'
 
         - task: ArchiveFiles@2
           displayName: "Archive files"
