@@ -263,7 +263,7 @@ async function formSubmit() {
 }
 
 //
-//* Vérifier la saisie de l'ordre (Notemment pour les douchettes)
+//* Vérifier la saisie de l'ordre (Notamment pour les douchettes)
 //
 document.getElementById("ordre").addEventListener("input", verifChampOrdre);
 document.getElementById("ordre").addEventListener("paste", verifChampOrdre);
@@ -286,7 +286,7 @@ function verifChampOrdre(evt){
 let inputOrdre = document.getElementById("ordre");
 let inputOrdreLabel = document.getElementById("ordre").parentElement;
 document.getElementById("ordre").addEventListener("input", function () {
-    let regex = new RegExp("^[0-9A-Za-z]{1}[0-9]{6}$");
+    let regex = new RegExp("^[0-9A-Za-z]{2}[0-9]{5}$");
     inputOrdreLabel.classList.remove("input-success");
     inputOrdreLabel.classList.remove("input-error");
     if (regex.test(inputOrdre.value)) {
