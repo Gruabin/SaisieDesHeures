@@ -3,10 +3,8 @@
     Saisie des heures
 {% endblock %}
 {% block body %}
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md" id="temps">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
-        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-col lg:flex-row lg:items-center p-2">
+    <section class="mx-24 my-4 max-2xl:mx-8 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red text-lg max-sm:text-base shadow-md" id="temps">
+        <div class="flex flex-col lg:flex-row items-center max-sm:text-center p-2">
             <div class="m-2 flex-1">
                 <div class="m-2">
                     <b>Employé</b>
@@ -56,10 +54,8 @@
             </div>
         </div>
     </section>
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Saisie des heures</h2>
-        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-col flex-wrap text-center p-2">
+    <section class="mx-24 my-4 max-2xl:mx-8 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red text-lg max-sm:text-base shadow-md">
+        <div class="flex flex-col flex-wrap max-sm:items-center text-center p-2">
             <div class="w-fit self-center">
                 <div id="alertSuccess" role="alert" class="alert alert-success hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -76,7 +72,7 @@
                         <b>Type d'heures</b>
                     </label>
                 </div>
-                <div class="flex-1 text-left md:flex md:self-center items-center">
+                <div class="flex-1 text-left flex md:self-center items-center">
                     <div class="md:self-center">
                         <select class="select focus:ring-primary mx-3" {% if nbHeures >= 12 %}disabled{% endif %} name="type" id="type">
                             <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>-- Sélectionner un type d'heure --</option>
@@ -101,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="my-3 hidden flex md:flex-row flex-col w-full" id="divOrdre">
+            <div class="my-3 hidden flex md:flex-row flex-col" id="divOrdre">
                 <div class="flex-1 text-left md:text-right md:self-center m-3">
                     <label for="ordre">
                         <b>Ordre</b>
@@ -110,7 +106,7 @@
                 <div class="flex-1 text-left items-center">
                     <label class="input input-bordered flex items-center gap-2 max-w-40">
                         <span id="labelOrdre">{{ site }}</span>
-                        <input type="text" name="ordre" id="ordre" class="w-28" maxlength="9" pattern="^[0-9A-Za-z]{1}[0-9]{6}$"/>
+                        <input type="text" name="ordre" id="ordre" class="w-28" maxlength="9" pattern="^[0-9A-Za-z]{2}[0-9]{5}$"/>
                     </label>
                 </div>
             </div>
@@ -125,7 +121,7 @@
                     <p class="mx-3" id="infoActivite"></p>
                 </div>
             </div>
-            <div class="my-3 hidden flex md:flex-row flex-col" id="divTache">
+            <div class="my-3 hidden flex md:flex-row flex-col max-sm:items-center" id="divTache">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label for="tache">
                         <b>Tâche</b>
@@ -154,7 +150,7 @@
                     <input class="input focus:ring-primary mx-3" type="number" name="operation" id="operation" max="999" min="0" step="10">
                 </div>
             </div>
-            <div class="my-3 hidden flex md:flex-row flex-col" id="divTacheSpe">
+            <div class="my-3 hidden flex md:flex-row flex-col max-sm:items-center" id="divTacheSpe">
                 <div class="flex-1 text-left md:text-right md:self-center m-2">
                     <label class="mx-3" for="tacheSpe">
                         <b>Tâche spécifique</b>
