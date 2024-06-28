@@ -22,7 +22,7 @@ class ConsoleTest extends PantherTestCase
         $client->waitFor('#console');
 
         // Vérifiez qu'aucune case n'est cochée au début
-        $checkboxes = $client->findElements(WebDriverBy::id('checkbox'));
+        $checkboxes = $client->findElements(WebDriverBy::name('checkbox_ligne'));
 
         foreach ($checkboxes as $checkbox) {
             $this->assertFalse($checkbox->isSelected());

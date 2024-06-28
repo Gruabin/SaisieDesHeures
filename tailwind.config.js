@@ -17,7 +17,7 @@ module.exports = {
       },
       textColor: {
         'gruau-red': '#e83a38',
-        "gruau-light-blue": '#005179',
+        "gruau-dark-blue": '#005179',
         'gruau-light-blue': '#00bbee',
         'gruau-green': '#42b284',
         'white': '#ffffff',

@@ -14,7 +14,10 @@ variables:
   webAppName: "app-gruau-tst-saisie-heures"
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: "ubuntu-20.04"
+
+  # PHP version
+  phpVersion: "8.3"
 
   # Environment name
   environmentName: "app-gruau-tst-saisie-heures"
@@ -25,8 +28,6 @@ variables:
 stages:
 - stage: Build
   displayName: Build stage
-  variables:
-    phpVersion: "8.2.14"
   jobs:
     - job: BuildJob
       pool:
@@ -42,9 +43,15 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "Use PHP version $(phpVersion)"
 
+        #install les packages Symfony
         - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
           workingDirectory: $(rootFolder)
           displayName: "Composer install"
+        
+        #update les packages Symfony
+        - script: composer update
+          workingDirectory: $(rootFolder)
+          displayName: 'Composer update'
 
         # Install the JavaScript packages with npm
         - script: npm install
@@ -72,7 +79,7 @@ stages:
           displayName: "Generate cache file structure"
 
         # Clear cache
-        - script: php bin/console cache:clear
+        - script: php bin/console cache:clear --no-warmup
           workingDirectory: $(rootFolder)
           displayName: "Clear cache"
 
@@ -91,12 +98,6 @@ stages:
         - script: php vendor/bin/twig-cs-fixer lint --fix templates
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
-
-        # Mend
-        - task: WhiteSource@21
-          displayName: "Mend"
-          inputs:
-            cwd: '$(System.DefaultWorkingDirectory)'
 
         - task: ArchiveFiles@2
           displayName: "Archive files"
@@ -133,3 +134,4 @@ stages:
               WebAppName: '$(webAppName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'

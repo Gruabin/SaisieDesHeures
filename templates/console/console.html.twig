@@ -46,8 +46,8 @@ Console d'approbation
                     <div ><b>Date</b></div>
                 {{ form_start(formDate) }}
                     <div class="flex justify-center items-center h-12">
-                            {{ form_widget(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
-                            {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+                        {{ form_widget(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
+                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
                     </div>
                 {{ form_end(formDate) }}
             </div>
@@ -85,7 +85,7 @@ Console d'approbation
         {% endif %}
         {# {% set lesEmployes = value %} #}
             {% for employe in employes %}
-                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full" id="tabEmploye" data-employe="{{ employe.id }}">
+                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full tabEmploye"  data-employe="{{ employe.id }}">
                     <div class="flex justify-between m-3">
                         <div class="flex flex-row ">
                             <input type="checkbox" class="checkbox checkbox-primary" id="select_user" data-employe="{{ employe.id }}"/>

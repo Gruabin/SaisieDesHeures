@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let couleur;
     let couleurTexte;
 
-    function chargement(){
+    function chargement() {
         loader();
     }
 
@@ -121,18 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-/**
- * Cas applicable uniquement sur la page /
- */
+    /**
+     * Cas applicable uniquement sur la page /
+     */
 
-// Vérifier que l'url est bien /
-if(window.location.pathname === '/') {
+    // Vérifier que l'url est bien /
+    if (window.location.pathname === '/') {
         // Variable de contrôle pour savoir si l'event listener est actif
         let eventListenerActive = false;
-    
+
         // Sélectionne la balise turbo-frame avec l'ID "connexion_id"
         const frame = document.querySelector("#identification");
-    
+
         // Crée une instance de MutationObserver avec une fonction de rappel
         const observer = new MutationObserver(function (mutationsList, observer) {
             // Il y a eu un changement dans l'architecture HTML de la balise turbo-frame
@@ -144,10 +144,10 @@ if(window.location.pathname === '/') {
                 eventListenerActive = true;
             }
         });
-    
+
         // Configure les options de l'observateur pour observer les modifications des enfants et des attributs de la balise turbo-frame
-    const config = { childList: true, subtree: true };
-    
+        const config = { childList: true, subtree: true };
+
         // Commence à observer les mutations dans la balise turbo-frame avec les options spécifiées
         observer.observe(frame, config);
     }

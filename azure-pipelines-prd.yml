@@ -14,7 +14,10 @@ variables:
   webAppName: 'app-gruau-prd-saisie-heures'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'ubuntu-20.04'
+
+  # PHP version
+  phpVersion: "8.3"
 
   # Environment name
   environmentName: 'app-gruau-prd-saisie-heures'
@@ -25,8 +28,6 @@ variables:
 stages:
 - stage: Build
   displayName: Build stage
-  variables:
-    phpVersion: "8.2"
   jobs:
   - job: BuildJob
     pool:
@@ -77,15 +78,14 @@ stages:
       displayName: "Generate cache file structure"
 
     # Clear cache
-    - script: php bin/console cache:clear
+    - script: php bin/console cache:clear --no-warmup
       workingDirectory: $(rootFolder)
       displayName: "Clear cache"
 
     # Linter PHP CS fixer
     - script: php vendor/bin/php-cs-fixer fix
       workingDirectory: $(rootFolder)
-      displayName:
-        "Linter PHP CS fixer"
+      displayName: "Linter PHP CS fixer"
 
     # Linter rector
     - script: php vendor/bin/rector process src
@@ -138,3 +138,4 @@ stages:
               WebAppName: '$(webAppName)'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'
