@@ -51,7 +51,10 @@ stages:
     - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
       workingDirectory: $(rootFolder)
       displayName: "Composer install"
-
+    #update les packages Symfony
+    - script: composer update
+      workingDirectory: $(rootFolder)
+      displayName: 'Composer update'
     # Install the JavaScript packages with npm
     - script: npm install
       workingDirectory: $(rootFolder)
