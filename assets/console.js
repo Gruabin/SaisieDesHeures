@@ -134,7 +134,7 @@ if (checkbox) {
 // 
 // * Sélection de tout les checkboxs d'un employé
 //
-let checkboxes = document.querySelectorAll("#select_user");
+let checkboxes = document.querySelectorAll('[name="select_user"]');
 checkboxes.forEach(checkbox => {
     const tab = document.querySelector('.tabEmploye[data-employe="' + checkbox.dataset.employe + '"]');
     checkbox.addEventListener("click", (event) => {
@@ -338,9 +338,10 @@ async function APIModification(element) {
         addToastSuccess("Saisie modifiée");
         element.querySelector('.pen').classList.remove('hidden');
         element.querySelector('.trash').classList.remove('hidden');
+
         MAJDonnees(element, data);
         if (statut == 2) {
-            document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
+            document.getElementById("nbAnomalie").innerText = parseInt(document.getElementById("nbAnomalie").innerText) - 1;
         }
         resetModif(element)
 
@@ -376,7 +377,7 @@ function MAJTempsJourna(employe) {
     tab.querySelectorAll('.texte_saisieTemps').forEach(element => {
         temps += parseFloat(element.innerHTML);
     });
-    tab.querySelector(".tempsTotal").innerHTML = temps.toFixed(2) + " h";
+    tab.querySelector('[name="tempsTotal"]').innerHTML = temps.toFixed(2) + " h";
 }
 
 
