@@ -88,12 +88,12 @@ Console d'approbation
                 <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full tabEmploye"  data-employe="{{ employe.id }}">
                     <div class="flex justify-between m-3">
                         <div class="flex flex-row ">
-                            <input type="checkbox" class="checkbox checkbox-primary" id="select_user" data-employe="{{ employe.id }}"/>
+                            <input type="checkbox" class="checkbox checkbox-primary" name="select_user" data-employe="{{ employe.id }}"/>
                             <h1 class="text-primary mx-3">{{ employe.id }} - {{ employe.nom }} </h1>
                         </div>
                         <div class="mx-3">
                         {# +0 permet de faire un calcul pour arrondir la donnée #}
-                                <b id="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
+                                <b name="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
                         </div>
                     </div>
                     {# Tableau #}
