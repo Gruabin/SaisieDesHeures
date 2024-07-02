@@ -66,9 +66,22 @@ php vendor/bin/php-cs-fixer fix
 php vendor/bin/rector process src
 php vendor/bin/twig-cs-fixer lint --fix templates
 ```
+#Aide pour installer la bdd de test via docker
+
+1er fois via :
+
+```shell
+./setup-test-environment.bat
+```
+
+Puis ensuite une fois installé seulement :
+
+```shell
+docker compose up
+```
 
 # Test Php
-Aide pour executer les tests php
+Executer les tests php
 
 ```shell
 php bin/phpunit
