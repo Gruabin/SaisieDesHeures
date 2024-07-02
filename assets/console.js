@@ -207,7 +207,7 @@ document.getElementById('validation').addEventListener('click', function () {
 // * Envoie le requête de suppression
 //
 function APISuppression(ligneASupprimer) {
-    token = ligneASupprimer.querySelector('.ligne').value;
+    token = ligneASupprimer.querySelector("input[name='ligneToken']").value;
     document.getElementById('btnModalSuppr').classList.add("hidden");
     document.getElementById('btnModalAnnuler').classList.add("hidden");
     document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
