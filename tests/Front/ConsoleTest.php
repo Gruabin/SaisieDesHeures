@@ -64,7 +64,7 @@ class ConsoleTest extends PantherTestCase
         $client->submit($form);
         $client->waitFor('#console');
 
-        $selectAllCheckbox = $client->findElement(WebDriverBy::id('select_user'));
+        $selectAllCheckbox = $client->findElement(WebDriverBy::name('select_user'));
         $checkboxes = $client->findElements(WebDriverBy::cssSelector('tr[data-employe="'.$selectAllCheckbox->getAttribute('data-employe').'"] input[type="checkbox"]'));
 
         // Vérifiez qu'aucune case n'est cochée au début

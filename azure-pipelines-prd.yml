@@ -33,9 +33,6 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - script: |
-        cp .env.prod .env
-      displayName: 'Copy .env.prod to .env'
 
     - script: |
         sudo update-alternatives --set php /usr/bin/php$(phpVersion)
