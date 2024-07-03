@@ -374,10 +374,10 @@ function MAJDonnees(element, data) {
 function MAJTempsJourna(employe) {
     const tab = document.querySelector('.tabEmploye[data-employe="' + employe + '"]');
     let temps = 0;
-    tab.querySelectorAll('.texte_saisieTemps').forEach(element => {
+    tab.querySelectorAll("[name='texte_saisieTemps']").forEach(element => {
         temps += parseFloat(element.innerHTML);
     });
-    tab.querySelector('[name="tempsTotal"]').innerHTML = temps.toFixed(2) + " h";
+    tab.querySelector("[name='tempsTotal']").innerHTML = temps.toFixed(2) + " h";
 }
 
 
