@@ -1,0 +1,39 @@
+### Definition of Pull (DOP)
+
+À appliquer lors d’un pull request allant de la Branche A à la branche de Dev :
+
+- Le titre de la PR doit être pertinent et clair.
+  - [ ] **Titre de la PR :**
+
+- La PR est associée à une User Story.
+  - [ ] **Association à une User Story (US) :**
+
+- Le code produit est couvert par des tests unitaires pertinents.
+  - [ ] **Couverture de tests :**
+
+- Les tests sont exécutés avec succès.
+  - [ ] **Validation des tests :**
+
+- Un reviewer a été désigné et a validé la PR.
+  - [ ] **Revues par les pairs :**
+
+- Aucune faille CVE n'est présente dans le code.
+  - [ ] **Sécurité :**
+
+- Les versions de PHP et de Symfony sont à jour et maintenues.
+  - [ ] **Versions à jour :**
+
+- Vérifier que le code produit remplit les critères d'acceptation de l’User Story.
+  - [ ] **Critères d'acceptation :**
+
+- Le code produit est clair, compréhensible, documenté et maintenable.
+  - [ ] **Clarté et documentation :**
+
+- Aucun code répétitif n’a été produit.
+  - [ ] **Élimination de code redondant :**
+
+- Il ne reste pas de “console.log”, “dd”, “dump”, etc.
+  - [ ] **Nettoyage du code :**
+
+- Toute la chaîne de la fonctionnalité a été testée sur l’environnement de développement.
+  - [ ] **Test complet en environnement de dev :**
