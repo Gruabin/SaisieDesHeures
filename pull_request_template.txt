@@ -2,38 +2,38 @@
 
 À appliquer lors d’un pull request allant de la Branche A à la branche de Dev :
 
-- [ ] **Titre de la PR :**
-  - Le titre de la PR doit être pertinent et clair.
+- Le titre de la PR doit être pertinent et clair.
+  - [ ] **Titre de la PR :**
 
-- [ ] **Association à une User Story (US) :**
-  - La PR est associée à une User Story.
+- La PR est associée à une User Story.
+  - [ ] **Association à une User Story (US) :**
 
-- [ ] **Couverture de tests :**
-  - Le code produit est couvert par des tests unitaires pertinents.
+- Le code produit est couvert par des tests unitaires pertinents.
+  - [ ] **Couverture de tests :**
 
-- [ ] **Validation des tests :**
-  - Les tests sont exécutés avec succès.
+- Les tests sont exécutés avec succès.
+  - [ ] **Validation des tests :**
 
-- [ ] **Revues par les pairs :**
-  - Un reviewer a été désigné et a validé la PR.
+- Un reviewer a été désigné et a validé la PR.
+  - [ ] **Revues par les pairs :**
 
-- [ ] **Sécurité :**
-  - Aucune faille CVE n'est présente dans le code.
+- Aucune faille CVE n'est présente dans le code.
+  - [ ] **Sécurité :**
 
-- [ ] **Versions à jour :**
-  - Les versions de PHP et de Symfony sont à jour et maintenues.
+- Les versions de PHP et de Symfony sont à jour et maintenues.
+  - [ ] **Versions à jour :**
 
-- [ ] **Critères d'acceptation :**
-  - Vérifier que le code produit remplit les critères d'acceptation de l’User Story.
+- Vérifier que le code produit remplit les critères d'acceptation de l’User Story.
+  - [ ] **Critères d'acceptation :**
 
-- [ ] **Clarté et documentation :**
-  - Le code produit est clair, compréhensible, documenté et maintenable.
+- Le code produit est clair, compréhensible, documenté et maintenable.
+  - [ ] **Clarté et documentation :**
 
-- [ ] **Élimination de code redondant :**
-  - Aucun code répétitif n’a été produit.
+- Aucun code répétitif n’a été produit.
+  - [ ] **Élimination de code redondant :**
 
-- [ ] **Nettoyage du code :**
-  - Il ne reste pas de “console.log”, “dd”, “dump”, etc.
+- Il ne reste pas de “console.log”, “dd”, “dump”, etc.
+  - [ ] **Nettoyage du code :**
 
-- [ ] **Test complet en environnement de dev :**
-  - Toute la chaîne de la fonctionnalité a été testée sur l’environnement de développement.
+- Toute la chaîne de la fonctionnalité a été testée sur l’environnement de développement.
+  - [ ] **Test complet en environnement de dev :**
