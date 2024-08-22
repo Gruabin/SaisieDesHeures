@@ -7,7 +7,7 @@ use Symfony\Component\Panther\PantherTestCase;
 
 class ConsoleTest extends PantherTestCase
 {
-    public function testSelectionAll(): void
+    public function testSelectionLigneAll(): void
     {
         $client = static::createPantherClient();
         $client->followRedirects(true);
@@ -50,7 +50,7 @@ class ConsoleTest extends PantherTestCase
         }
     }
 
-    public function testSelectionUser(): void
+    public function testSelectionLigneUser(): void
     {
         $client = static::createPantherClient();
         $client->followRedirects(true);
@@ -63,6 +63,7 @@ class ConsoleTest extends PantherTestCase
         $client->waitForEnabled('[type="submit"]');
         $client->submit($form);
         $client->waitFor('#console');
+        $client->takeScreenshot('screen.png');
 
         $selectAllCheckbox = $client->findElement(WebDriverBy::name('select_user'));
         $checkboxes = $client->findElements(WebDriverBy::cssSelector('tr[data-employe="'.$selectAllCheckbox->getAttribute('data-employe').'"] input[type="checkbox"]'));
@@ -129,6 +130,38 @@ class ConsoleTest extends PantherTestCase
         // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
         foreach ($lignes as $ligne) {
             $this->assertTrue($ligne->isDisplayed());
+        }
+    }
+
+    public function testSelectionResponsable(): void
+    {
+        $client = static::createPantherClient();
+        $client->followRedirects(true);
+        $crawler = $client->request('GET', '/');
+
+        // Connexion
+        $client->waitForEnabled('[type="submit"]');
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]'] = 'LV0000002';
+        $client->waitForEnabled('[type="submit"]');
+        $client->submit($form);
+        $client->waitFor('#console');
+        $employes = $client->findElements(WebDriverBy::className('tabEmploye'));
+        
+        // Vérifie que tous les employés du responsable connecté sont affichés
+        foreach ($employes as $employe) {
+            $this->assertTrue($employe->getAttribute('data-employe') == 'LV0000002');
+        }
+        
+        // Sélection de tous les responsables
+        $client->findElement(WebDriverBy::id('check-all'))->click();
+        $client->findElement(WebDriverBy::id('filtre_responsable_button'))->click();
+        $client->waitFor('#console');
+        $employes = $client->findElements(WebDriverBy::className('tabEmploye'));
+
+        // Vérifie que tous les responsables sont affichés
+        foreach ($employes as $employe) {
+            $this->assertTrue($employe->getAttribute('data-employe') == 'LV0000002' || 'LV0000003');
         }
     }
 }

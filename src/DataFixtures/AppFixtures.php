@@ -13,30 +13,42 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        // Créez un objet CentreDeCharge
-        $centreDeCharge = new CentreDeCharge();
-        $centreDeCharge->setId("LV0001000");
+        // Créez des objets CentreDeCharge
+        $centreDeCharge1 = new CentreDeCharge();
+        $centreDeCharge1->setId("LV0001000");
+
+        $centreDeCharge2 = new CentreDeCharge();
+        $centreDeCharge2->setId("LV0002000");
 
         // Création de plusieurs employés fictifs
         $employe1 = new Employe();
         $employe1->setId('LV0000001');
         $employe1->setNomEmploye('Test Employe');
         $employe1->setRoles(['ROLE_EMPLOYE']);
-        $employe1->setCentreDeCharge($centreDeCharge);
+        $employe1->setCentreDeCharge($centreDeCharge1);
         $manager->persist($employe1);
 
         $employe2 = new Employe();
         $employe2->setId('LV0000002');
         $employe2->setNomEmploye('Test Responsable');
         $employe2->setRoles(['ROLE_MANAGER']);
-        $employe2->setCentreDeCharge($centreDeCharge);
+        $employe2->setCentreDeCharge($centreDeCharge1);
         $manager->persist($employe2);
 
+        $employe3 = new Employe();
+        $employe3->setId('LV0000003');
+        $employe3->setNomEmploye('Test Responsable 2');
+        $employe3->setRoles(['ROLE_MANAGER']);
+        $employe3->setCentreDeCharge($centreDeCharge2);
+        $manager->persist($employe3);
+
         // Associez un responsable à ce centre de charge
-        $centreDeCharge->setResponsable($employe2);
+        $centreDeCharge1->setResponsable($employe2);
+        $centreDeCharge2->setResponsable($employe3);
 
         // Persistez l'objet CentreDeCharge
-        $manager->persist($centreDeCharge);
+        $manager->persist($centreDeCharge1);
+        $manager->persist($centreDeCharge2);
 
         $manager->flush();
 
@@ -441,6 +453,22 @@ class AppFixtures extends Fixture
                 'date' => '2024-04-22 16:02:48',
                 'temps_main_oeuvre' => 1.00,
                 'employe_id' => "LV0000002",
+                'operation' => null,
+                'date_export' => null,
+                'tache_specifique_id' => null,
+                'motif_erreur' => null,
+                'statut_id' => 2,
+            ],
+            [
+                'id' => Uuid::uuid4(),
+                'type_heures_id' => 4,
+                'ordre' => "LV1234678",
+                'tache_id' => 1,
+                'activite_id' => 200,
+                'centre_de_charge_id' => null,
+                'date' => '2024-04-22 11:02:48',
+                'temps_main_oeuvre' => 2.00,
+                'employe_id' => "LV0000003",
                 'operation' => null,
                 'date_export' => null,
                 'tache_specifique_id' => null,
