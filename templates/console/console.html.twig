@@ -83,7 +83,6 @@ Console d'approbation
         {% if employes is empty %}
             <h1 class="text-center m-5">Aucune saisie pour ce jour</h1>
         {% endif %}
-        {# {% set lesEmployes = value %} #}
             {% for employe in employes %}
                 <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full tabEmploye"  data-employe="{{ employe.id }}">
                     <div class="flex justify-between m-3">
@@ -92,8 +91,7 @@ Console d'approbation
                             <h1 class="text-primary mx-3">{{ employe.id }} - {{ employe.nom }} </h1>
                         </div>
                         <div class="mx-3">
-                        {# +0 permet de faire un calcul pour arrondir la donnée #}
-                                <b name="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
+                            <b name="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
                         </div>
                     </div>
                     {# Tableau #}

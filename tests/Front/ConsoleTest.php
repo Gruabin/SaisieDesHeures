@@ -21,28 +21,28 @@ class ConsoleTest extends PantherTestCase
         $client->submit($form);
         $client->waitFor('#console');
 
-        // Vérifiez qu'aucune case n'est cochée au début
+        // Vérifie qu'aucune case n'est cochée au début
         $checkboxes = $client->findElements(WebDriverBy::name('checkbox_ligne'));
 
         foreach ($checkboxes as $checkbox) {
             $this->assertFalse($checkbox->isSelected());
         }
 
-        // Cochez la case principale
+        // Coche la case principale
         $selectAllCheckbox = $client->findElement(WebDriverBy::id('select_all'));
         $selectAllCheckbox->click();
 
-        // Vérifiez que toutes les autres cases (non désactivées) sont également cochées
+        // Vérifie que toutes les autres cases (non désactivées) sont également cochées
         foreach ($checkboxes as $checkbox) {
             if (null == $checkbox->getAttribute('disabled')) {
                 $this->assertTrue($checkbox->isSelected());
             }
         }
 
-        // Décochez la case principale
+        // Décoche la case principale
         $selectAllCheckbox->click();
 
-        // Vérifiez que toutes les autres cases (non désactivées) sont également décochées
+        // Vérifie que toutes les autres cases (non désactivées) sont également décochées
         foreach ($checkboxes as $checkbox) {
             if (null == $checkbox->getAttribute('disabled')) {
                 $this->assertFalse($checkbox->isSelected());
@@ -72,10 +72,10 @@ class ConsoleTest extends PantherTestCase
             $this->assertFalse($checkbox->isSelected());
         }
 
-        // Cochez la case principale
+        // Coche la case principale
         $selectAllCheckbox->click();
 
-        // Vérifiez que toutes les autres cases (non désactivées) sont également cochées
+        // Vérifie que toutes les autres cases (non désactivées) sont également cochées
         foreach ($checkboxes as $checkbox) {
             if (null == $checkbox->getAttribute('disabled')) {
                 $this->assertTrue($checkbox->isSelected());
@@ -90,6 +90,45 @@ class ConsoleTest extends PantherTestCase
             if (null == $checkbox->getAttribute('disabled')) {
                 $this->assertFalse($checkbox->isSelected());
             }
+        }
+    }
+
+    public function testSelectionAnomalie(): void
+    {
+        $client = static::createPantherClient();
+        $client->followRedirects(true);
+        $crawler = $client->request('GET', '/');
+
+        // Connexion
+        $client->waitForEnabled('[type="submit"]');
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]'] = 'LV0000002';
+        $client->waitForEnabled('[type="submit"]');
+        $client->submit($form);
+        $client->waitFor('#console');
+
+        $selectAnomalie = $client->findElement(WebDriverBy::id('select_anomalies'));
+        $lignes = $client->findElements(WebDriverBy::className('ligne'));
+
+        // Coche la case anomalies
+        $selectAnomalie->click();
+
+        // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
+        foreach ($lignes as $ligne) {
+            if($ligne->getAttribute('data-statut') == '3') {
+                $this->assertFalse($ligne->isDisplayed());
+            }
+            if($ligne->getAttribute('data-statut') == '2') {
+                $this->assertTrue($ligne->isDisplayed());
+            }
+        }
+
+        // Coche la case anomalies
+        $selectAnomalie->click();
+
+        // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
+        foreach ($lignes as $ligne) {
+            $this->assertTrue($ligne->isDisplayed());
         }
     }
 }
