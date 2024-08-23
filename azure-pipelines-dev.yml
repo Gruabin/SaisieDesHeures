@@ -137,6 +137,19 @@ stages:
           inputs:
             cwd: '$(System.DefaultWorkingDirectory)'
 
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: 'var/coverage/clover.xml'
+            reportDirectory: 'var/coverage/html'
+            failIfCoverageEmpty: true
+
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFiles: '**/TEST-*.xml'
+            failTaskOnFailedTests: true
+            testRunTitle: 'PHPUnit Test Results'
+
         - task: ArchiveFiles@2
           displayName: "Archive files"
           inputs:
