@@ -63,7 +63,6 @@ class ConsoleTest extends PantherTestCase
         $client->waitForEnabled('[type="submit"]');
         $client->submit($form);
         $client->waitFor('#console');
-        $client->takeScreenshot('screen.png');
 
         $selectAllCheckbox = $client->findElement(WebDriverBy::name('select_user'));
         $checkboxes = $client->findElements(WebDriverBy::cssSelector('tr[data-employe="'.$selectAllCheckbox->getAttribute('data-employe').'"] input[type="checkbox"]'));
@@ -116,10 +115,10 @@ class ConsoleTest extends PantherTestCase
 
         // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
         foreach ($lignes as $ligne) {
-            if($ligne->getAttribute('data-statut') == '3') {
+            if ('3' == $ligne->getAttribute('data-statut')) {
                 $this->assertFalse($ligne->isDisplayed());
             }
-            if($ligne->getAttribute('data-statut') == '2') {
+            if ('2' == $ligne->getAttribute('data-statut')) {
                 $this->assertTrue($ligne->isDisplayed());
             }
         }
@@ -147,12 +146,12 @@ class ConsoleTest extends PantherTestCase
         $client->submit($form);
         $client->waitFor('#console');
         $employes = $client->findElements(WebDriverBy::className('tabEmploye'));
-        
+
         // Vérifie que tous les employés du responsable connecté sont affichés
         foreach ($employes as $employe) {
-            $this->assertTrue($employe->getAttribute('data-employe') == 'LV0000002');
+            $this->assertTrue('LV0000002' == $employe->getAttribute('data-employe'));
         }
-        
+
         // Sélection de tous les responsables
         $client->findElement(WebDriverBy::id('check-all'))->click();
         $client->findElement(WebDriverBy::id('filtre_responsable_button'))->click();
@@ -161,7 +160,7 @@ class ConsoleTest extends PantherTestCase
 
         // Vérifie que tous les responsables sont affichés
         foreach ($employes as $employe) {
-            $this->assertTrue($employe->getAttribute('data-employe') == 'LV0000002' || 'LV0000003');
+            $this->assertTrue('LV0000002' == $employe->getAttribute('data-employe') || 'LV0000003');
         }
     }
 }
