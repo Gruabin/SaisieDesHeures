@@ -135,18 +135,18 @@ stages:
         - task: WhiteSource@21
           displayName: "Mend"
           inputs:
-            cwd: '$(System.DefaultWorkingDirectory)'
+            cwd: '$(rootFolder)'
 
-        - task: PublishCodeCoverageResults@1
+        - task: PublishCodeCoverageResults@2
           inputs:
             codeCoverageTool: 'Cobertura'
-            summaryFileLocation: 'var/coverage/clover.xml'
-            reportDirectory: 'var/coverage/html'
+            summaryFileLocation: '$(rootFolder)/var/coverage/clover.xml'
+            reportDirectory: '$(rootFolder)/var/coverage/html'
             failIfCoverageEmpty: true
 
         - task: PublishTestResults@2
           inputs:
-            testResultsFiles: 'var/coverage/phpunit-results.xml'
+            testResultsFiles: '$(rootFolder)/var/coverage/phpunit-results.xml'
             failTaskOnFailedTests: true
             testRunTitle: 'PHPUnit Test Results'
 
