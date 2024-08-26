@@ -122,7 +122,7 @@ stages:
           displayName: "Load fixture"
 
         # Execution des tests
-        - script: php bin/phpunit -d xdebug.mode=coverage --coverage-html var/coverage/html
+        - script: php -d xdebug.mode=coverage bin/phpunit --coverage-clover='reports/coverage/coverage.xml' --coverage-html='var/coverage/html'
           workingDirectory: $(rootFolder)
           displayName: "make test"
 
