@@ -18,13 +18,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 class CentreDeChargeRepository extends ServiceEntityRepository
 {
     public ManagerRegistry $registry;
-    public Security $security;
+
     public function __construct(
         ManagerRegistry $registry,
-        Security $security,
+        public Security $security,
     ) {
         parent::__construct($registry, CentreDeCharge::class);
-        $this->security = $security;
     }
 
     /**

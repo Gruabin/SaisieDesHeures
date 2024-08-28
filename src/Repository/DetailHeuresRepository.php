@@ -7,7 +7,6 @@ use App\Entity\Employe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -25,20 +24,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class DetailHeuresRepository extends ServiceEntityRepository
 {
-        public EntityManagerInterface $entityManager;
-        public ManagerRegistry $registry;
-        public Security $security;
-        public EmployeRepository $employeRepository;
+    public ManagerRegistry $registry;
+
     public function __construct(
-        EntityManagerInterface $entityManager,
+        public EntityManagerInterface $entityManager,
         ManagerRegistry $registry,
-        Security $security,
-        EmployeRepository $employeRepository
+        public Security $security,
+        public EmployeRepository $employeRepository
     ) {
         parent::__construct($registry, DetailHeures::class);
-        $this->security = $security;
-        $this->entityManager = $entityManager;
-        $this->employeRepository = $employeRepository;
     }
 
     public function findAll(): array
@@ -137,8 +131,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
     /**
      * Récupère le nombre total d'heures pour l'utilisateur connecté.
-     * 
+     *
      * @param Employe|UserInterface|string $user l'utilisateur connecté
+     *
      * @return float le nombre total d'heures
      */
     public function getNbHeures($user): float
@@ -152,7 +147,8 @@ class DetailHeuresRepository extends ServiceEntityRepository
             ->setParameter('employe', $user)
             ->getQuery()
             ->getSingleResult();
-            return (float)$retour['total'];
+
+        return (float) $retour['total'];
     }
 
     /**
@@ -160,6 +156,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
      * ! Pas utilisé.
      *
      * @param array<Employe> $responsables les responsables selectionnés
+     *
      * @return int le nombre total d'anomalies des responsables selectionnés
      */
     public function findNbAnomalie(array $responsables): int
@@ -177,8 +174,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
 
     /**
      * Récupère Les dates qui ont des détails d'heures non validées.
-     * 
+     *
      * @param string $responsables les responsables selectionnés
+     *
      * @return array<string>|string dates possédant des détails d'heures non validées
      */
     public function findDatesDetail($responsables): array|string

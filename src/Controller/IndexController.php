@@ -18,10 +18,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface as FormFormInterface;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -41,38 +39,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class IndexController extends AbstractController
 {
-        public LoggerInterface $logger;
-        public CentreDeChargeRepository $CDGRepository;
-        public DetailHeuresRepository $detailHeuresRepository;
-        public DetailHeureService $detailHeureService;
-        public EmployeRepository $employeRepository;
-        public Security $security;
-        public StatutRepository $statutRepository;
-        public TacheRepository $tacheRepository;
-        public TacheSpecifiqueRepository $tacheSpecifiqueRepository;
-        public TypeHeuresRepository $typeHeuresRepo;
-    public function __construct(
-        LoggerInterface $logger,
-        CentreDeChargeRepository $CDGRepository,
-        DetailHeuresRepository $detailHeuresRepository,
-        DetailHeureService $detailHeureService,
-        EmployeRepository $employeRepository,
-        Security $security,
-        StatutRepository $statutRepository,
-        TacheRepository $tacheRepository,
-        TacheSpecifiqueRepository $tacheSpecifiqueRepository,
-        TypeHeuresRepository $typeHeuresRepo,
-    ) {
-        $this->logger = $logger;
-        $this->CDGRepository = $CDGRepository;
-        $this->detailHeuresRepository = $detailHeuresRepository;
-        $this->detailHeureService = $detailHeureService;
-        $this->employeRepository = $employeRepository;
-        $this->security = $security;
-        $this->statutRepository = $statutRepository;
-        $this->tacheRepository = $tacheRepository;
-        $this->tacheSpecifiqueRepository = $tacheSpecifiqueRepository;
-        $this->typeHeuresRepo = $typeHeuresRepo;
+    public function __construct(public LoggerInterface $logger, public CentreDeChargeRepository $CDGRepository, public DetailHeuresRepository $detailHeuresRepository, public DetailHeureService $detailHeureService, public EmployeRepository $employeRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public TypeHeuresRepository $typeHeuresRepo)
+    {
     }
 
     // Affiche la page d'identification
@@ -85,7 +53,7 @@ class IndexController extends AbstractController
 
                 return $this->render(
                     'connexion/identification.html.twig', [
-                    'user' => $this->getUser(),
+                        'user' => $this->getUser(),
                     ]
                 );
             }
@@ -123,15 +91,15 @@ class IndexController extends AbstractController
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render(
             'temps.html.twig', [
-            'details' => $this->detailHeuresRepository->findAllTodayUser(),
-            'types' => $this->typeHeuresRepo->findAll(),
-            'taches' => $this->tacheRepository->findAll(),
-            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $this->CDGRepository->findAllUser(),
-            'user' => $this->getUser(),
-            'nbHeures' => $nbHeures,
-            'favoriTypeHeure' => $favoriTypeHeure,
-            'site' => substr((string) $user->getUserIdentifier(), 0, 2),
+                'details' => $this->detailHeuresRepository->findAllTodayUser(),
+                'types' => $this->typeHeuresRepo->findAll(),
+                'taches' => $this->tacheRepository->findAll(),
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $this->CDGRepository->findAllUser(),
+                'user' => $this->getUser(),
+                'nbHeures' => $nbHeures,
+                'favoriTypeHeure' => $favoriTypeHeure,
+                'site' => substr((string) $user->getUserIdentifier(), 0, 2),
             ]
         );
     }
@@ -149,9 +117,9 @@ class IndexController extends AbstractController
 
         return $this->render(
             'historique.html.twig', [
-            'details' => $this->detailHeuresRepository->findAllTodayUser(),
-            'user' => $this->getUser(),
-            'nbHeures' => $nbHeures,
+                'details' => $this->detailHeuresRepository->findAllTodayUser(),
+                'user' => $this->getUser(),
+                'nbHeures' => $nbHeures,
             ]
         );
     }
@@ -172,8 +140,8 @@ class IndexController extends AbstractController
         // Formulaire de filtre des responsables
         $formResponsable = $this->createForm(
             FiltreResponsableType::class, null, [
-            'user' => $user,
-            'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
+                'user' => $user,
+                'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
             ]
         );
 
@@ -197,8 +165,8 @@ class IndexController extends AbstractController
 
         $formDate = $this->createForm(
             FiltreDateType::class, null, [
-            'dates' => $dates,
-            'data' => $data,
+                'dates' => $dates,
+                'data' => $data,
             ]
         );
         $formDate->handleRequest($request);
@@ -225,29 +193,29 @@ class IndexController extends AbstractController
 
         return $this->render(
             'console/console.html.twig', [
-            'formResponsable' => $formResponsable->createView(),
-            'formDate' => $formDate->createView(),
-            'user' => $user,
-            'site' => substr((string) $user->getUserIdentifier(), 0, 2),
-            'nbAnomalie' => $nbAnomalie,
-            'employes' => $employes,
-            'heures' => $heures,
-            'taches' => $this->tacheRepository->findAll(),
-            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $this->CDGRepository->findAllUser(),
-            'titrePage' => "Console d'approbation des heures",
+                'formResponsable' => $formResponsable->createView(),
+                'formDate' => $formDate->createView(),
+                'user' => $user,
+                'site' => substr((string) $user->getUserIdentifier(), 0, 2),
+                'nbAnomalie' => $nbAnomalie,
+                'employes' => $employes,
+                'heures' => $heures,
+                'taches' => $this->tacheRepository->findAll(),
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $this->CDGRepository->findAllUser(),
+                'titrePage' => "Console d'approbation des heures",
             ]
         );
     }
 
     /**
-     * Défini les responsables
+     * Défini les responsables.
+     *
      * @param FormFormInterface $formResponsable
-     * @param Request $request
-     * @param SessionInterface $session
-     * 
-     * @return void
-     *  */ 
+     * @param Request           $request
+     * @param SessionInterface  $session
+     *
+     *  */
     private function setResponsables($formResponsable, $request, $session): void
     {
         $responsables = [];
@@ -263,8 +231,9 @@ class IndexController extends AbstractController
 
     /**
      * Filtre les employés possédant des heures.
+     *
      * @param DetailHeures[] $heures
-     * 
+     *
      * @return array<mixed>
      */
     private function filtreEmploye($heures): array

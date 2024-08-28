@@ -36,7 +36,7 @@ Console d'approbation
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
                         <div class="flex flex-col justify-center items-center space-y-1">
                             <button type="button" class="btn btn-primary btn-sm" id="check-all">Tout sélectionner</button>
-                            {{ form_widget(formResponsable.button, {'attr': {'class': 'btn btn-primary btn-sm max-xl:w-max'}}) }}
+                            {{ form_widget(formResponsable.button, {attr: {class: 'btn btn-primary btn-sm max-xl:w-max'}}) }}
                         </div>
                     </div>
                     {{ form_end(formResponsable) }}
@@ -46,8 +46,8 @@ Console d'approbation
                     <div ><b>Date</b></div>
                 {{ form_start(formDate) }}
                     <div class="flex justify-center items-center h-12">
-                        {{ form_widget(formDate.date, {'attr': {'class': 'select select-ghost', 'id': 'selectDate'}}) }}
-                        {{ form_row(formDate.button, {'attr': {'class': 'btn btn-primary btn-sm', 'id': 'submitDate', 'value': 'Appliquer la date'}}) }}
+                        {{ form_widget(formDate.date, {attr: {class: 'select select-ghost', id: 'selectDate'}}) }}
+                        {{ form_row(formDate.button, {attr: {class: 'btn btn-primary btn-sm', id: 'submitDate', value: 'Appliquer la date'}}) }}
                     </div>
                 {{ form_end(formDate) }}
             </div>
@@ -100,10 +100,10 @@ Console d'approbation
                     <div class="overflow-x-auto">
                         <table class="table table-fixed">
                         {% block thead %}
-                            {% include 'console/head.table.html.twig' %}
+                            {{ include('console/head.table.html.twig') }}
                         {% endblock %}
                         {% block tbody %}
-                            {% include 'console/body.table.html.twig' %}
+                            {{ include('console/body.table.html.twig') }}
                         {% endblock %}
                         </table>
                     </div>

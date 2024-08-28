@@ -9,12 +9,8 @@ use App\Repository\DetailHeuresRepository;
  */
 class DetailHeureService
 {
-    public DetailHeuresRepository $detailHeuresRepository;
-
-    public function __construct(
-        DetailHeuresRepository $detailHeuresRepository
-    ) {
-        $this->detailHeuresRepository = $detailHeuresRepository;
+    public function __construct(public DetailHeuresRepository $detailHeuresRepository)
+    {
     }
 
     public function cleanLastWeek(): void

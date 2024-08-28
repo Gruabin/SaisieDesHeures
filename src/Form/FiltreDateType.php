@@ -15,14 +15,14 @@ class FiltreDateType extends AbstractType
         $builder
             ->add(
                 'date', ChoiceType::class, [
-                'choices' => $options['dates'],
-                'label' => false,
-                'data' => $options['data'][0],
+                    'choices' => $options['dates'],
+                    'label' => false,
+                    'data' => $options['data'][0],
                 ]
             )
             ->add(
                 'button', SubmitType::class, [
-                'label' => 'Appliquer la date',
+                    'label' => 'Appliquer la date',
                 ]
             );
     }
@@ -31,7 +31,7 @@ class FiltreDateType extends AbstractType
     {
         $resolver->setDefaults(
             [
-            // Configure your form options here
+                // Configure your form options here
             ]
         );
         $resolver->setRequired('dates');

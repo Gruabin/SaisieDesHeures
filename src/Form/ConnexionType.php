@@ -16,16 +16,16 @@ class ConnexionType extends AbstractType
         $builder
             ->add(
                 'id', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'maxlength' => '9',
-                    'name' => 'inputEmploye',
-                ],
+                    'label' => false,
+                    'attr' => [
+                        'maxlength' => '9',
+                        'name' => 'inputEmploye',
+                    ],
                 ]
             )
             ->add(
                 'bouton', SubmitType::class, [
-                'label' => 'Connexion',
+                    'label' => 'Connexion',
                 ]
             );
     }
@@ -34,7 +34,7 @@ class ConnexionType extends AbstractType
     {
         $resolver->setDefaults(
             [
-            'data_class' => Employe::class,
+                'data_class' => Employe::class,
             ]
         );
     }

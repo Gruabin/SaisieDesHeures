@@ -6,7 +6,6 @@ use App\Repository\DetailHeuresRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: DetailHeuresRepository::class)]
 class DetailHeures

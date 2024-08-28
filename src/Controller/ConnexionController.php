@@ -22,17 +22,8 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
  */
 class ConnexionController extends AbstractController
 {
-    public EntityManagerInterface $entityManager;
-    public LoggerInterface $logger;
-    public Security $security;
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        Security $security
-    ) {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
-        $this->security = $security;
+    public function __construct(public EntityManagerInterface $entityManager, public LoggerInterface $logger, public Security $security)
+    {
     }
 
     #[Route('/_connexion', name: 'connexion')]
@@ -74,7 +65,7 @@ class ConnexionController extends AbstractController
 
         return $this->render(
             'connexion/_formulaire.html.twig', [
-            'form' => $form->createView(),
+                'form' => $form->createView(),
             ]
         );
     }
