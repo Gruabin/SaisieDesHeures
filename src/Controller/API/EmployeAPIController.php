@@ -15,10 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EmployeAPIController extends AbstractController
 {
-    public function __construct(
-        LoggerInterface $logger
-    ) {
-        $this->logger = $logger;
+    public function __construct(public LoggerInterface $logger)
+    {
     }
 
     // *READ
@@ -36,7 +34,7 @@ class EmployeAPIController extends AbstractController
 
             // Convertir l'objet Employe en tableau associatif
             $employeData = [
-                'id' => $employe->getId(),
+                'id' => $employe->getUserIdentifier(),
                 'nom' => $employe->getNomEmploye(),
             ];
 

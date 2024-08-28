@@ -14,22 +14,28 @@ class ConnexionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'maxlength' => '9',
-                    'name' => 'inputEmploye',
-                ],
-            ])
-            ->add('bouton', SubmitType::class, [
-                'label' => 'Connexion',
-            ]);
+            ->add(
+                'id', TextType::class, [
+                    'label' => false,
+                    'attr' => [
+                        'maxlength' => '9',
+                        'name' => 'inputEmploye',
+                    ],
+                ]
+            )
+            ->add(
+                'bouton', SubmitType::class, [
+                    'label' => 'Connexion',
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Employe::class,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => Employe::class,
+            ]
+        );
     }
 }

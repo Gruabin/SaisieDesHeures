@@ -22,14 +22,8 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
  */
 class ConnexionController extends AbstractController
 {
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        Security $security
-    ) {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
-        $this->security = $security;
+    public function __construct(public EntityManagerInterface $entityManager, public LoggerInterface $logger, public Security $security)
+    {
     }
 
     #[Route('/_connexion', name: 'connexion')]
@@ -42,11 +36,11 @@ class ConnexionController extends AbstractController
         $form = $this->createForm(ConnexionType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getId())]);
+            $user = $employeRepo->findOneBy(['id' => strtoupper((string) $form->getData()->getUserIdentifier())]);
             if ($user) {
                 // Met à jour le role du manager
                 if ($employeRepo->estResponsable($user) && 'ROLE_EMPLOYE' === $user->getRoles()[0]) {
-                    $employe = $employeRepo->find($user->getId());
+                    $employe = $employeRepo->find($user->getUserIdentifier());
                     $employe->setRoles(['ROLE_MANAGER']);
                     $this->entityManager->persist($employe);
                     $this->entityManager->flush();
@@ -69,9 +63,11 @@ class ConnexionController extends AbstractController
             }
         }
 
-        return $this->render('connexion/_formulaire.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render(
+            'connexion/_formulaire.html.twig', [
+                'form' => $form->createView(),
+            ]
+        );
     }
 
     #[Route('/deconnexion', name: 'deconnexion')]

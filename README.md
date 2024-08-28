@@ -1,10 +1,10 @@
 Gruau - Saisie des heures
 --------
-Saisi des heures est une application web légère conçue pour simplifier la gestion de temps 
-et la saisie des heures pour les employés. Elle permet aux utilisateurs de suivre, 
-d'enregistrer et de gérer efficacement les heures travaillées sur différents projets. 
+Saisie des heures est une application web légère conçue pour simplifier la gestion de temps
+et la saisie des heures pour les employés. Elle permet aux utilisateurs de suivre,
+d'enregistrer et de gérer efficacement les heures travaillées sur différents projets.
 
-[![PHP](https://img.shields.io/badge/PHP-8.0.2-brightgreen.svg?logo=php&logoColor=white)](https://www.php.net/)
+[![PHP](https://img.shields.io/badge/PHP-8.3-brightgreen.svg?logo=php&logoColor=white)](https://www.php.net/)
 [![Nginx](https://img.shields.io/badge/Nginx-latest-brightgreen.svg?logo=nginx&logoColor=white)](https://www.nginx.com/)
 [![Symfony](https://img.shields.io/badge/Symfony-6.4.6-brightgreen.svg?logo=symfony&logoColor=white)](https://www.symfony.com/)
 
@@ -23,7 +23,7 @@ d'enregistrer et de gérer efficacement les heures travaillées sur différents 
 
 Pour utiliser l'application en localhost vous avez juste à suivre les étapes suivantes
 
-1. Vérifier que vous avez php 8
+1. Vérifier que vous avez php 8.3
 2. Installer les dépendances
 
    ```shell
@@ -50,6 +50,10 @@ Pour utiliser l'application en localhost vous avez juste à suivre les étapes s
 Aide pour executer les linters
 
 ```shell
+vendor/bin/phpstan analyse src tests --memory-limit=2G
+```
+
+```shell
 php vendor/bin/php-cs-fixer fix
 ```
 
@@ -66,6 +70,7 @@ php vendor/bin/php-cs-fixer fix
 php vendor/bin/rector process src
 php vendor/bin/twig-cs-fixer lint --fix templates
 ```
+
 #Aide pour installer la bdd de test via docker
 
 1er fois via :

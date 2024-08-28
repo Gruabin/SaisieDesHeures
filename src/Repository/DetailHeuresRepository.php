@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\DetailHeures;
+use App\Entity\Employe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<DetailHeures>
@@ -22,16 +24,15 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class DetailHeuresRepository extends ServiceEntityRepository
 {
+    public ManagerRegistry $registry;
+
     public function __construct(
-        EntityManagerInterface $entityManager,
+        public EntityManagerInterface $entityManager,
         ManagerRegistry $registry,
-        Security $security,
-        EmployeRepository $employeRepository
+        public Security $security,
+        public EmployeRepository $employeRepository
     ) {
         parent::__construct($registry, DetailHeures::class);
-        $this->security = $security;
-        $this->entityManager = $entityManager;
-        $this->employeRepository = $employeRepository;
     }
 
     public function findAll(): array
@@ -54,7 +55,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->where('d.date >= :date')
                 ->andWhere('d.employe IN (:employe)')
                 ->setParameter('date', date('Y-m-d', $dateAjd))
-                ->setParameter('employe', $user->getId())
+                ->setParameter('employe', $user->getUserIdentifier())
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
                 ->getResult();
@@ -91,7 +92,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->join('d.employe', 'employe')
                 ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('employe', substr((string) $user->getId(), 0, 2).'%')
+                ->setParameter('employe', substr((string) $user->getUserIdentifier(), 0, 2).'%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()
@@ -118,9 +119,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * Supprime tous les éléments spécifiés.
      *
-     * @param array $items les éléments à supprimer
+     * @param array<mixed> $items les éléments à supprimer
      */
-    public function removeAll($items)
+    public function removeAll($items): void
     {
         foreach ($items as $item) {
             $this->entityManager->remove($item);
@@ -131,26 +132,30 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * Récupère le nombre total d'heures pour l'utilisateur connecté.
      *
-     * @return array|null le nombre total d'heures
+     * @param Employe|UserInterface|string $user l'utilisateur connecté
+     *
+     * @return float le nombre total d'heures
      */
-    public function getNbHeures($user): array
+    public function getNbHeures($user): float
     {
         $dateAjd = strtotime('now');
-        if (!empty($user)) {
-            return $this->createQueryBuilder('d')
-                ->select('SUM(d.temps_main_oeuvre) AS total')
-                ->where('d.date >= :date')
-                ->andWhere('d.employe IN (:employe)')
-                ->setParameter('date', date('Y-m-d', $dateAjd))
-                ->setParameter('employe', $user)
-                ->getQuery()
-                ->getSingleResult();
-        }
+        $retour = $this->createQueryBuilder('d')
+            ->select('SUM(d.temps_main_oeuvre) AS total')
+            ->where('d.date >= :date')
+            ->andWhere('d.employe IN (:employe)')
+            ->setParameter('date', date('Y-m-d', $dateAjd))
+            ->setParameter('employe', $user)
+            ->getQuery()
+            ->getSingleResult();
+
+        return (float) $retour['total'];
     }
 
     /**
      * Récupère le nombre total d'anomalies pour les responsables selectionnés.
      * ! Pas utilisé.
+     *
+     * @param array<Employe> $responsables les responsables selectionnés
      *
      * @return int le nombre total d'anomalies des responsables selectionnés
      */
@@ -170,7 +175,9 @@ class DetailHeuresRepository extends ServiceEntityRepository
     /**
      * Récupère Les dates qui ont des détails d'heures non validées.
      *
-     * @return array|string dates possédant des détails d'heures non validées
+     * @param string $responsables les responsables selectionnés
+     *
+     * @return array<string>|string dates possédant des détails d'heures non validées
      */
     public function findDatesDetail($responsables): array|string
     {
