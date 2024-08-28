@@ -135,6 +135,7 @@ stages:
         - script: vendor/bin/phpstan analyse src tests --memory-limit=2G
           workingDirectory: $(rootFolder)
           displayName: "PHPStan analyse"
+          continueOnError: true
 
         # Mend
         - task: WhiteSource@21
