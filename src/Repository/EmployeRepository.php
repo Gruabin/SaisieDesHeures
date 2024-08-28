@@ -22,6 +22,7 @@ class EmployeRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param Employe $responsable
      * @return Employe[] Retourne les employées d'un responsable
      */
     public function findEmployeByResponsable($responsable): array
@@ -35,6 +36,9 @@ class EmployeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<Employe> retourne tout les employés
+     */
     public function findAll(): array
     {
         return $this->createQueryBuilder('e')
@@ -44,6 +48,7 @@ class EmployeRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int|array<int> $id
      * @return Employe[] Retourne les employées avec un tableau d'ID
      */
     public function findEmploye($id): array
@@ -59,9 +64,10 @@ class EmployeRepository extends ServiceEntityRepository
     /**
      * Récupère toute les heures à controller des responsables selectionnés trié par employe.
      *
-     * @return array Retourne les employées des responsables selectionnés
+     * @param array<Employe> $responsables
+     * @return array<Employe> Retourne les employées des responsables selectionnés
      */
-    public function findHeuresControle(array $responsables): array
+    public function findHeuresControle($responsables): array
     {
         $qb = $this->createQueryBuilder('e');
         $qb->join('e.detailHeures', 'd', 'WITH', 'd.statut IN (2, 3)')
@@ -75,7 +81,8 @@ class EmployeRepository extends ServiceEntityRepository
     /**
      * Retourne l'employé s'il est un responsable.
      *
-     * @return ?Employe Employé ou null
+     * @param Employe $user
+     * @return bool Retourne vrai si l'employé est un responsable
      */
     public function estResponsable($user): bool
     {

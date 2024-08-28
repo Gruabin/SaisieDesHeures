@@ -16,6 +16,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @property ActiviteRepository        $activiteRepository
@@ -30,6 +31,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConsoleController extends AbstractController
 {
+        public ActiviteRepository $activiteRepository;
+        public CentreDeChargeRepository $centreDeChargeRepository;
+        public LoggerInterface $logger;
+        public EntityManagerInterface $entityManager;
+        public DetailHeuresRepository $detailHeuresRepository;
+        public Security $security;
+        public StatutRepository $statutRepository;
+        public TacheRepository $tacheRepository;
+        public TacheSpecifiqueRepository $tacheSpecifiqueRepository;
     public function __construct(
         ActiviteRepository $activiteRepository,
         CentreDeChargeRepository $centreDeChargeRepository,
@@ -148,7 +158,8 @@ class ConsoleController extends AbstractController
     #[Route('/api/post/modifierLigne', name: 'modifierLigne', methods: ['POST'])]
     public function modifierLigne(Request $request): Response
     {
-        // try {
+        try {
+        $data = [];
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
@@ -170,14 +181,20 @@ class ConsoleController extends AbstractController
             $message = 'Jeton CSRF invalide';
             $code = Response::HTTP_UNAUTHORIZED;
         }
-        // } catch (\Throwable) {
-        //     $message = 'Erreur lors de la modification';
-        //     $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-        // }
+        } catch (\Throwable) {
+            $message = 'Erreur lors de la modification';
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+        }
 
         return new Response($message, $code);
     }
 
+    /**
+     * Summary of setDetailHeures
+     * @param DetailHeures $unDetail
+     * @param array<mixed> $data
+     * @return DetailHeures|null
+     */
     private function setDetailHeures(DetailHeures $unDetail, array $data)
     {
         $statutConforme = $this->statutRepository->getStatutConforme();

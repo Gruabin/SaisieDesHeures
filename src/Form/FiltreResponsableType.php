@@ -16,19 +16,20 @@ class FiltreResponsableType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('responsable', EntityType::class, [
+            ->add(
+                'responsable', EntityType::class, [
                 'class' => Employe::class,
                 'query_builder' => function (EntityRepository $er) use ($options): QueryBuilder {
                     if ('ROLE_ADMIN' === $options['user']->getRoles()[0]) {
                         $result = $er->createQueryBuilder('r')
-                        ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
-                        ->orderBy('r.nom_employe');
+                            ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
+                            ->orderBy('r.nom_employe');
                     } else {
                         $result = $er->createQueryBuilder('r')
-                        ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
-                        ->andWhere('r.id LIKE :codeSite')
-                        ->setParameter('codeSite', '%'.substr((string) $options['user']->getId(), 0, 2).'%')
-                        ->orderBy('r.nom_employe');
+                            ->innerJoin(\App\Entity\CentreDeCharge::class, 'cc', 'WITH', 'cc.responsable = r.id')
+                            ->andWhere('r.id LIKE :codeSite')
+                            ->setParameter('codeSite', '%'.substr((string) $options['user']->getUserIdentifier(), 0, 2).'%')
+                            ->orderBy('r.nom_employe');
                     }
 
                     return $result;
@@ -39,11 +40,14 @@ class FiltreResponsableType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'data' => $options['data'],
-            ])
+                ]
+            )
 
-            ->add('button', SubmitType::class, [
+            ->add(
+                'button', SubmitType::class, [
                 'label' => 'Appliquer le filtre',
-            ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

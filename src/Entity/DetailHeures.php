@@ -6,6 +6,7 @@ use App\Repository\DetailHeuresRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: DetailHeuresRepository::class)]
 class DetailHeures
@@ -73,10 +74,10 @@ class DetailHeures
             $name[] = $this->operation;
         }
         if (!empty($this->tache)) {
-            $name[] = $this->tache->name;
+            $name[] = $this->tache->getName();
         }
         if (!empty($this->centre_de_charge)) {
-            $name[] = $this->centre_de_charge->name;
+            $name[] = $this->centre_de_charge->getName();
         }
 
         return implode(', ', $name);

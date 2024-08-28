@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ActiviteAPIController extends AbstractController
 {
+    public LoggerInterface $logger;
     public function __construct(
         LoggerInterface $logger
     ) {

@@ -78,32 +78,32 @@ class AppFixtures extends Fixture
               $sql = "INSERT INTO type_heures (id,nom_type) VALUES (:id,:nom_type)";
               $stmt = $connection->prepare($sql);
               $typesHeuresData = $this->getTypesHeuresData();
-              foreach ($typesHeuresData as $typeHeureData) {
-                  $stmt->bindValue('id', $typeHeureData['id']);
-                  $stmt->bindValue('nom_type', $typeHeureData['nom_type']);
-                  $stmt->executeStatement();
-              }
+            foreach ($typesHeuresData as $typeHeureData) {
+                $stmt->bindValue('id', $typeHeureData['id']);
+                $stmt->bindValue('nom_type', $typeHeureData['nom_type']);
+                $stmt->executeStatement();
+            }
 
               // Exécutez des requêtes SQL natives pour insérer vos données
               $sql = "INSERT INTO tache (id,nom_tache,type_heures_id) VALUES (:id,:nom_tache,:type_heures_id)";
               $stmt = $connection->prepare($sql);
               $tachesData = $this->getTachesData();
-              foreach ($tachesData as $tacheData) {
-                  $stmt->bindValue('id', $tacheData['id']);
-                  $stmt->bindValue('nom_tache', $tacheData['nom_tache']);
-                  $stmt->bindValue('type_heures_id', $tacheData['type_heures_id']);
-                  $stmt->executeStatement();
-              }
+            foreach ($tachesData as $tacheData) {
+                $stmt->bindValue('id', $tacheData['id']);
+                $stmt->bindValue('nom_tache', $tacheData['nom_tache']);
+                $stmt->bindValue('type_heures_id', $tacheData['type_heures_id']);
+                $stmt->executeStatement();
+            }
  
                // Exécutez des requêtes SQL natives pour insérer vos données
                $sql = "INSERT INTO tache_specifique (id,description) VALUES (:id,:description)";
                $stmt = $connection->prepare($sql);
                $tachesSpecifiquesData = $this->getTachesSpecifiquesData();
-               foreach ($tachesSpecifiquesData as $tacheSpecifiqueData) {
-                   $stmt->bindValue('id', $tacheSpecifiqueData['id']);
-                   $stmt->bindValue('description', $tacheSpecifiqueData['description']);
-                   $stmt->executeStatement();
-               }
+            foreach ($tachesSpecifiquesData as $tacheSpecifiqueData) {
+                $stmt->bindValue('id', $tacheSpecifiqueData['id']);
+                $stmt->bindValue('description', $tacheSpecifiqueData['description']);
+                $stmt->executeStatement();
+            }
 
             // Exécutez des requêtes SQL natives pour insérer vos données
             $sql = "INSERT INTO site_tache_specifique (site_id,tache_specifique_id) VALUES (:site_id,:tache_specifique_id)";
@@ -153,7 +153,7 @@ class AppFixtures extends Fixture
 
     public function getActiviteData(): array
     {
-      return  $activitesData = [
+        return  $activitesData = [
             ['id' => 100, 'description' => "ETUDES"],
             ['id' => 101, 'description' => "ETUDES-Amélioration continue"],
             ['id' => 102, 'description' => "ETUDES-Compléments de projet inf. à 20 H"],
@@ -241,7 +241,8 @@ class AppFixtures extends Fixture
     }
 
 
-    public function getSitesData():array {
+    public function getSitesData():array
+    {
         return $sitesData = [
           ['id' => "AC"],
           ['id' => "AL"],
@@ -253,8 +254,8 @@ class AppFixtures extends Fixture
           ['id' => "LY"],
           ['id' => "PN"],
           ['id' => "SM"],
-      ];
-      }
+        ];
+    }
 
     public function getSitesTachesSpecifiquesData(): array
     {

@@ -14,7 +14,7 @@ class Site
     #[ORM\Column]
     private ?string $id = null;
 
-    #[ORM\ManyToMany(targetEntity: tacheSpecifique::class, inversedBy: 'sites')]
+    #[ORM\ManyToMany(targetEntity: TacheSpecifique::class, inversedBy: 'sites')]
     private Collection $tacheSpecifique;
 
     public function __construct()
@@ -35,14 +35,14 @@ class Site
     }
 
     /**
-     * @return Collection<string, tacheSpecifique>
+     * @return Collection<string, TacheSpecifique>
      */
     public function getTacheSpecifique(): Collection
     {
         return $this->tacheSpecifique;
     }
 
-    public function addTacheSpecifique(tacheSpecifique $tacheSpecifique): static
+    public function addTacheSpecifique(TacheSpecifique $tacheSpecifique): static
     {
         if (!$this->tacheSpecifique->contains($tacheSpecifique)) {
             $this->tacheSpecifique->add($tacheSpecifique);
@@ -51,7 +51,7 @@ class Site
         return $this;
     }
 
-    public function removeTacheSpecifique(tacheSpecifique $tacheSpecifique): static
+    public function removeTacheSpecifique(TacheSpecifique $tacheSpecifique): static
     {
         $this->tacheSpecifique->removeElement($tacheSpecifique);
 

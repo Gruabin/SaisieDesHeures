@@ -17,6 +17,8 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class CentreDeChargeRepository extends ServiceEntityRepository
 {
+    public ManagerRegistry $registry;
+    public Security $security;
     public function __construct(
         ManagerRegistry $registry,
         Security $security,
@@ -34,7 +36,7 @@ class CentreDeChargeRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('c')
             ->andWhere('c.id LIKE :val')
-            ->setParameter('val', substr((string) $user->getId(), 0, 2).'C%0')
+            ->setParameter('val', substr((string) $user->getUserIdentifier(), 0, 2).'C%0')
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult();

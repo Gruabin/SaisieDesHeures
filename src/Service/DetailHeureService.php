@@ -9,6 +9,8 @@ use App\Repository\DetailHeuresRepository;
  */
 class DetailHeureService
 {
+    public DetailHeuresRepository $detailHeuresRepository;
+
     public function __construct(
         DetailHeuresRepository $detailHeuresRepository
     ) {

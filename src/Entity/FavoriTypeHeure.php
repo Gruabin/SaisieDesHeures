@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FavoriTypeHeureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: FavoriTypeHeureRepository::class)]
 class FavoriTypeHeure

@@ -128,3 +128,8 @@ stages:
           displayName: "Mend"
           inputs:
             cwd: '$(System.DefaultWorkingDirectory)'
+
+        # PHPStan analyse
+        - script: vendor/bin/phpstan analyse src tests --memory-limit=2G
+          workingDirectory: $(rootFolder)
+          displayName: "PHPStan analyse"
