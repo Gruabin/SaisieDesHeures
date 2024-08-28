@@ -120,8 +120,8 @@ class IndexController extends AbstractController
     public function historique(): Response
     {
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser());
-        if ($nbHeures['total'] >= 10) {
-            $message = "Votre nombre d'heure est trop élevé";
+        if ($nbHeures['total'] >= 12) {
+            $message = "Votre avez atteint votre limite d'heures journalières";
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();

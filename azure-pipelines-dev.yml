@@ -101,7 +101,7 @@ stages:
       
         # Démarrage du conteneur pour la bdd de test
         - script: |
-            docker-compose up -d
+            docker compose up -d
           workingDirectory: $(rootFolder)
           displayName: 'Exécuter docker-compose up'
           
@@ -122,7 +122,7 @@ stages:
           displayName: "Load fixture"
 
         # Execution des tests
-        - script: php bin/phpunit
+        - script: php -d xdebug.mode=coverage bin/phpunit --coverage-clover='var/coverage/clover.xml' --coverage-html='var/coverage/html' --log-junit='var/coverage/phpunit-results.xml'
           workingDirectory: $(rootFolder)
           displayName: "make test"
 
@@ -135,7 +135,20 @@ stages:
         - task: WhiteSource@21
           displayName: "Mend"
           inputs:
-            cwd: '$(System.DefaultWorkingDirectory)'
+            cwd: '$(rootFolder)'
+
+        - task: PublishCodeCoverageResults@2
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: '$(rootFolder)/var/coverage/clover.xml'
+            reportDirectory: '$(rootFolder)/var/coverage/html'
+            failIfCoverageEmpty: true
+
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFiles: '$(rootFolder)/var/coverage/phpunit-results.xml'
+            failTaskOnFailedTests: true
+            testRunTitle: 'PHPUnit Test Results'
 
         - task: ArchiveFiles@2
           displayName: "Archive files"

@@ -114,7 +114,7 @@ stages:
           displayName: "Load fixture"
 
         # Execution des tests
-        - script: php bin/phpunit
+        - script: php bin/phpunit --coverage-html var/coverage/html
           workingDirectory: $(rootFolder)
           displayName: "make test"
 
@@ -128,3 +128,16 @@ stages:
           displayName: "Mend"
           inputs:
             cwd: '$(System.DefaultWorkingDirectory)'
+
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: 'var/coverage/clover.xml'
+            reportDirectory: 'var/coverage/html'
+            failIfCoverageEmpty: true
+
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFiles: '**/TEST-*.xml'
+            failTaskOnFailedTests: true
+            testRunTitle: 'PHPUnit Test Results'

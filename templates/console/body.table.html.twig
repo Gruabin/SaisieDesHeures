@@ -1,8 +1,10 @@
 {% block tbody %}
     <tbody class="text-center">
         {% for heure in employe.heures %}
-        <div class="hidden" name="dateLigne"> {{ heure.date|date('d-m-Y', 'Europe/Paris') }}</div>
-            <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-statut="{{ heure.statut.id }}" data-employe="{{ heure.employe.id }}">
+            <tr class="text-center ligne" data-idligne="{{ heure.id }}" data-date="{{ heure.date|date('d-m-Y', 'Europe/Paris') }}" data-statut="{{ heure.statut.id }}" data-employe="{{ heure.employe.id }}">
+            <div class="hidden" name="dateLigne">
+                {{ heure.date|date('d-m-Y', 'Europe/Paris') }}
+            </div>
                 <input type="hidden" name="ligneToken"  value="{{ csrf_token('ligneToken_' ~ heure.id) }}">
                 <td>
                     <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="checkbox_ligne">
