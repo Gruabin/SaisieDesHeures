@@ -3,6 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\DetailHeures;
+use App\Entity\Employe;
 use App\Entity\Statut;
 use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
@@ -22,18 +23,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @property TypeHeuresRepository      $typeHeuresRepository
+ * @property TypeHeuresRepository      $typeHeuresRepo
  * @property ActiviteRepository        $activiteRepository
- * @property CentreDeChargeRepository  $centreDeChargeRepository
+ * @property CentreDeChargeRepository  $centreDeChargeRepo
  * @property TacheRepository           $tacheRepository
- * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
+ * @property TacheSpecifiqueRepository $tacheSpecifiqueRepo
  * @property LoggerInterface           $logger
  */
 class DetailHeuresAPIController extends AbstractController
 {
     public StatutRepository $statutRepository;
 
-    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger)
+    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepo, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepo, public TacheSpecifiqueRepository $tacheSpecifiqueRepo, public LoggerInterface $logger)
     {
     }
 
@@ -101,7 +102,7 @@ class DetailHeuresAPIController extends AbstractController
             // Valider les données entrantes
             $tempsMainOeuvre = $data['temps_main_oeuvre'] ?? null;
             $typeHeures = $data['type_heures'] ?? null;
-            $typeHeures = $this->typeHeuresRepository->find($typeHeures);
+            $typeHeures = $this->typeHeuresRepo->find($typeHeures);
             $statut = $statutRepo->getStatutEnregistre();
 
             // Vérifier si les données nécessaires sont présentes
@@ -164,10 +165,12 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->setTypeHeures($typeHeures);
-        $detailHeures->setEmploye($security->getUser());
         $detailHeures->setDateExport(null);
         $detailHeures->setStatut($statut);
-
+        $user = $security->getUser();
+        if ($user instanceof Employe) {
+            $detailHeures->setEmploye($user);
+        }
         // Vérifier et définir les propriétés optionnelles
         if (!empty($data['ordre'])) {
             $detailHeures->setOrdre($data['ordre']);
@@ -185,7 +188,7 @@ class DetailHeuresAPIController extends AbstractController
             $detailHeures->setTache($tache);
         }
         if (!empty($data['tacheSpecifique'])) {
-            $tacheSpecifique = $this->tacheSpecifiqueRepository->find($data['tacheSpecifique']);
+            $tacheSpecifique = $this->tacheSpecifiqueRepo->find($data['tacheSpecifique']);
             if (!$tacheSpecifique) {
                 $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object tacheSpecifique manquant');
 
@@ -204,7 +207,7 @@ class DetailHeuresAPIController extends AbstractController
         }
         if (!empty($data['centre_de_charge'])) {
             if (1 == $typeHeures->getId()) {
-                $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
+                $centreDeCharge = $this->centreDeChargeRepo->find($data['centre_de_charge']);
                 if (!$centreDeCharge) {
                     $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
 

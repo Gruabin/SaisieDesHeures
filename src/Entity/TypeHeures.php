@@ -18,12 +18,21 @@ class TypeHeures
     #[ORM\Column(length: 255)]
     private ?string $nom_type = null;
 
+    /**
+     * @var Collection<int, DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'type_heures', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    /**
+     * @var Collection<int, Tache>
+     */
     #[ORM\OneToMany(mappedBy: 'typeHeures', targetEntity: Tache::class)]
     private Collection $taches;
 
+    /**
+     * @var Collection<int, FavoriTypeHeure>
+     */
     #[ORM\OneToMany(targetEntity: FavoriTypeHeure::class, mappedBy: 'typeHeure')]
     private Collection $favoriTypeHeures;
 

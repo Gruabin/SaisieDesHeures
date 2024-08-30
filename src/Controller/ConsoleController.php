@@ -18,19 +18,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @property ActiviteRepository        $activiteRepository
- * @property CentreDeChargeRepository  $centreDeChargeRepository
+ * @property ActiviteRepository        $activiteRepo
+ * @property CentreDeChargeRepository  $centreDeChargeRepo
  * @property LoggerInterface           $logger
  * @property EntityManagerInterface    $entityManager
- * @property DetailHeuresRepository    $detailHeuresRepository
+ * @property DetailHeuresRepository    $detailHeuresRepo
  * @property Security                  $security
- * @property StatutRepository          $statutRepository
- * @property TacheRepository           $tacheRepository
- * @property TacheSpecifiqueRepository $tacheSpecifiqueRepository
+ * @property StatutRepository          $statutRepo
+ * @property TacheRepository           $tacheRepo
+ * @property TacheSpecifiqueRepository $tacheSpecifiqueRepo
  */
 class ConsoleController extends AbstractController
 {
-    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository)
+    public function __construct(public ActiviteRepository $activiteRepo, public CentreDeChargeRepository $centreDeChargeRepo, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepo, public Security $security, public StatutRepository $statutRepo, public TacheRepository $tacheRepo, public TacheSpecifiqueRepository $tacheSpecifiqueRepo)
     {
     }
 
@@ -48,11 +48,11 @@ class ConsoleController extends AbstractController
             $token = $data['token'];
             // Vérifie si le jeton CSRF est valide
             if (!empty($token) && $this->isCsrfTokenValid('approbationToken', $token)) {
-                $statutApprouve = $this->statutRepository->getStatutApprouve();
-                $statutConforme = $this->statutRepository->getStatutConforme();
+                $statutApprouve = $this->statutRepo->getStatutApprouve();
+                $statutConforme = $this->statutRepo->getStatutConforme();
                 // Parcourir les ID des détails envoyés
                 foreach ($data['id'] as $ligne) {
-                    $unDetail = $this->detailHeuresRepository->findOneBy(['id' => $ligne]);
+                    $unDetail = $this->detailHeuresRepo->findOneBy(['id' => $ligne]);
                     // Vérifie si le statut du détail est conforme
                     if ($unDetail->getStatut() == $statutConforme) {
                         $unDetail->setStatut($statutApprouve);
@@ -92,10 +92,10 @@ class ConsoleController extends AbstractController
 
             // Vérifie si le jeton CSRF est valide
             if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
-                $statutSupprime = $this->statutRepository->getStatutSupprime();
-                $statutConforme = $this->statutRepository->getStatutConforme();
-                $statutAnomalie = $this->statutRepository->getStatutAnomalie();
-                $unDetail = $this->detailHeuresRepository->find($data['id']);
+                $statutSupprime = $this->statutRepo->getStatutSupprime();
+                $statutConforme = $this->statutRepo->getStatutConforme();
+                $statutAnomalie = $this->statutRepo->getStatutAnomalie();
+                $unDetail = $this->detailHeuresRepo->find($data['id']);
 
                 if ($unDetail && in_array($unDetail->getStatut(), [$statutConforme, $statutAnomalie])) {
                     $unDetail->setStatut($statutSupprime);
@@ -137,9 +137,9 @@ class ConsoleController extends AbstractController
             $token = $data['token'];
             // Vérifie si le jeton CSRF est valide
             if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
-                $statutAnomalie = $this->statutRepository->getStatutAnomalie();
-                $statutConforme = $this->statutRepository->getStatutConforme();
-                $unDetail = $this->detailHeuresRepository->findOneBy(['id' => $data['id']]);
+                $statutAnomalie = $this->statutRepo->getStatutAnomalie();
+                $statutConforme = $this->statutRepo->getStatutConforme();
+                $unDetail = $this->detailHeuresRepo->findOneBy(['id' => $data['id']]);
                 // Vérifie si le statut du détail est conforme
                 if ($unDetail && in_array($unDetail->getStatut(), [$statutConforme, $statutAnomalie])) {
                     $unDetail = $this->setDetailHeures($unDetail, $data);
@@ -170,7 +170,7 @@ class ConsoleController extends AbstractController
      */
     private function setDetailHeures(DetailHeures $unDetail, array $data)
     {
-        $statutConforme = $this->statutRepository->getStatutConforme();
+        $statutConforme = $this->statutRepo->getStatutConforme();
         $unDetail->setTempsMainOeuvre($data['temps_main_oeuvre']);
         $unDetail->setStatut($statutConforme);
         $unDetail->setMotifErreur(null);
@@ -190,7 +190,7 @@ class ConsoleController extends AbstractController
         }
 
         if (null != $data['activite']) {
-            $activite = $this->activiteRepository->find($data['activite']);
+            $activite = $this->activiteRepo->find($data['activite']);
             if (!$activite) {
                 $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Activite manquant');
 
@@ -202,10 +202,10 @@ class ConsoleController extends AbstractController
         }
 
         if (null != $data['tache']) {
-            if (null != $this->tacheSpecifiqueRepository->find($data['tache'])) {
-                $unDetail->setTacheSpecifique($this->tacheSpecifiqueRepository->find($data['tache']));
-            } elseif (null != $this->tacheRepository->find($data['tache'])) {
-                $unDetail->setTache($this->tacheRepository->find($data['tache']));
+            if (null != $this->tacheSpecifiqueRepo->find($data['tache'])) {
+                $unDetail->setTacheSpecifique($this->tacheSpecifiqueRepo->find($data['tache']));
+            } elseif (null != $this->tacheRepo->find($data['tache'])) {
+                $unDetail->setTache($this->tacheRepo->find($data['tache']));
             } else {
                 $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Tache manquant');
 
@@ -217,7 +217,7 @@ class ConsoleController extends AbstractController
         }
 
         if (null != $data['centre_de_charge']) {
-            $centreDeCharge = $this->centreDeChargeRepository->find($data['centre_de_charge']);
+            $centreDeCharge = $this->centreDeChargeRepo->find($data['centre_de_charge']);
             if (!$centreDeCharge) {
                 $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object Centre de charge manquant');
 

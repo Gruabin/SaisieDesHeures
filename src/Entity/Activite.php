@@ -18,6 +18,9 @@ class Activite
     #[ORM\Column(length: 255)]
     private ?string $description_activite = null;
 
+    /**
+     * @var Collection<int, DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'activite', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 

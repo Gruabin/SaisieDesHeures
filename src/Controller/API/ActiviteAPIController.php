@@ -22,6 +22,7 @@ class ActiviteAPIController extends AbstractController
     #[Route('/api/get/activite', name: 'api_get_activite', methods: ['GET'])]
     public function get(ActiviteRepository $activiteRepo): Response
     {
+        $activiteData = [];
         // Récupérer l'activité correspondante à l'ID depuis la base de données
         $activite = $activiteRepo->findAll();
         // Vérifier si l'activité existe

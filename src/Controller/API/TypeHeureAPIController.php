@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Employe;
 use App\Entity\FavoriTypeHeure;
 use App\Repository\FavoriTypeHeureRepository;
 use App\Repository\TypeHeuresRepository;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class TypeHeureAPIController extends AbstractController
 {
     #[Route('/api/post/type_heure', name: 'api_type_heure_post', methods: ['POST'])]
-    public function TypeHeurePost(Request $request, FavoriTypeHeureRepository $favoriTypeHeureRepository, TypeHeuresRepository $typeHeuresRepository, EntityManagerInterface $entityManager): Response
+    public function TypeHeurePost(Request $request, FavoriTypeHeureRepository $favoriTypeHeureRepo, TypeHeuresRepository $typeHeuresRepo, EntityManagerInterface $entityManager): Response
     {
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -23,16 +24,19 @@ class TypeHeureAPIController extends AbstractController
             return new Response('type manquant', Response::HTTP_BAD_REQUEST);
         }
 
-        $typeHeure = $typeHeuresRepository->find($data['type']);
+        $typeHeure = $typeHeuresRepo->find($data['type']);
 
-        $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $this->getUser()]);
+        $favoriTypeHeure = $favoriTypeHeureRepo->findOneBy(['employe' => $this->getUser()]);
 
         if ($favoriTypeHeure) {
             $favoriTypeHeure->setTypeHeure($typeHeure);
         } else {
             $favoriTypeHeure = new FavoriTypeHeure();
             $favoriTypeHeure->setTypeHeure($typeHeure);
-            $favoriTypeHeure->setEmploye($this->getUser());
+            $user = $this->getUser();
+            if ($user instanceof Employe) {
+                $favoriTypeHeure->setEmploye($user);
+            }
         }
         $entityManager->persist($favoriTypeHeure);
         $entityManager->flush();

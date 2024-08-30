@@ -18,6 +18,9 @@ class Tache
     #[ORM\Column(length: 255)]
     private ?string $nom_tache = null;
 
+    /**
+     * @var Collection<int, DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'tache', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
