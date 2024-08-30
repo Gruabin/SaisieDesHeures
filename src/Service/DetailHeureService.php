@@ -5,11 +5,11 @@ namespace App\Service;
 use App\Repository\DetailHeuresRepository;
 
 /**
- * @property DetailHeuresRepository $detailHeuresRepository
+ * @property DetailHeuresRepository $detailHeuresRepo
  */
 class DetailHeureService
 {
-    public function __construct(public DetailHeuresRepository $detailHeuresRepository)
+    public function __construct(public DetailHeuresRepository $detailHeuresRepo)
     {
     }
 

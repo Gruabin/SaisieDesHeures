@@ -160,7 +160,7 @@ class ConsoleTest extends PantherTestCase
 
         // Vérifie que tous les responsables sont affichés
         foreach ($employes as $employe) {
-            $this->assertTrue('LV0000002' == $employe->getAttribute('data-employe') || 'LV0000003');
+            $this->assertTrue('LV0000002' || 'LV0000003' == $employe->getAttribute('data-employe'));
         }
     }
 }

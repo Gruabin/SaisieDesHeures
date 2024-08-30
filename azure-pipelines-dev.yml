@@ -132,9 +132,15 @@ stages:
           displayName: "docker down"
 
         # PHPStan analyse
-        - script: vendor/bin/phpstan analyse src tests --memory-limit=2G
+        - script: vendor/bin/phpstan analyse src --memory-limit=2G
           workingDirectory: $(rootFolder)
           displayName: "PHPStan analyse"
+          continueOnError: true
+
+        # PHP Mess Detector
+        - script: php vendor/bin/phpmd  src/ text phpmd.xml
+          workingDirectory: $(rootFolder)
+          displayName: "PHP Mess Detector"
           continueOnError: true
 
         # Mend

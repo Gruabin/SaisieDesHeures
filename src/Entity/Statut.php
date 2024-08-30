@@ -18,6 +18,9 @@ class Statut
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    /**
+     * @var Collection<int, DetailHeures>
+     */
     #[ORM\OneToMany(targetEntity: DetailHeures::class, mappedBy: 'statut')]
     private Collection $detail;
 

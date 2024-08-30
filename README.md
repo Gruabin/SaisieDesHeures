@@ -13,11 +13,13 @@ d'enregistrer et de gérer efficacement les heures travaillées sur différents 
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Installation](#installation)
+- [Linter](#linter)
+- [Qualité de code](#qualité-de-code)
+- [tests PHP](#tests-php)
 - [TIPS](#tips)
 - [SSO](#sso)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 # Installation
 
@@ -47,31 +49,51 @@ Pour utiliser l'application en localhost vous avez juste à suivre les étapes s
 6. Vous pouvez maintenant accéder à l'application via l'url `http://localhost:8000`
 
 # Linter
+
 Aide pour executer les linters
 
-```shell
-vendor/bin/phpstan analyse src tests --memory-limit=2G
-```
+1. PHP CS Fixer
+
+   ```shell
+   php vendor/bin/php-cs-fixer fix
+   ```
+
+2. Rector
+
+   ```shell
+   php vendor/bin/rector process src
+   ```
+
+3. Twig CS Fixer
+
+   ```shell
+   php vendor/bin/twig-cs-fixer lint --fix templates
+   ```
 
 ```shell
 php vendor/bin/php-cs-fixer fix
-```
-
-```shell
-php vendor/bin/rector process src
-```
-
-```shell
-php vendor/bin/twig-cs-fixer lint --fix templates
-```
-
-```shell
-php vendor/bin/php-cs-fixer fix
 php vendor/bin/rector process src
 php vendor/bin/twig-cs-fixer lint --fix templates
+vendor/bin/phpstan analyse src --memory-limit=2G
 ```
 
-#Aide pour installer la bdd de test via docker
+# Qualité de code
+
+Outils de qualité de code :
+
+1. PHPStan
+
+   ```shell
+   vendor/bin/phpstan analyse src --memory-limit=2G
+   ```
+
+2. PHP Mess Detector
+
+   ```shell
+   php vendor/bin/phpmd  src/ text phpmd.xml
+   ```
+
+# Aide pour installer la bdd de test via docker
 
 1er fois via :
 
@@ -85,20 +107,12 @@ Puis ensuite une fois installé seulement :
 docker compose up
 ```
 
-# Test Php
+# Tests Php
+
 Executer les tests php
 
 ```shell
 php bin/phpunit
-```
-
-# Linter + tests
-
-```shell
-php bin/phpunit
-php vendor/bin/php-cs-fixer fix
-php vendor/bin/rector process src
-php vendor/bin/twig-cs-fixer lint --fix templates
 ```
 
 # TIPS

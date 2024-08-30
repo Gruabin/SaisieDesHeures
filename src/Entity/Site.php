@@ -14,6 +14,9 @@ class Site
     #[ORM\Column]
     private ?string $id = null;
 
+    /**
+     * @var Collection<string, TacheSpecifique>
+     */
     #[ORM\ManyToMany(targetEntity: TacheSpecifique::class, inversedBy: 'sites')]
     private Collection $tacheSpecifique;
 

@@ -14,9 +14,15 @@ class CentreDeCharge
     #[ORM\Column(length: 255)]
     private ?string $id = null;
 
+    /**
+     * @var Collection<int, Employe>
+     */
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: Employe::class)]
     private Collection $employes;
 
+    /**
+     * @var Collection<int, DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 

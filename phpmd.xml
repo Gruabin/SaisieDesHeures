@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="Ruleset">
+    <description>Regles pour PHPMD</description>
+    <exclude-pattern>\src\DataFixtures\AppFixtures.php</exclude-pattern>
+    <exclude-pattern>\src\Kernel.php</exclude-pattern>
+    <exclude-pattern>\src\Security\AuthSecurity</exclude-pattern>
+    
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="ElseExpression" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml">
+    </rule>
+
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable" />
+    </rule>
+
+    <rule ref="rulesets/unusedcode.xml">
+    </rule>
+
+</ruleset>
