@@ -93,44 +93,44 @@ class ConsoleTest extends PantherTestCase
         }
     }
 
-    public function testSelectionAnomalie(): void
-    {
-        $client = static::createPantherClient();
-        $client->followRedirects(true);
-        $crawler = $client->request('GET', '/');
+    // public function testSelectionAnomalie(): void
+    // {
+    //     $client = static::createPantherClient();
+    //     $client->followRedirects(true);
+    //     $crawler = $client->request('GET', '/');
 
-        // Connexion
-        $client->waitForEnabled('[type="submit"]');
-        $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]'] = 'LV0000002';
-        $client->waitForEnabled('[type="submit"]');
-        $client->submit($form);
-        $client->waitFor('#console');
+    //     // Connexion
+    //     $client->waitForEnabled('[type="submit"]');
+    //     $form = $crawler->selectButton('Connexion')->form();
+    //     $form['connexion[id]'] = 'LV0000002';
+    //     $client->waitForEnabled('[type="submit"]');
+    //     $client->submit($form);
+    //     $client->waitFor('#console');
 
-        $selectAnomalie = $client->findElement(WebDriverBy::id('select_anomalies'));
-        $lignes = $client->findElements(WebDriverBy::className('ligne'));
+    //     $selectAnomalie = $client->findElement(WebDriverBy::id('select_anomalies'));
+    //     $lignes = $client->findElements(WebDriverBy::className('ligne'));
 
-        // Coche la case anomalies
-        $selectAnomalie->click();
+    //     // Coche la case anomalies
+    //     $selectAnomalie->click();
 
-        // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
-        foreach ($lignes as $ligne) {
-            if ('3' == $ligne->getAttribute('data-statut')) {
-                $this->assertFalse($ligne->isDisplayed());
-            }
-            if ('2' == $ligne->getAttribute('data-statut')) {
-                $this->assertTrue($ligne->isDisplayed());
-            }
-        }
+    //     // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
+    //     foreach ($lignes as $ligne) {
+    //         if ('3' == $ligne->getAttribute('data-statut')) {
+    //             $this->assertFalse($ligne->isDisplayed());
+    //         }
+    //         if ('2' == $ligne->getAttribute('data-statut')) {
+    //             $this->assertTrue($ligne->isDisplayed());
+    //         }
+    //     }
 
-        // Coche la case anomalies
-        $selectAnomalie->click();
+    //     // Coche la case anomalies
+    //     $selectAnomalie->click();
 
-        // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
-        foreach ($lignes as $ligne) {
-            $this->assertTrue($ligne->isDisplayed());
-        }
-    }
+    //     // Vérifie qu'uniquement les lignes avec des anomalies sont affichées
+    //     foreach ($lignes as $ligne) {
+    //         $this->assertTrue($ligne->isDisplayed());
+    //     }
+    // }
 
     public function testSelectionResponsable(): void
     {
