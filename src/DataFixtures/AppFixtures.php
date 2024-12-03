@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // Créez des objets CentreDeCharge
         $centreDeCharge1 = new CentreDeCharge();
