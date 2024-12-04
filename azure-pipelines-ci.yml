@@ -93,7 +93,7 @@ stages:
       
         # Démarrage du conteneur pour la bdd de test
         - script: |
-            docker-compose up -d
+            docker compose up -d
           workingDirectory: $(rootFolder)
           displayName: 'Exécuter docker-compose up'
           
@@ -114,9 +114,9 @@ stages:
           displayName: "Load fixture"
 
         # Execution des tests
-        - script: php bin/phpunit
+        - script: php -d xdebug.mode=coverage bin/phpunit --coverage-clover='var/coverage/clover.xml' --coverage-html='var/coverage/html' --log-junit='var/coverage/phpunit-results.xml'
           workingDirectory: $(rootFolder)
-          displayName: "make test"
+          displayName: "Tests"
 
         # Démontage du conteneur
         - script: docker compose down
@@ -128,3 +128,22 @@ stages:
           displayName: "Mend"
           inputs:
             cwd: '$(System.DefaultWorkingDirectory)'
+
+        # PHPStan analyse
+        - script: vendor/bin/phpstan analyse src tests --memory-limit=2G
+          workingDirectory: $(rootFolder)
+          displayName: "PHPStan analyse"
+          continueOnError: true
+
+        - task: PublishCodeCoverageResults@2
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: 'var/coverage/clover.xml'
+            reportDirectory: 'var/coverage/html'
+            failIfCoverageEmpty: true
+
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFiles: '**/TEST-*.xml'
+            failTaskOnFailedTests: true
+            testRunTitle: 'PHPUnit Test Results'

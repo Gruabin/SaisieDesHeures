@@ -73,10 +73,10 @@ class DetailHeures
             $name[] = $this->operation;
         }
         if (!empty($this->tache)) {
-            $name[] = $this->tache->name;
+            $name[] = $this->tache->getName();
         }
         if (!empty($this->centre_de_charge)) {
-            $name[] = $this->centre_de_charge->name;
+            $name[] = $this->centre_de_charge->getName();
         }
 
         return implode(', ', $name);

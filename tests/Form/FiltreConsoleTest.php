@@ -42,7 +42,8 @@ class FiltreConsoleTest extends WebTestCase
         $client->followRedirects();
 
         // vérification de l'affichage des données
-        $this->assertSelectorExists('div[name="dateLigne"]', '19-04-2024');
+        $this->assertSelectorTextContains('div[name="dateLigne"]', '19-04-2024');
+        $this->assertSelectorTextNotContains('div[name="dateLigne"]', '22-04-2024');
     }
 
     public function testFiltreToutesDate(): void
@@ -79,7 +80,6 @@ class FiltreConsoleTest extends WebTestCase
         $client->followRedirects();
 
         // vérification de l'affichage des données
-        $this->assertSelectorExists('div[name="dateLigne"]', '22-04-2024');
-        $this->assertSelectorExists('div[name="dateLigne"]', '19-04-2024');
+        $this->assertSelectorTextContains('div[name="dateLigne"]', '22-04-2024' || '19-04-2024');
     }
 }

@@ -30,26 +30,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConsoleController extends AbstractController
 {
-    public function __construct(
-        ActiviteRepository $activiteRepository,
-        CentreDeChargeRepository $centreDeChargeRepository,
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        DetailHeuresRepository $detailHeuresRepository,
-        Security $security,
-        StatutRepository $statutRepository,
-        TacheRepository $tacheRepository,
-        TacheSpecifiqueRepository $tacheSpecifiqueRepository
-    ) {
-        $this->activiteRepository = $activiteRepository;
-        $this->centreDeChargeRepository = $centreDeChargeRepository;
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->detailHeuresRepository = $detailHeuresRepository;
-        $this->security = $security;
-        $this->statutRepository = $statutRepository;
-        $this->tacheRepository = $tacheRepository;
-        $this->tacheSpecifiqueRepository = $tacheSpecifiqueRepository;
+    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository)
+    {
     }
 
     /**
@@ -148,36 +130,44 @@ class ConsoleController extends AbstractController
     #[Route('/api/post/modifierLigne', name: 'modifierLigne', methods: ['POST'])]
     public function modifierLigne(Request $request): Response
     {
-        // try {
-        // Récupérer les données JSON envoyées dans la requête POST
-        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $token = $data['token'];
-        // Vérifie si le jeton CSRF est valide
-        if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
-            $statutAnomalie = $this->statutRepository->getStatutAnomalie();
-            $statutConforme = $this->statutRepository->getStatutConforme();
-            $unDetail = $this->detailHeuresRepository->findOneBy(['id' => $data['id']]);
-            // Vérifie si le statut du détail est conforme
-            if ($unDetail && in_array($unDetail->getStatut(), [$statutConforme, $statutAnomalie])) {
-                $unDetail = $this->setDetailHeures($unDetail, $data);
-                $this->entityManager->persist($unDetail);
-                $this->entityManager->flush();
-                $this->logger->info('Détail n°'.$data['id'].' modifié par '.$this->getUser()->getNomEmploye());
+        try {
+            $data = [];
+            // Récupérer les données JSON envoyées dans la requête POST
+            $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $token = $data['token'];
+            // Vérifie si le jeton CSRF est valide
+            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
+                $statutAnomalie = $this->statutRepository->getStatutAnomalie();
+                $statutConforme = $this->statutRepository->getStatutConforme();
+                $unDetail = $this->detailHeuresRepository->findOneBy(['id' => $data['id']]);
+                // Vérifie si le statut du détail est conforme
+                if ($unDetail && in_array($unDetail->getStatut(), [$statutConforme, $statutAnomalie])) {
+                    $unDetail = $this->setDetailHeures($unDetail, $data);
+                    $this->entityManager->persist($unDetail);
+                    $this->entityManager->flush();
+                    $this->logger->info('Détail n°'.$data['id'].' modifié par '.$this->getUser()->getNomEmploye());
+                }
+                $message = 'Saisie modifié';
+                $code = Response::HTTP_OK;
+            } else {
+                $message = 'Jeton CSRF invalide';
+                $code = Response::HTTP_UNAUTHORIZED;
             }
-            $message = 'Saisie modifié';
-            $code = Response::HTTP_OK;
-        } else {
-            $message = 'Jeton CSRF invalide';
-            $code = Response::HTTP_UNAUTHORIZED;
+        } catch (\Throwable) {
+            $message = 'Erreur lors de la modification';
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
-        // } catch (\Throwable) {
-        //     $message = 'Erreur lors de la modification';
-        //     $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-        // }
 
         return new Response($message, $code);
     }
 
+    /**
+     * Summary of setDetailHeures.
+     *
+     * @param array<mixed> $data
+     *
+     * @return DetailHeures|null
+     */
     private function setDetailHeures(DetailHeures $unDetail, array $data)
     {
         $statutConforme = $this->statutRepository->getStatutConforme();

@@ -18,7 +18,7 @@ class Statut
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\OneToMany(targetEntity: detailHeures::class, mappedBy: 'statut')]
+    #[ORM\OneToMany(targetEntity: DetailHeures::class, mappedBy: 'statut')]
     private Collection $detail;
 
     public function __construct()
@@ -44,14 +44,14 @@ class Statut
     }
 
     /**
-     * @return Collection<int, detailHeures>
+     * @return Collection<int, DetailHeures>
      */
     public function getDetail(): Collection
     {
         return $this->detail;
     }
 
-    public function addDetail(detailHeures $detail): static
+    public function addDetail(DetailHeures $detail): static
     {
         if (!$this->detail->contains($detail)) {
             $this->detail->add($detail);
@@ -61,7 +61,7 @@ class Statut
         return $this;
     }
 
-    public function removeDetail(detailHeures $detail): static
+    public function removeDetail(DetailHeures $detail): static
     {
         if ($this->detail->removeElement($detail)) {
             // set the owning side to null (unless already changed)

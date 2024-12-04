@@ -23,8 +23,6 @@ class StatutRepository extends ServiceEntityRepository
 
     /**
      * Récupère le statut Enregistré.
-     *
-     * @return ?Statut
      */
     public function getStatutEnregistre(): ?Statut
     {
@@ -37,8 +35,6 @@ class StatutRepository extends ServiceEntityRepository
 
     /**
      * Récupère le statut Anomalie.
-     *
-     * @return ?Statut
      */
     public function getStatutAnomalie(): ?Statut
     {
@@ -51,8 +47,6 @@ class StatutRepository extends ServiceEntityRepository
 
     /**
      * Récupère le statut Conforme.
-     *
-     * @return ?Statut
      */
     public function getStatutConforme(): ?Statut
     {
@@ -65,8 +59,6 @@ class StatutRepository extends ServiceEntityRepository
 
     /**
      * Récupère le statut Approuvé.
-     *
-     * @return ?Statut
      */
     public function getStatutApprouve(): ?Statut
     {
@@ -79,8 +71,6 @@ class StatutRepository extends ServiceEntityRepository
 
     /**
      * Récupère le statut Supprimé.
-     *
-     * @return ?Statut
      */
     public function getStatutSupprime(): ?Statut
     {

@@ -5,12 +5,12 @@
                 <span class="label-text">Code employé</span>
                 <span id="informationEmploye" class="label-text-alt">Non identifié</span>
             </div>
-            {{ form_widget(form.id, {'attr': {'class': 'input input-bordered input-primary w-full max-w-xs'}}) }}
+            {{ form_widget(form.id, {attr: {class: 'input input-bordered input-primary w-full max-w-xs'}}) }}
             <div class="label">
                 <span class="label-text-alt text-gruau-red">{{ form_errors(form) }}</span>
             </div>
         </label>
-        {{ form_row(form.bouton, {'attr': {'class': 'btn btn-primary btn-outline btn-disabled'}}) }}
+        {{ form_row(form.bouton, {attr: {class: 'btn btn-primary btn-outline btn-disabled'}}) }}
         {{ form_rest(form) }}
     </form>
 </turbo-frame>

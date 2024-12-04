@@ -21,7 +21,7 @@ class CentreDeCharge
     private Collection $detailHeures;
 
     #[ORM\ManyToOne(inversedBy: 'responsable')]
-    private ?employe $responsable = null;
+    private ?Employe $responsable = null;
 
     public function __construct()
     {
@@ -110,12 +110,12 @@ class CentreDeCharge
         return $this;
     }
 
-    public function getResponsable(): ?employe
+    public function getResponsable(): ?Employe
     {
         return $this->responsable;
     }
 
-    public function setResponsable(?employe $responsable): static
+    public function setResponsable(?Employe $responsable): static
     {
         $this->responsable = $responsable;
 

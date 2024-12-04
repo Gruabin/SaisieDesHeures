@@ -16,7 +16,7 @@
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
         {% block javascripts %}
-            {% include 'javascripts.html.twig' %}
+            {{ include('javascripts.html.twig') }}
         {% endblock %}
         <!-- Matomo -->
         <script>
@@ -29,6 +29,7 @@
                 var u="https://matomo.gruau.com/";
                 _paq.push(['setTrackerUrl', u+'matomo.php']);
                 _paq.push(['setSiteId', '11']);
+                _paq.push(['setUserId', "{{ app.user ? app.user.id ~ ' - ' ~ app.user.nomemploye : 'null' }}"]);
                 var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                 g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
             })();
@@ -38,11 +39,11 @@
     <body class="flex flex-col min-h-[100vh]">
         <header class="invisible">
             {% block navbar %}
-                {% include 'navbar.html.twig' %}
+                {{ include('navbar.html.twig') }}
             {% endblock %}
         </header>
         <section id="boxAlertMessage" class="invisible">
-            {% include 'alert.html.twig' %}
+            {{ include('alert.html.twig') }}
         </section>
         <div id="loader">
             <img class="scale-down-tl" src="{{ asset('images/logo-symbole-haut.svg') }}">
@@ -53,7 +54,7 @@
             {% block body %}{% endblock %}
         </main>
         <footer class="mt-auto invisible">
-            {% include 'footer.html.twig' %}
+            {{ include('footer.html.twig') }}
         </footer>
     </body>
 </html>
