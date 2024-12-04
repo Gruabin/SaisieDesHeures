@@ -124,7 +124,7 @@ stages:
         # Execution des tests
         - script: php -d xdebug.mode=coverage bin/phpunit --coverage-clover='var/coverage/clover.xml' --coverage-html='var/coverage/html' --log-junit='var/coverage/phpunit-results.xml'
           workingDirectory: $(rootFolder)
-          displayName: "make test"
+          displayName: "Tests"
 
         # Démontage du conteneur
         - script: docker compose down

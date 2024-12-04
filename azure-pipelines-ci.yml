@@ -114,9 +114,9 @@ stages:
           displayName: "Load fixture"
 
         # Execution des tests
-        - script: php bin/phpunit --coverage-html var/coverage/html
+        - script: php -d xdebug.mode=coverage bin/phpunit --coverage-clover='var/coverage/clover.xml' --coverage-html='var/coverage/html' --log-junit='var/coverage/phpunit-results.xml'
           workingDirectory: $(rootFolder)
-          displayName: "make test"
+          displayName: "Tests"
 
         # Démontage du conteneur
         - script: docker compose down
@@ -135,7 +135,7 @@ stages:
           displayName: "PHPStan analyse"
           continueOnError: true
 
-        - task: PublishCodeCoverageResults@1
+        - task: PublishCodeCoverageResults@2
           inputs:
             codeCoverageTool: 'Cobertura'
             summaryFileLocation: 'var/coverage/clover.xml'
