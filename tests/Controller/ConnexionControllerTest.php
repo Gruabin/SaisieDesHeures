@@ -97,6 +97,7 @@ class ConnexionControllerTest extends WebTestCase
 
         // Tester la deconnexion
         $client->request('GET', '/deconnexion');
+        $this->assertResponseIsSuccessful();
 
         // Vérifier la redirection
         $this->assertStringEndsWith('/', $client->getRequest()->getUri());

@@ -31,20 +31,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DetailHeuresAPIController extends AbstractController
 {
-    public function __construct(
-        ActiviteRepository $activiteRepository,
-        CentreDeChargeRepository $centreDeChargeRepository,
-        TacheRepository $tacheRepository,
-        TypeHeuresRepository $typeHeuresRepository,
-        TacheSpecifiqueRepository $tacheSpecifiqueRepository,
-        LoggerInterface $logger,
-    ) {
-        $this->typeHeuresRepository = $typeHeuresRepository;
-        $this->activiteRepository = $activiteRepository;
-        $this->centreDeChargeRepository = $centreDeChargeRepository;
-        $this->tacheRepository = $tacheRepository;
-        $this->tacheSpecifiqueRepository = $tacheSpecifiqueRepository;
-        $this->logger = $logger;
+    public StatutRepository $statutRepository;
+
+    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger)
+    {
     }
 
     // * READ
@@ -99,7 +89,7 @@ class DetailHeuresAPIController extends AbstractController
 
         // Vérifie que l'utilisateur n'a pas trop d'heures journalières
         $nbHeures = $detailHeuresRepo->getNbHeures($this->getUser());
-        if ($nbHeures['total'] + $data['temps_main_oeuvre'] > 12) {
+        if ($nbHeures + $data['temps_main_oeuvre'] > 12) {
             $message = 'Nombre d\'heures maximal dépassé. Saisie non prise en compte';
             $this->addFlash('error', $message);
 
@@ -153,6 +143,14 @@ class DetailHeuresAPIController extends AbstractController
     /**
      * Cette fonction crée une nouvelle instance de l'entité DetailHeures, remplit ses propriétés avec les données reçues et renvoie l'entité créée.
      * Si certaines propriétés sont manquantes ou invalides, la fonction renvoie null et enregistre un message de débogage.
+     *
+     * @param mixed        $tempsMainOeuvre le temps de main d'oeuvre
+     * @param TypeHeures   $typeHeures      le type d'heures
+     * @param Security     $security        le service de
+     *                                      sécurité
+     * @param array<mixed> $data            les données
+     *                                      reçues
+     * @param Statut       $statut          le statut
      */
     private function setDetailHeures(mixed $tempsMainOeuvre, TypeHeures $typeHeures, Security $security, array $data, Statut $statut): ?DetailHeures
     {

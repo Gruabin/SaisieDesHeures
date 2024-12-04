@@ -23,7 +23,7 @@ class Tache
 
     #[ORM\ManyToOne(inversedBy: 'taches')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?typeHeures $typeHeures = null;
+    private ?TypeHeures $typeHeures = null;
 
     public function __construct()
     {
@@ -94,12 +94,12 @@ class Tache
         return $this;
     }
 
-    public function getTypeHeures(): ?typeHeures
+    public function getTypeHeures(): ?TypeHeures
     {
         return $this->typeHeures;
     }
 
-    public function setTypeHeures(?typeHeures $typeHeures): static
+    public function setTypeHeures(?TypeHeures $typeHeures): static
     {
         $this->typeHeures = $typeHeures;
 

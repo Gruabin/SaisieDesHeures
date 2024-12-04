@@ -20,7 +20,7 @@ class TacheSpecifique
     #[ORM\ManyToMany(targetEntity: Site::class, mappedBy: 'tacheSpecifique')]
     private Collection $sites;
 
-    #[ORM\OneToMany(mappedBy: 'tacheSpecifique', targetEntity: detailHeures::class)]
+    #[ORM\OneToMany(mappedBy: 'tacheSpecifique', targetEntity: DetailHeures::class)]
     private Collection $detailHeure;
 
     public function __construct()
@@ -91,14 +91,14 @@ class TacheSpecifique
     }
 
     /**
-     * @return Collection<int, detailHeures>
+     * @return Collection<int, DetailHeures>
      */
     public function getDetailHeure(): Collection
     {
         return $this->detailHeure;
     }
 
-    public function addDetailHeure(detailHeures $detailHeure): static
+    public function addDetailHeure(DetailHeures $detailHeure): static
     {
         if (!$this->detailHeure->contains($detailHeure)) {
             $this->detailHeure->add($detailHeure);
@@ -108,7 +108,7 @@ class TacheSpecifique
         return $this;
     }
 
-    public function removeDetailHeure(detailHeures $detailHeure): static
+    public function removeDetailHeure(DetailHeures $detailHeure): static
     {
         if ($this->detailHeure->removeElement($detailHeure)) {
             // set the owning side to null (unless already changed)

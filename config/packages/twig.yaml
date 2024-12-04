@@ -1,3 +1,7 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['tailwind_2_layout.html.twig']
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    cache: '%kernel.cache_dir%/twig'
+    auto_reload: true
