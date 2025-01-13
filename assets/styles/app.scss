@@ -22,6 +22,10 @@ h1{
  * Animation de surlignage sur le lien de la page actuelle
  */
 
+.invisible{
+  display: none;
+}
+
 .surlineAnimation {
 	display: inline-block;
 	padding-bottom: 3px;
