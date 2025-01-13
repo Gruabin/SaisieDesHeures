@@ -84,28 +84,37 @@ Console d'approbation
             <h1 class="text-center m-5">Aucune saisie pour ce jour</h1>
         {% endif %}
             {% for employe in employes %}
-                <div class="card bg-neutral-50 text-center shadow-lg mx-5 mb-10 p-3 w-full tabEmploye"  data-employe="{{ employe.id }}">
-                    <div class="flex justify-between m-3">
-                        <div class="flex flex-row ">
-                            <input type="checkbox" class="checkbox checkbox-primary" name="select_user" data-employe="{{ employe.id }}"/>
-                            <h1 class="text-primary mx-3">{{ employe.id }} - {{ employe.nom }} </h1>
+                <details class="collapse bg-neutral-50 card shadow-lg mx-5 mb-10 p-3 w-full tabEmploye group" data-employe="{{ employe.id }}">
+                    <summary class="collapse-title cursor-pointer">
+                        <div class="flex justify-between">
+                            <div class="flex flex-row items-center gap-3">
+                                <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180"></i>
+                                <input type="checkbox" class="checkbox checkbox-primary" name="select_user" data-employe="{{ employe.id }}"/>
+                                <h1 class="text-primary">{{ employe.id }} - {{ employe.nom }} </h1>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                {% if employe.heures|filter(h => h.motifErreur is not empty)|length > 0 %}
+                                    <i class="fa-solid fa-circle-xmark fa-xl text-accent"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-check fa-xl text-success"></i>
+                                {% endif %}
+                                <b name="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
+                            </div>
                         </div>
-                        <div class="mx-3">
-                            <b name="tempsTotal">{{ employe.total|number_format(2, '.', ',') }} h </b>
+                    </summary>
+                    <div class="collapse-content transition-all duration-300 ease-in-out">
+                        <div class="overflow-x-auto transform origin-top scale-y-0 group-open:scale-y-100 transition-transform duration-300">
+                            <table class="table table-fixed">
+                                {% block thead %}
+                                    {{ include('console/head.table.html.twig') }}
+                                {% endblock %}
+                                {% block tbody %}
+                                    {{ include('console/body.table.html.twig') }}
+                                {% endblock %}
+                            </table>
                         </div>
                     </div>
-                    {# Tableau #}
-                    <div class="overflow-x-auto">
-                        <table class="table table-fixed">
-                        {% block thead %}
-                            {{ include('console/head.table.html.twig') }}
-                        {% endblock %}
-                        {% block tbody %}
-                            {{ include('console/body.table.html.twig') }}
-                        {% endblock %}
-                        </table>
-                    </div>
-                </div>
+                </details>
             {% endfor %}
         </div>
     </section>
