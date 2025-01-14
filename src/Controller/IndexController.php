@@ -249,6 +249,8 @@ class IndexController extends AbstractController
                 $j = 0;
                 $tab[$i]['id'] = $uneHeure->getEmploye()->getUserIdentifier();
                 $tab[$i]['nom'] = $uneHeure->getEmploye()->getNomEmploye();
+                $tab[$i]['centreDeCharge'] = $uneHeure->getEmploye()->getCentreDeCharge()->getId();
+                $tab[$i]['libelle'] = $uneHeure->getEmploye()->getCentreDeCharge()->getLibelle();
                 $tab[$i]['heures'][$j] = $uneHeure;
                 $tab[$i]['total'] = $uneHeure->getTempsMainOeuvre();
             } else {
