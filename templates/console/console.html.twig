@@ -93,6 +93,12 @@ Console d'approbation
                                 <h1 class="text-primary">{{ employe.id }} - {{ employe.nom }} </h1>
                             </div>
                             <div class="flex items-center gap-2">
+                                <h1 class="text-primary">
+                                    {{ employe.centreDeCharge }}
+                                    {% if employe.libelle %}
+                                        - {{employe.libelle}}
+                                    {% endif %}  
+                                </h1>
                                 {% if employe.heures|filter(h => h.motifErreur is not empty)|length > 0 %}
                                     <i class="fa-solid fa-circle-xmark fa-xl text-accent"></i>
                                 {% else %}
