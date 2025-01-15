@@ -99,7 +99,7 @@ Console d'approbation
                                         - {{employe.libelle}}
                                     {% endif %}  
                                 </h1>
-                                {% if employe.heures|filter(h => h.motifErreur is not empty)|length > 0 %}
+                                {% if employe.heures|filter(h => h.statut.id == 2)|length > 0 %}
                                     <i class="fa-solid fa-circle-xmark fa-xl text-accent"></i>
                                 {% else %}
                                     <i class="fa-solid fa-circle-check fa-xl text-success"></i>
