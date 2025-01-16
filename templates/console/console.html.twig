@@ -78,6 +78,16 @@ Console d'approbation
                 <input type="checkbox" class="checkbox checkbox-primary"  id="select_all"/>
                 <span class="label-text">&nbsp; Tout sélectionner</span>
             </label>
+            <div class="text-end">
+                <h1>
+                    <span id="nombre_employe">0</span> 
+                    <span id="phrase_employe">employé sélectionné</span>
+                </h1>
+                <h1>
+                    <span id="nombre_ligne">0</span> 
+                    <span id="phrase_ligne">ligne sélectionnée</span>
+                </h1>
+            </div>
         </div>
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
         {% if employes is empty %}
