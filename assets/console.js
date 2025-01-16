@@ -104,32 +104,30 @@ document.getElementById("select_anomalies").addEventListener("click", () => {
 });
 
 // 
-// * Sélection de tout les checkboxs
+// * Sélection de tous les checkboxs
 // 
 let checkbox = document.getElementById("select_all");
 if (checkbox) {
     checkbox.addEventListener("click", (event) => {
         let checkboxDiv = document.getElementById("select_all_checkboxes");
-        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-            if (event.target.checked) {
-                if (!item.checked) {
-                    item.click();
-                }
-            } else {
-                if (item.checked) {
-                    item.click();
-                }
+        const isChecked = event.target.checked;
+
+        checkboxDiv.querySelectorAll("input[type=checkbox]:not(:disabled)").forEach((item) => {
+            if (item.checked !== isChecked) {
+                item.click();
             }
-        });
-        checkboxDiv.querySelectorAll("input[type=checkbox]").forEach((item) => {
-            item.addEventListener("click", (event) => {
-                if (!event.target.checked) {
-                    checkbox.checked = false;
-                }
-            })
         });
     });
 }
+
+// Mise à jour de la case "Tout sélectionner" en fonction des cases individuelles
+document.querySelectorAll("#select_all_checkboxes input[type=checkbox]:not(:disabled)").forEach((item) => {
+    item.addEventListener("click", () => {
+        const allCheckboxes = document.querySelectorAll("#select_all_checkboxes input[type=checkbox]:not(:disabled)");
+        const allChecked = Array.from(allCheckboxes).every(checkbox => checkbox.checked);
+        checkbox.checked = allChecked;
+    });
+});
 
 // 
 // * Sélection de tout les checkboxs d'un employé
@@ -229,9 +227,17 @@ function APISuppression(ligneASupprimer) {
             if (ligneASupprimer.dataset.statut == 2) {
                 document.getElementById("nbAnomalie").innerHTML = parseInt(document.getElementById("nbAnomalie").innerHTML) - 1;
             }
+            const employeTab = ligneASupprimer.closest('.tabEmploye');
             ligneASupprimer.remove();
-            MAJTempsJourna(ligneASupprimer.dataset.employe)
+            MAJTempsJourna(employeTab.dataset.employe);
             addToastSuccess("Saisie supprimée");
+            updateNombre();
+
+            // Vérifier et supprimer l'employé si aucune ligne n'est restante
+            if (employeTab.querySelectorAll('input[type="checkbox"][name="checkbox_ligne"]').length === 0) {
+                employeTab.remove();
+            }
+            
         } else {
             addToastErreur("Erreur lors de la suppression de la saisie");
         }
@@ -512,4 +518,56 @@ document.getElementById('check-all').addEventListener('click', function (event) 
         return allValues[key].value;
     });
     tomSelectInstance.setValue(valuesToSelect);
+});
+
+function updateNombre() {
+    const employesSelectionnes = new Set();
+    const lignesSelectionnees = document.querySelectorAll('input[type="checkbox"][name="checkbox_ligne"]:checked');
+
+    lignesSelectionnees.forEach(ligne => {
+        const employeId = ligne.closest('.tabEmploye').dataset.employe;
+        employesSelectionnes.add(employeId);
+    });
+
+    const nombreEmploye = employesSelectionnes.size;
+    const nombreLigne = lignesSelectionnees.length;
+
+    document.getElementById('nombre_employe').innerText = nombreEmploye;
+    document.getElementById('phrase_employe').innerText = nombreEmploye > 1 ? "employés sélectionnés" : "employé sélectionné";
+
+    document.getElementById('nombre_ligne').innerText = nombreLigne;
+    document.getElementById('phrase_ligne').innerText = nombreLigne > 1 ? "lignes sélectionnées" : "ligne sélectionnée";
+}
+
+updateEmployeCheckboxes();
+function updateEmployeCheckboxes() {
+    document.querySelectorAll('.tabEmploye').forEach(tab => {
+        const employeCheckbox = tab.querySelector('input[type="checkbox"][name="select_user"]');
+        const lignesCheckboxes = tab.querySelectorAll('input[type="checkbox"][name="checkbox_ligne"]');
+        const lignesCheckboxesEnabled = tab.querySelectorAll('input[type="checkbox"][name="checkbox_ligne"]:not(:disabled)');
+        const lignesCheckboxesChecked = tab.querySelectorAll('input[type="checkbox"][name="checkbox_ligne"]:checked:not(:disabled)');
+
+        // Désactiver la case de l'employé si toutes les lignes sont désactivées
+        if (lignesCheckboxesEnabled.length === 0) {
+            employeCheckbox.disabled = true;
+        } else {
+            employeCheckbox.disabled = false;
+            employeCheckbox.checked = (lignesCheckboxesEnabled.length === lignesCheckboxesChecked.length);
+        }
+    });
+
+    // Vérification pour cocher la case "Tout sélectionner" si toutes les cases employé sont cochées
+    const allEmployeCheckboxes = document.querySelectorAll('input[type="checkbox"][name="select_user"]:not(:disabled)');
+    const allEmployeCheckboxesChecked = document.querySelectorAll('input[type="checkbox"][name="select_user"]:checked:not(:disabled)');
+    const selectAllCheckbox = document.getElementById('select_all');
+
+    selectAllCheckbox.checked = (allEmployeCheckboxes.length === allEmployeCheckboxesChecked.length);
+}
+
+// Appel des fonctions après chaque mise à jour
+document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        updateNombre();
+        updateEmployeCheckboxes();
+    });
 });
