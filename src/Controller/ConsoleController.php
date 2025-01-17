@@ -9,6 +9,7 @@ use App\Repository\DetailHeuresRepository;
 use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
+use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConsoleController extends AbstractController
 {
-    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository)
+    public function __construct(public ActiviteRepository $activiteRepository, public TypeHeuresRepository $typeHeuresRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository)
     {
     }
 
@@ -176,6 +177,16 @@ class ConsoleController extends AbstractController
         $unDetail->setMotifErreur(null);
 
         // Vérifier et définir les propriétés
+
+        if (null != $data['type_heure']) {
+            $typeHeure = $this->typeHeuresRepository->find($data['type_heure']);
+            if (!$typeHeure) {
+                $this->logger->debug('DetailHeuresAPIController::setDetailHeures Object type heure manquant');
+
+                return null;
+            }
+            $unDetail->setTypeHeures($typeHeure);
+        }
 
         if (null != $data['ordre']) {
             $unDetail->setOrdre($data['ordre']);

@@ -10,7 +10,12 @@
                     <input type="checkbox" class="checkbox checkbox-primary "{% if heure.statut.id == 2 %} disabled {% endif %} name="checkbox_ligne">
                 </td>
                 <td>
-                    {{ heure.typeHeures.nomType }}
+                    <select class="select w-full form hidden" name="type_heure">
+                        {% for type_heure in types %}
+                            <option value="{{ type_heure.id ?? null }}" {% if type_heure.id == heure.typeHeures.id ?? null %}selected{% endif %}>{{ type_heure.nomType }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="texte" name="texte_type_heure">{{ heure.typeHeures.nomType }}</p>
                 </td>
                 <td>
                     <input type="text" class="input w-full form hidden" value="{{ heure.ordre ?? null }}" name="ordre" maxlength="9" pattern="^[0-9A-Z]{9}$">

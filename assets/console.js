@@ -283,6 +283,7 @@ async function APIModification(element) {
 
     const id = element.dataset.idligne;
     const statut = element.dataset.statut;
+    const type_heure = element.querySelector("select[name='type_heure']").value;
     const ordre = element.querySelector("input[name='ordre']").value;
     const tache = element.querySelector("select[name='tache']").value;
     const operation = element.querySelector("input[name='operation']").value;
@@ -300,6 +301,11 @@ async function APIModification(element) {
         alert("Veuillez insérer un temps de main d'oeuvre");
 
         return respnse.status = 400;
+    }
+    if (type_heure !== "-1") {
+        data.type_heure = type_heure;
+    } else {
+        data.type_heure = null;
     }
     if (ordre !== "") {
         data.ordre = ordre;
@@ -340,17 +346,17 @@ async function APIModification(element) {
             element.querySelector('.check').classList.remove('hidden');
             element.querySelector('.xmark').classList.remove('hidden');
 
+        }else{
+            addToastSuccess("Saisie modifiée");
+            element.querySelector('.pen').classList.remove('hidden');
+            element.querySelector('.trash').classList.remove('hidden');
+            
+            MAJDonnees(element, data);
+            if (statut == 2) {
+                document.getElementById("nbAnomalie").innerText = parseInt(document.getElementById("nbAnomalie").innerText) - 1;
+            }
+            resetModif(element)
         }
-        addToastSuccess("Saisie modifiée");
-        element.querySelector('.pen').classList.remove('hidden');
-        element.querySelector('.trash').classList.remove('hidden');
-
-        MAJDonnees(element, data);
-        if (statut == 2) {
-            document.getElementById("nbAnomalie").innerText = parseInt(document.getElementById("nbAnomalie").innerText) - 1;
-        }
-        resetModif(element)
-
     }).catch((error) => {
         console.error("Une erreur s'est produite :", error);
         addToastErreur("Erreur lors de la modification de la saisie");
@@ -365,6 +371,7 @@ function MAJDonnees(element, data) {
     element.querySelector(".fa-circle-check").classList.remove("hidden");
     element.querySelector(".fa-circle-xmark").classList.add("hidden");
     element.querySelector("input[name='checkbox_ligne']").disabled = false;
+    element.querySelector("p[name='texte_type_heure']").innerHTML = element.querySelector("select[name='type_heure']").selectedOptions[0].text;
     element.querySelector("p[name='texte_ordre']").innerHTML = data.ordre;
     element.querySelector("p[name='texte_tache']").innerHTML = data.tache;
     element.querySelector("p[name='texte_operation']").innerHTML = data.operation;
