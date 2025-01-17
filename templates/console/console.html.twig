@@ -22,7 +22,11 @@ Console d'approbation
     </dialog>
     {# --- #}
     <section data-turbo="false" id="console" class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red text-lg max-sm:text-base shadow-md lg:sticky lg:top-0 z-10">
-        <div class="flex space-x-2 xl:space-x-10 2xl:space-x-16 flex-col lg:flex-row lg:items-center justify-center">
+        <div class="flex space-x-2 xl:space-x-5 2xl:space-x-10 flex-col lg:flex-row lg:items-center justify-center">
+            <label class="flex flex-col justify-center items-center text-center">
+                <input type="checkbox" class="checkbox checkbox-primary"  id="select_all"/>
+                <span class="label-text">&nbsp; Sélectionner tous les employés</span>
+            </label>
             <div class="flex flex-col justify-center items-center text-center">
                 <div ><b>Site</b></div>
                 <div class="h-12 flex items-center justify-center">{{ site }}</div>
@@ -35,8 +39,8 @@ Console d'approbation
                         {{ form_row(formResponsable.responsable) }}
                         <input type="hidden" name="token" id="loginToken" value="{{ csrf_token('loginToken') }}">
                         <div class="flex flex-col justify-center items-center space-y-1">
-                            <button type="button" class="btn btn-primary btn-sm" id="check-all">Tout sélectionner</button>
-                            {{ form_widget(formResponsable.button, {attr: {class: 'btn btn-primary btn-sm max-xl:w-max'}}) }}
+                            <button type="button" class="btn btn-primary btn-sm w-28" id="check-all">Tout sélectionner</button>
+                            {{ form_widget(formResponsable.button, {attr: {class: 'btn btn-primary btn-sm w-28'}}) }}
                         </div>
                     </div>
                     {{ form_end(formResponsable) }}
@@ -47,7 +51,7 @@ Console d'approbation
                 {{ form_start(formDate) }}
                     <div class="flex justify-center items-center h-12">
                         {{ form_widget(formDate.date, {attr: {class: 'select select-ghost', id: 'selectDate'}}) }}
-                        {{ form_row(formDate.button, {attr: {class: 'btn btn-primary btn-sm', id: 'submitDate', value: 'Appliquer la date'}}) }}
+                        {{ form_row(formDate.button, {attr: {class: 'btn btn-primary btn-sm w-28', id: 'submitDate', value: 'Appliquer la date'}}) }}
                     </div>
                 {{ form_end(formDate) }}
             </div>
@@ -67,18 +71,10 @@ Console d'approbation
                     <div class="invisible"><b>X</b></div>
                     <div class="flex h-12 justify-center text-center items-center">
                     <span id="loading" class=""></span>
-                    <button type="button" id="validation" class="btn btn-primary btn-sm">Approuver la selection</button>
+                    <button type="button" id="validation" class="btn btn-primary btn-sm sm:w-28">Approuver la selection</button>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
-        <div class="p-5 flex justify-between">
-            <label class="label">
-                <input type="checkbox" class="checkbox checkbox-primary"  id="select_all"/>
-                <span class="label-text">&nbsp; Tout sélectionner</span>
-            </label>
-            <div class="text-end">
+            <div class="flex flex-col justify-center items-center text-center">
                 <h1>
                     <span id="nombre_employe">0</span> 
                     <span id="phrase_employe">employé sélectionné</span>
@@ -89,6 +85,8 @@ Console d'approbation
                 </h1>
             </div>
         </div>
+    </section>
+    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red p-5 text-lg max-sm:text-base shadow-md">
         <div class="flex flex-col items-center p-2" id="select_all_checkboxes">
         {% if employes is empty %}
             <h1 class="text-center m-5">Aucune saisie pour ce jour</h1>
