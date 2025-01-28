@@ -205,6 +205,7 @@ class IndexController extends AbstractController
                 'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
                 'CDG' => $this->CDGRepository->findAllUser(),
                 'titrePage' => "Console d'approbation des heures",
+                'types' => $this->typeHeuresRepo->findAll(),
             ]
         );
     }
@@ -249,6 +250,8 @@ class IndexController extends AbstractController
                 $j = 0;
                 $tab[$i]['id'] = $uneHeure->getEmploye()->getUserIdentifier();
                 $tab[$i]['nom'] = $uneHeure->getEmploye()->getNomEmploye();
+                $tab[$i]['centreDeCharge'] = $uneHeure->getEmploye()->getCentreDeCharge()->getId();
+                $tab[$i]['libelle'] = $uneHeure->getEmploye()->getCentreDeCharge()->getLibelle();
                 $tab[$i]['heures'][$j] = $uneHeure;
                 $tab[$i]['total'] = $uneHeure->getTempsMainOeuvre();
             } else {
