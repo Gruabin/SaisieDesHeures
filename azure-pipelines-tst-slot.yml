@@ -31,24 +31,8 @@ stages:
               php -version
             displayName: "Use PHP version $(phpVersion)"
 
-          # Utiliser le cache Composer
-          - task: Cache@2
-            inputs:
-              key: 'composer | "$(Agent.OS)" | composer.lock'
-              restoreKeys: 'composer | "$(Agent.OS)"'
-              path: '~/.composer/cache'
-            displayName: "Cache Composer"
-
           - script: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
             displayName: "Composer install"
-
-          # Utiliser le cache npm pour accélérer les installations
-          - task: Cache@2
-            inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
-              restoreKeys: 'npm | "$(Agent.OS)"'
-              path: '$(rootFolder)/node_modules'
-            displayName: "Cache npm"
 
           - script: npm ci
             displayName: "Run npm install"
