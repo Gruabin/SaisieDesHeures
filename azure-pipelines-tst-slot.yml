@@ -9,6 +9,7 @@ trigger:
 variables:
   # Azure Resource Manager connection created during pipeline creation
   azureSubscription: "app-azuredevops-groupegruau-pipelines-prd"
+  azureTstSubscription: "app-azuredevops-groupegruau-pipelines-tst"
 
   # Web app name
   webAppName: "app-gruau-prd-test-slot"
@@ -23,7 +24,7 @@ variables:
   rgName: "rg-prd-webapps"
 
   # Slot name
-  slotName: "PREPROD"
+  slotName: "preprod"
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
@@ -118,14 +119,31 @@ stages:
           runOnce:
             deploy:
               steps:
+              - task: AzureKeyVault@2
+                displayName: "Récupération des secrets du Key Vault"
+                inputs:
+                  azureSubscription: "$(azureTstSubscription)"
+                  KeyVaultName: "kv-gruau-tst"
+                  SecretsFilter: "*"
+                  RunAsPreJob: false
+
               - task: AzureCLI@2
-                displayName: "Création du Slot"
+                displayName: "Configuration des variables d'environnement du Slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
-                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
-              
+                  inlineScript: |
+                    az webapp config appsettings set --name $(webAppName) --resource-group $(rgName) --slot $(slotName) --settings \
+                    APP_ENV=prod \
+                    APP_DEBUG=env \
+                    DATABASE_HOST=$(saisie-heures-tst-dbHost) \
+                    DATABASE_NAME=$(saisie-heures-tst-dbName) \
+                    DATABASE_PASSWORD=$(saisie-heures-tst-dbPassword) \
+                    DATABASE_PORT=$(saisie-heures-tst-dbPort) \
+                    DATABASE_USER=$(saisie-heures-tst-dbUser) \
+                    SECRET_KEY=$(saisie-heures-tst-appSecret) \
+
               - task: AzureRmWebAppDeployment@4
                 displayName: "Déploiement de l'application"
                 inputs:
