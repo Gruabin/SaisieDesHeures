@@ -1,32 +1,15 @@
 # PHP as Linux Web App on Azure
-# Build, package and deploy your PHP project to Azure Linux Web App.
-# Add steps that run tests and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/php
-
 trigger:
   - Test-Slot
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
   azureSubscription: "app-azuredevops-groupegruau-pipelines-prd"
   azureTstSubscription: "app-azuredevops-groupegruau-pipelines-tst"
-
-  # Web app name
   webAppName: "app-gruau-prd-test-slot"
-
-  # Agent VM image name
   vmImageName: "ubuntu-latest"
-
-  # Environment name
   environmentName: "app-gruau-prd-test-slot"
-
-  # Resource group name
   rgName: "rg-prd-webapps"
-
-  # Slot name
   slotName: "preprod"
-
-  # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
 
 stages:
@@ -46,51 +29,34 @@ stages:
               sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
               sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
               php -version
-            workingDirectory: $(rootFolder)
             displayName: "Use PHP version $(phpVersion)"
 
-          - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
-            workingDirectory: $(rootFolder)
+          # Utiliser le cache Composer
+          - task: Cache@2
+            inputs:
+              key: 'composer | "$(Agent.OS)" | composer.lock'
+              restoreKeys: 'composer | "$(Agent.OS)"'
+              path: '~/.composer/cache'
+            displayName: "Cache Composer"
+
+          - script: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
             displayName: "Composer install"
 
-          #install les packages Symfony
-          - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
-            workingDirectory: $(rootFolder)
-            displayName: "Composer install"
-          
-          #update les packages Symfony
-          - script: composer update
-            workingDirectory: $(rootFolder)
-            displayName: 'Composer update'
+          # Utiliser le cache npm pour accélérer les installations
+          - task: Cache@2
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: 'npm | "$(Agent.OS)"'
+              path: '$(rootFolder)/node_modules'
+            displayName: "Cache npm"
 
-          # Install the JavaScript packages with npm
-          - script: npm install
-            workingDirectory: $(rootFolder)
+          - script: npm ci
             displayName: "Run npm install"
 
-          # Install the Symfony CLI to test for requirements
-          - script: curl -sS https://get.symfony.com/cli/installer | bash
-            workingDirectory: $(rootFolder)
-            displayName: "Install SymfonyCLI"
-
-          # Check for requirements
-          - script: /home/vsts/.symfony5/bin/symfony check:requirements
-            workingDirectory: $(rootFolder)
-            displayName: "Symfony - Check requirements"
-
-          # Build JavaScript assets
           - script: npm run build
-            workingDirectory: $(rootFolder)
             displayName: "Build JS assets"
 
-          # Generate cache file structure
-          - script: composer dump-autoload --classmap-authoritative
-            workingDirectory: $(rootFolder)
-            displayName: "Generate cache file structure"
-
-          # Clear cache
           - script: php bin/console cache:clear --no-warmup
-            workingDirectory: $(rootFolder)
             displayName: "Clear cache"
 
           - task: ArchiveFiles@2
@@ -102,7 +68,7 @@ stages:
               archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
               replaceExistingArchive: true
 
-          - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
             displayName: "Upload package"
             artifact: drop
 
@@ -125,7 +91,6 @@ stages:
                   azureSubscription: "$(azureTstSubscription)"
                   KeyVaultName: "kv-gruau-tst"
                   SecretsFilter: "*"
-                  RunAsPreJob: false
 
               - task: AzureCLI@2
                 displayName: "Configuration des variables d'environnement du Slot"
@@ -135,6 +100,7 @@ stages:
                   scriptLocation: 'inlineScript'
                   inlineScript: |
                     az webapp config appsettings set --name $(webAppName) --resource-group $(rgName) --slot $(slotName) --settings \
+                    WEBSITE_RUN_FROM_PACKAGE=1 \
                     APP_ENV=prod \
                     APP_DEBUG=env \
                     DATABASE_HOST=$(saisie-heures-tst-dbHost) \
@@ -142,17 +108,13 @@ stages:
                     DATABASE_PASSWORD=$(saisie-heures-tst-dbPassword) \
                     DATABASE_PORT=$(saisie-heures-tst-dbPort) \
                     DATABASE_USER=$(saisie-heures-tst-dbUser) \
-                    SECRET_KEY=$(saisie-heures-tst-appSecret) \
+                    SECRET_KEY=$(saisie-heures-tst-appSecret)
 
-              - task: AzureRmWebAppDeployment@4
-                displayName: "Déploiement de l'application"
+              - task: AzureCLI@2
+                displayName: "Déploiement rapide avec ZIP Deploy"
                 inputs:
-                  ConnectionType: 'AzureRM'
                   azureSubscription: '$(azureSubscription)'
-                  appType: 'webAppLinux'
-                  WebAppName: '$(webAppName)'
-                  deployToSlotOrASE: true
-                  ResourceGroupName: '$(rgName)'
-                  SlotName: '$(slotName)'
-                  packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-                  StartupCommand: '/home/site/wwwroot/startup.sh'
+                  scriptType: 'pscore'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
