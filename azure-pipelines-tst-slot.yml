@@ -75,11 +75,7 @@ stages:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    az webapp config appsettings set --name $(webAppName) --resource-group $(rgName) --slot $(slotName) --settings \
-                    WEBSITE_RUN_FROM_PACKAGE=1 \
-                    APP_ENV=prod \
-                    APP_DEBUG=env 
+                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
 
               - task: AzureCLI@2
                 displayName: "Déploiement rapide avec ZIP Deploy"
