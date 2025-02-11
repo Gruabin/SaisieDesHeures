@@ -31,15 +31,6 @@ stages:
               php -version
             displayName: "Use PHP version $(phpVersion)"
 
-          - script: npm ci
-            displayName: "Run npm install"
-
-          - script: npm run build
-            displayName: "Build JS assets"
-
-          - script: php bin/console cache:clear --no-warmup
-            displayName: "Clear cache"
-
           - task: ArchiveFiles@2
             displayName: "Archive files"
             inputs:
