@@ -22,26 +22,26 @@ stages:
         pool:
           vmImage: $(vmImageName)
         steps:
-          - script: |
-              sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-              sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-              sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-              sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-              sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-              php -version
-            displayName: "Use PHP version $(phpVersion)"
+          # - script: |
+          #     sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+          #     sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+          #     sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+          #     sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+          #     sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+          #     php -version
+          #   displayName: "Use PHP version $(phpVersion)"
 
-          - script: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
-            displayName: "Composer install"
+          # - script: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
+          #   displayName: "Composer install"
 
-          - script: npm ci
-            displayName: "Run npm install"
+          # - script: npm ci
+          #   displayName: "Run npm install"
 
-          - script: npm run build
-            displayName: "Build JS assets"
+          # - script: npm run build
+          #   displayName: "Build JS assets"
 
-          - script: php bin/console cache:clear --no-warmup
-            displayName: "Clear cache"
+          # - script: php bin/console cache:clear --no-warmup
+          #   displayName: "Clear cache"
 
           - task: ArchiveFiles@2
             displayName: "Archive files"
@@ -75,13 +75,16 @@ stages:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
-                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
-
-              - task: AzureCLI@2
-                displayName: "Déploiement rapide avec ZIP Deploy"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
+                    az webapp config appsettings set --name $(webAppName) --resource-group $(rgName) --slot $(slotName) --settings \
+                    APP_ENV=prod \
+                    APP_DEBUG=false \
+
+              # - task: AzureCLI@2
+              #   displayName: "Déploiement rapide avec ZIP Deploy"
+              #   inputs:
+              #     azureSubscription: '$(azureSubscription)'
+              #     scriptType: 'pscore'
+              #     scriptLocation: 'inlineScript'
+              #     inlineScript: |
+              #       az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
