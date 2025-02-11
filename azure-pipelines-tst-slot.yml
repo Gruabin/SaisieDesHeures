@@ -85,6 +85,7 @@ stages:
                   scriptLocation: 'inlineScript'
                   inlineScript: |
                     az webapp config appsettings set --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --settings "APP_ENV=prod" "APP_DEBUG=false" "APP_SECRET=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-appSecret)" "DATABASE_HOST=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbHost)" "DATABASE_NAME=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbName)" "DATABASE_PASSWORD=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPassword)" "DATABASE_PORT=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPort)" "DATABASE_USER=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbUser)"
+              
               - task: AzureCLI@2
                 displayName: "Activer l'identité managée du slot"
                 inputs:
@@ -93,16 +94,17 @@ stages:
                   scriptLocation: 'inlineScript'
                   inlineScript: |
                     az webapp identity assign --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)"
+
               - task: AzureCLI@2
                 displayName: "Récupérer l'ID de l'identité managée du slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
-                  addSpnToEnvironment: true
                   inlineScript: |
-                    SLOT_PRINCIPAL_ID=$(az webapp identity show --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --query "principalId" --output tsv)
-                    echo "##vso[task.setvariable variable=SLOT_PRINCIPAL_ID]$SLOT_PRINCIPAL_ID"
+                    $principalId = az webapp identity show --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --query "principalId" --output tsv
+                    echo "ID de l'identité du slot : $principalId"
+                    echo "##vso[task.setvariable variable=SLOT_PRINCIPAL_ID]$principalId"
 
               - task: AzureCLI@2
                 displayName: "Attribuer les permissions Key Vault au slot"
