@@ -8,9 +8,6 @@ apt-get update -y
 echo "🔧 Installation temporaire de Composer et npm..."
 apt-get install -y curl unzip nodejs npm composer
 
-echo "📂 Déplacement vers le dossier de l'application..."
-cd site/wwwroot || exit
-
 echo "⚙️ Installation des dépendances..."
 composer install --no-dev --prefer-dist
 npm ci
