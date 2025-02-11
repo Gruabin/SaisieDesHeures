@@ -22,26 +22,23 @@ stages:
         pool:
           vmImage: $(vmImageName)
         steps:
-          # - script: |
-          #     sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-          #     sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-          #     sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-          #     sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-          #     sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-          #     php -version
-          #   displayName: "Use PHP version $(phpVersion)"
+          - script: |
+              sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+              sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+              sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+              sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+              sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+              php -version
+            displayName: "Use PHP version $(phpVersion)"
 
-          # - script: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
-          #   displayName: "Composer install"
+          - script: npm ci
+            displayName: "Run npm install"
 
-          # - script: npm ci
-          #   displayName: "Run npm install"
+          - script: npm run build
+            displayName: "Build JS assets"
 
-          # - script: npm run build
-          #   displayName: "Build JS assets"
-
-          # - script: php bin/console cache:clear --no-warmup
-          #   displayName: "Clear cache"
+          - script: php bin/console cache:clear --no-warmup
+            displayName: "Clear cache"
 
           - task: ArchiveFiles@2
             displayName: "Archive files"
@@ -70,79 +67,25 @@ stages:
             deploy:
               steps:
               - task: AzureCLI@2
-                displayName: "Création du Slot"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
-
-              - task: AzureCLI@2
-                displayName: "Configuration des variables d'environnement du Slot"
+                displayName: "Déploiement rapide avec ZIP Deploy"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az webapp config appsettings set --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --settings "APP_ENV=prod" "APP_DEBUG=false" "APP_SECRET=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-appSecret)" "DATABASE_HOST=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbHost)" "DATABASE_NAME=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbName)" "DATABASE_PASSWORD=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPassword)" "DATABASE_PORT=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPort)" "DATABASE_USER=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbUser)"
-              
+                    az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
+
               - task: AzureCLI@2
-                displayName: "Vérifier la souscription active"
+                displayName: "Installer les dépendances sur la webapp"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az account set --subscription "sub-gruau-prd"
-                    echo "Souscription active: $(az account show --query name)"
-
-              - task: AzureCLI@2
-                displayName: "Vérification de l'accès au Key Vault via ID"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    az keyvault show --id "https://kv-gruau-tst.vault.azure.net/" --subscription "sub-gruau-prd"
-                    echo "Key Vault trouvé et accessible avec l'ID."
-
-              - task: AzureCLI@2
-                displayName: "Activer l'identité managée du slot"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    az webapp identity assign --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)"
-
-              - task: AzureCLI@2
-                displayName: "Récupérer l'ID de l'identité managée du slot"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    $principalId = az webapp identity show --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --query "principalId" --output tsv
-                    echo "ID de l'identité du slot : $principalId"
-                    echo "##vso[task.setvariable variable=SLOT_PRINCIPAL_ID]$principalId"
-
-              - task: AzureCLI@2
-                displayName: "Attribuer les permissions Key Vault au slot"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    az keyvault set-policy --id "https://kv-gruau-tst.vault.azure.net/" --object-id "$(SLOT_PRINCIPAL_ID)" --secret-permissions get list
-                    echo "Permissions Key Vault attribuées à l'identité du slot."
-
-
-
-              # - task: AzureCLI@2
-              #   displayName: "Déploiement rapide avec ZIP Deploy"
-              #   inputs:
-              #     azureSubscription: '$(azureSubscription)'
-              #     scriptType: 'pscore'
-              #     scriptLocation: 'inlineScript'
-              #     inlineScript: |
-              #       az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
+                    az webapp ssh --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "
+                    cd /home/site/wwwroot &&
+                    composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts &&
+                    npm ci &&
+                    npm run build &&
+                    php bin/console cache:clear --no-warmup
+                    "
