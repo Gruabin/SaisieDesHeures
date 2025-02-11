@@ -87,4 +87,6 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
-                      az webapp ssh --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist && npm ci && php bin/console cache:clear --no-warmup"
+                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist"
+                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "npm ci"
+                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "php bin/console cache:clear --no-warmup"
