@@ -11,7 +11,6 @@ variables:
   rgName: "rg-prd-webapps"
   slotName: "preprod"
   rootFolder: $(System.DefaultWorkingDirectory)
-  sshPort: 55200
 
 stages:
   - stage: Build
@@ -68,26 +67,13 @@ stages:
                     az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
 
               - task: AzureCLI@2
-                displayName: "Create Remote Connection"
+                displayName: "Installer les dépendances sur la webapp via Kudu"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    nohup az webapp create-remote-connection --subscription $(azureSubscription) --resource-group $(rgName) -n $(webAppName) -s $(slotName) -p $(sshPort) > connection.log 2>&1 &
-                    sleep 60  # Wait for connection to establish
-
-              - task: AzureCLI@2
-                displayName: "Install dependencies on the webapp via SSH"
-                inputs:
-                  azureSubscription: '$(azureSubscription)'
-                  scriptType: 'bash'
-                  scriptLocation: 'inlineScript'
-                  inlineScript: |
-                    sshpass -p "Docker!" ssh -o StrictHostKeyChecking=no root@127.0.0.1 -p $(sshPort) << EOF
-                    cd /home/site/wwwroot &&
-                    composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts &&
-                    npm ci &&
-                    npm run build &&
-                    php bin/console cache:clear --no-warmup
-                    EOF
+                    curl -u \$(WEBAPP_USER):\$(WEBAPP_PASSWORD) -X POST https://$(webAppName)-$(slotName).scm.azurewebsites.net/api/command -d '
+                    {
+                      "command": "cd /home/site/wwwroot && composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts && npm ci && npm run build && php bin/console cache:clear --no-warmup"
+                    }'
