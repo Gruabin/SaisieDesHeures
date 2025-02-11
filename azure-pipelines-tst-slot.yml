@@ -11,6 +11,7 @@ variables:
   rgName: "rg-prd-webapps"
   slotName: "preprod"
   rootFolder: $(System.DefaultWorkingDirectory)
+  sshPort: 55200
 
 stages:
   - stage: Build
@@ -30,6 +31,15 @@ stages:
               sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
               php -version
             displayName: "Use PHP version $(phpVersion)"
+
+          - script: npm ci
+            displayName: "Run npm install"
+
+          - script: npm run build
+            displayName: "Build JS assets"
+
+          - script: php bin/console cache:clear --no-warmup
+            displayName: "Clear cache"
 
           - task: ArchiveFiles@2
             displayName: "Archive files"
@@ -67,16 +77,26 @@ stages:
                     az webapp deployment source config-zip --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --src "$(Pipeline.Workspace)/drop/$(Build.BuildId).zip"
 
               - task: AzureCLI@2
-                displayName: "Installer les dépendances sur la webapp"
+                displayName: "Create Remote Connection"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
-                  scriptType: 'pscore'
+                  scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az webapp ssh --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "
+                    nohup az webapp create-remote-connection --subscription $(azureSubscription) --resource-group $(rgName) -n $(webAppName) -s $(slotName) -p $(sshPort) > connection.log 2>&1 &
+                    sleep 60  # Wait for connection to establish
+
+              - task: AzureCLI@2
+                displayName: "Install dependencies on the webapp via SSH"
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  scriptType: 'bash'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    sshpass -p "Docker!" ssh -o StrictHostKeyChecking=no root@127.0.0.1 -p $(sshPort) << EOF
                     cd /home/site/wwwroot &&
                     composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts &&
                     npm ci &&
                     npm run build &&
                     php bin/console cache:clear --no-warmup
-                    "
+                    EOF
