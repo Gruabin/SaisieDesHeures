@@ -81,12 +81,11 @@ stages:
 
                 # Installer Composer et npm après le déploiement
                 - task: AzureCLI@2
-                  displayName: "Installer les dépendances après déploiement"
+                  displayName: "Forcer installation après déploiement via Kudu"
                   inputs:
                     azureSubscription: '$(azureSubscription)'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
-                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist"
-                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "npm ci"
-                      az webapp exec --resource-group $(rgName) --name $(webAppName) --slot $(slotName) --command "php bin/console cache:clear --no-warmup"
+                      curl -u $(USERNAME):$(PASSWORD) -X POST "https://$(webAppName).scm.azurewebsites.net/api/command" -d '{ "command": "composer install --no-dev --prefer-dist && npm ci && php bin/console cache:clear --no-warmup", "dir": "D:\\home\\site\\wwwroot" }'
+
