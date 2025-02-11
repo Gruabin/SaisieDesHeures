@@ -76,7 +76,15 @@ stages:
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az webapp config appsettings set --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --settings "APP_ENV=prod" "APP_DEBUG=false"
+                    az webapp config appsettings set --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --settings \
+                    "APP_ENV=prod" \
+                    "APP_DEBUG=false" \
+                    "APP_SECRET=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-appSecret)" \
+                    "DATABASE_HOST=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbHost)" \
+                    "DATABASE_NAME=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbName)" \
+                    "DATABASE_PASSWORD=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPassword)" \
+                    "DATABASE_PORT=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPort)" \
+                    "DATABASE_USER=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbUser)"
 
               # - task: AzureCLI@2
               #   displayName: "Déploiement rapide avec ZIP Deploy"
