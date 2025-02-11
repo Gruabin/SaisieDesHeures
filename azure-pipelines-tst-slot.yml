@@ -70,6 +70,16 @@ stages:
             deploy:
               steps:
               - task: AzureCLI@2
+                displayName: "Vérification de la souscription active"
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  scriptType: 'pscore'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    # Liste les souscriptions pour vérifier que la bonne est active
+                    az account list --output table
+
+              - task: AzureCLI@2
                 displayName: "Création du Slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
