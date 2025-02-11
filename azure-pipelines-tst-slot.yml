@@ -70,6 +70,14 @@ stages:
             deploy:
               steps:
               - task: AzureCLI@2
+                displayName: "Création du Slot"
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  scriptType: 'pscore'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: 'az webapp deployment slot create --name $(webAppName) --resource-group $(rgName) --slot $(slotName)'
+
+              - task: AzureCLI@2
                 displayName: "Configuration des variables d'environnement du Slot"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
