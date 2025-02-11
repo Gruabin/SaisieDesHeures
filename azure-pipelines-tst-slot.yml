@@ -87,25 +87,24 @@ stages:
                     az webapp config appsettings set --name "$(webAppName)" --resource-group "$(rgName)" --slot "$(slotName)" --settings "APP_ENV=prod" "APP_DEBUG=false" "APP_SECRET=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-appSecret)" "DATABASE_HOST=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbHost)" "DATABASE_NAME=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbName)" "DATABASE_PASSWORD=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPassword)" "DATABASE_PORT=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbPort)" "DATABASE_USER=@Microsoft.KeyVault(VaultName=kv-gruau-tst;SecretName=saisie-heures-tst-dbUser)"
               
               - task: AzureCLI@2
-                displayName: "Se connecter à la souscription 'sub-gruau-prd'"
+                displayName: "Vérifier la souscription active"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az account set --subscription "sub-gruau-prd"  # Sélectionner la bonne souscription
+                    az account set --subscription "sub-gruau-prd"
                     echo "Souscription active: $(az account show --query name)"
 
               - task: AzureCLI@2
-                displayName: "Vérification de l'accès au Key Vault 'kv-gruau-tst'"
+                displayName: "Vérification de l'accès au Key Vault via ID"
                 inputs:
                   azureSubscription: '$(azureSubscription)'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    # Vérifier l'existence du Key Vault
-                    az keyvault show --name "kv-gruau-tst" --subscription "sub-gruau-prd"  # Nom du Key Vault et souscription
-                    echo "Key Vault 'kv-gruau-tst' trouvé et accessible dans la souscription."
+                    az keyvault show --id "https://kv-gruau-tst.vault.azure.net/" --subscription "sub-gruau-prd"
+                    echo "Key Vault trouvé et accessible avec l'ID."
 
               - task: AzureCLI@2
                 displayName: "Activer l'identité managée du slot"
@@ -134,8 +133,9 @@ stages:
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
-                    az keyvault set-policy --name "kv-gruau-tst" --object-id "$(SLOT_PRINCIPAL_ID)" --secret-permissions get list
+                    az keyvault set-policy --id "https://kv-gruau-tst.vault.azure.net/" --object-id "$(SLOT_PRINCIPAL_ID)" --secret-permissions get list
                     echo "Permissions Key Vault attribuées à l'identité du slot."
+
 
 
               # - task: AzureCLI@2
