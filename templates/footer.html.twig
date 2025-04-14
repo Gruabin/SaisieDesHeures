@@ -1,16 +1,14 @@
 <footer class="bg-gruau-dark-blue shadow w-full">
-    <div class="w-full max-w-[2000px] mx-auto p-4 md:py-8 text-white">
-        <div class="sm:flex sm:items-center sm:justify-between">
-            <a href="{{ path('home') }}" target="_self" class="flex items-center mb-4 sm:mb-0 justify-center">
-                <img src="https://cdn.gruau.com/image/logo/grp-reversed-baseline.svg" class="h-8 mr-3" alt="Gruau Logo" />
+    <div class="max-w-[2000px] flex flex-col md:flex-row items-center mx-auto p-4 text-white justify-between">
+        <div class="md:w-1/3 w-max">
+            <a href="{{ path('home') }}" class="flex  justify-self-start items-center my-2">
+                <img src="https://cdn.gruau.com/image/logo/grp-reversed-baseline.svg" class="h-8" alt="Gruau Logo" />
             </a>
-            <ul class="flex flex-wrap items-center mb-6 text-sm font-medium sm:mb-0 justify-center">
-                <li>
-                    <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="mr-4 underline md:mr-6 noLoading" target="_blank">Support informatique</a>
-                </li>
-            </ul>
         </div>
-        <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
-        <span class="block text-sm text-center">© 2024 <a href="https://www.groupegruau.com/" target="_blank" class="hover:underline noLoading">Groupe Gruau™</a>. Tous droits réservés.</span>
+        <span class="block md:w-1/3 my-2 w-max  text-sm text-center">© 2025 <a href="https://www.groupegruau.com/" target="_blank" class="hover:underline noLoading ">Groupe Gruau™</a>. 'Tous droits réservés.</span>
+        <hr class="my-2 border-white w-1/2 text-center md:hidden"  />
+        <div class="md:w-1/3 w-max text-right">
+            <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="hover:underline noLoading  " target="_blank">Support informatique</a>
+        </div>
     </div>
 </footer>

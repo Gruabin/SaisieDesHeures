@@ -13,17 +13,28 @@ class TypeHeures
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $nom_type = null;
 
+    /**
+     * @var Collection<int,DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'type_heures', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+
+    /**
+     * @var Collection<int,Tache>
+     */
     #[ORM\OneToMany(mappedBy: 'typeHeures', targetEntity: Tache::class)]
     private Collection $taches;
 
+
+    /**
+     * @var Collection<int,FavoriTypeHeure>
+     */
     #[ORM\OneToMany(targetEntity: FavoriTypeHeure::class, mappedBy: 'typeHeure')]
     private Collection $favoriTypeHeures;
 
@@ -34,9 +45,16 @@ class TypeHeures
         $this->favoriTypeHeures = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getNomType(): ?string

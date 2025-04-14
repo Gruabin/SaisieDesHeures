@@ -24,6 +24,13 @@ class FavoriTypeHeure
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getTypeHeure(): ?TypeHeures
     {
         return $this->typeHeure;

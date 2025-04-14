@@ -12,11 +12,17 @@ class CentreDeCharge
 {
     #[ORM\Id]
     #[ORM\Column(length: 255)]
-    private ?string $id = null;
+    private string $id;
 
+    /**
+     * @var Collection<int,Employe>
+     */
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: Employe::class)]
     private Collection $employes;
 
+    /**
+     * @var Collection<int,DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'centre_de_charge', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
@@ -32,7 +38,7 @@ class CentreDeCharge
         $this->detailHeures = new ArrayCollection();
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }

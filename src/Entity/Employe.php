@@ -26,15 +26,27 @@ class Employe implements UserInterface
     #[ORM\ManyToOne(inversedBy: 'employes')]
     private ?CentreDeCharge $centre_de_charge = null;
 
+    /**
+     * @var Collection<int,DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: DetailHeures::class)]
     private Collection $detailHeures;
 
+    /**
+     * @var Collection<int,CentreDeCharge>
+     */
     #[ORM\OneToMany(targetEntity: CentreDeCharge::class, mappedBy: 'responsable')]
     private Collection $responsable;
 
+    /**
+     * @var array<string>
+     */
     #[ORM\Column]
     private array $roles = [];
 
+    /**
+     * @var Collection<int,FavoriTypeHeure>
+     */
     #[ORM\OneToMany(targetEntity: FavoriTypeHeure::class, mappedBy: 'employe')]
     private Collection $favoriTypeHeures;
 
@@ -56,6 +68,11 @@ class Employe implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * Summary of setRoles
+     * @param array<string> $roles
+     * @return Employe
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

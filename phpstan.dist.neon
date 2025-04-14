@@ -5,7 +5,7 @@ parameters:
         - config/
         - public/
         - src/
-        - tests/
     excludePaths:
         analyse:
             - src/DataFixtures
+            - src/Security
