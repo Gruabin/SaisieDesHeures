@@ -76,11 +76,11 @@ Console d'approbation
             </div>
             <div class="flex flex-col justify-center items-center text-center">
                 <h1>
-                    <span id="nombre_employe">0</span> 
+                    <span id="nombre_employe">0</span>
                     <span id="phrase_employe">employé sélectionné</span>
                 </h1>
                 <h1>
-                    <span id="nombre_ligne">0</span> 
+                    <span id="nombre_ligne">0</span>
                     <span id="phrase_ligne">ligne sélectionnée</span>
                 </h1>
             </div>
@@ -104,8 +104,8 @@ Console d'approbation
                                 <h1 class="text-primary">
                                     {{ employe.centreDeCharge }}
                                     {% if employe.libelle %}
-                                        - {{employe.libelle}}
-                                    {% endif %}  
+                                        - {{ employe.libelle }}
+                                    {% endif %}
                                 </h1>
                                 {% if employe.heures|filter(h => h.statut.id == 2)|length > 0 %}
                                     <i class="fa-solid fa-circle-xmark fa-xl text-accent"></i>

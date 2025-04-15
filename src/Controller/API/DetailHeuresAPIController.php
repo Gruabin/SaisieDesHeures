@@ -2,24 +2,25 @@
 
 namespace App\Controller\API;
 
-use App\Entity\DetailHeures;
 use App\Entity\Statut;
+use App\Entity\Employe;
 use App\Entity\TypeHeures;
-use App\Repository\ActiviteRepository;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\DetailHeuresRepository;
-use App\Repository\StatutRepository;
-use App\Repository\TacheRepository;
-use App\Repository\TacheSpecifiqueRepository;
-use App\Repository\TypeHeuresRepository;
-use App\Service\DetailHeureService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\DetailHeures;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\TacheRepository;
+use App\Service\DetailHeureService;
+use App\Repository\StatutRepository;
+use App\Repository\ActiviteRepository;
+use App\Repository\TypeHeuresRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\DetailHeuresRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\CentreDeChargeRepository;
+use App\Repository\TacheSpecifiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository      $typeHeuresRepository
@@ -33,9 +34,7 @@ class DetailHeuresAPIController extends AbstractController
 {
     public StatutRepository $statutRepository;
 
-    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger)
-    {
-    }
+    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger) {}
 
     // * READ
     #[Route('/api/get/detail_heures', name: 'api_get_detail_heures', methods: ['GET'])]
@@ -83,12 +82,15 @@ class DetailHeuresAPIController extends AbstractController
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
     public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, StatutRepository $statutRepo, Security $security, DetailHeureService $detailHeureService): Response
     {
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $token = $data['token'];
 
         // Vérifie que l'utilisateur n'a pas trop d'heures journalières
-        $nbHeures = $detailHeuresRepo->getNbHeures($this->getUser());
+        $nbHeures = $detailHeuresRepo->getNbHeures($user);
         if ($nbHeures + $data['temps_main_oeuvre'] > 12) {
             $message = 'Nombre d\'heures maximal dépassé. Saisie non prise en compte';
             $this->addFlash('error', $message);
@@ -157,6 +159,9 @@ class DetailHeuresAPIController extends AbstractController
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
 
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
         // Remplir les propriétés de l'entité avec les données reçues
         $now = new \DateTime();
         $heure = \DateTime::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d H:i:s'));
@@ -164,7 +169,7 @@ class DetailHeuresAPIController extends AbstractController
         $detailHeures->setDate($heure);
         $detailHeures->setTempsMainOeuvre($tempsMainOeuvre);
         $detailHeures->setTypeHeures($typeHeures);
-        $detailHeures->setEmploye($security->getUser());
+        $detailHeures->setEmploye($user);
         $detailHeures->setDateExport(null);
         $detailHeures->setStatut($statut);
 

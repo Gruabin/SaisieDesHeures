@@ -6,7 +6,7 @@ doctrine:
         port: '%env(DATABASE_PORT)%'
         user: '%env(DATABASE_USER)%'
         password: '%env(DATABASE_PASSWORD)%'
-        server_version: '11'
+        server_version: '16'
         application_name: "saisie-heures"
         charset: UTF8
         types:

@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Employe;
 use App\Form\ConnexionType;
-use App\Repository\EmployeRepository;
-use App\Security\AuthSecurity;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Security\AuthSecurity;
+use App\Repository\EmployeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 /**
@@ -22,9 +23,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
  */
 class ConnexionController extends AbstractController
 {
-    public function __construct(public EntityManagerInterface $entityManager, public LoggerInterface $logger, public Security $security)
-    {
-    }
+    public function __construct(public EntityManagerInterface $entityManager, public LoggerInterface $logger, public Security $security) {}
 
     #[Route('/_connexion', name: 'connexion')]
     public function connexion(
@@ -56,7 +55,7 @@ class ConnexionController extends AbstractController
                 if ('ROLE_MANAGER' === $user->getRoles()[0]) {
                     $route = 'console';
                 }
-                $message = 'Connexion de '.$user->getNomEmploye();
+                $message = 'Connexion de ' . $user->getNomEmploye();
                 $this->logger->info($message);
 
                 return $this->redirectToRoute($route);
@@ -64,7 +63,8 @@ class ConnexionController extends AbstractController
         }
 
         return $this->render(
-            'connexion/_formulaire.html.twig', [
+            'connexion/_formulaire.html.twig',
+            [
                 'form' => $form->createView(),
             ]
         );
@@ -73,7 +73,10 @@ class ConnexionController extends AbstractController
     #[Route('/deconnexion', name: 'deconnexion')]
     public function logoutUser(): RedirectResponse
     {
-        $message = 'Déconnexion de '.$this->getUser()->getNomEmploye();
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
+        $message = 'Déconnexion de ' . $user->getNomEmploye();
         $this->addFlash('success', $message);
         $this->logger->info($message);
 

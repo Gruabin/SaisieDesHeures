@@ -18,6 +18,9 @@ class Statut
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    /**
+     * @var Collection<int,DetailHeures>
+     */
     #[ORM\OneToMany(targetEntity: DetailHeures::class, mappedBy: 'statut')]
     private Collection $detail;
 
@@ -29,6 +32,13 @@ class Statut
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getLibelle(): ?string

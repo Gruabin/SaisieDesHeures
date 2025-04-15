@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<Statut>
  *
  * @method Statut|null find($id, $lockMode = null, $lockVersion = null)
- * @method Statut|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Statut|null findOneBy(array<mixed> $criteria, array<mixed> $orderBy = null)
  * @method Statut[]    findAll()
- * @method Statut[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Statut[]    findBy(array<mixed> $criteria, array<mixed> $orderBy = null, $limit = null, $offset = null)
  */
 class StatutRepository extends ServiceEntityRepository
 {
