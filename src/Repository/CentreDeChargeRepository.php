@@ -11,9 +11,9 @@ use Symfony\Bundle\SecurityBundle\Security;
  * @extends ServiceEntityRepository<CentreDeCharge>
  *
  * @method CentreDeCharge|null find($id, $lockMode = null, $lockVersion = null)
- * @method CentreDeCharge|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CentreDeCharge|null findOneBy(array<mixed> $criteria, array<mixed> $orderBy = null)
  * @method CentreDeCharge[]    findAll()
- * @method CentreDeCharge[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CentreDeCharge[]    findBy(array<mixed> $criteria, array<mixed> $orderBy = null, $limit = null, $offset = null)
  */
 class CentreDeChargeRepository extends ServiceEntityRepository
 {
@@ -35,7 +35,7 @@ class CentreDeChargeRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('c')
             ->andWhere('c.id LIKE :val')
-            ->setParameter('val', substr((string) $user->getUserIdentifier(), 0, 2).'C%0')
+            ->setParameter('val', substr((string) $user->getUserIdentifier(), 0, 2) . 'C%0')
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult();

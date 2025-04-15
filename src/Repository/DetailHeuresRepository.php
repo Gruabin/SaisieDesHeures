@@ -14,9 +14,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @extends ServiceEntityRepository<DetailHeures>
  *
  * @method DetailHeures|null find($id, $lockMode = null, $lockVersion = null)
- * @method DetailHeures|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DetailHeures|null findOneBy(array<mixed> $criteria, array<mixed> $orderBy = null)
  * @method DetailHeures[]    findAll()
- * @method DetailHeures[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DetailHeures[]    findBy(array<mixed> $criteria, array<mixed> $orderBy = null, $limit = null, $offset = null)
  *
  * @property EntityManagerInterface $entityManager
  * @property EmployeRepository      $employeRepository
@@ -30,7 +30,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
         public EntityManagerInterface $entityManager,
         ManagerRegistry $registry,
         public Security $security,
-        public EmployeRepository $employeRepository
+        public EmployeRepository $employeRepository,
     ) {
         parent::__construct($registry, DetailHeures::class);
     }
@@ -92,7 +92,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->join('d.employe', 'employe')
                 ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('employe', substr((string) $user->getUserIdentifier(), 0, 2).'%')
+                ->setParameter('employe', substr((string) $user->getUserIdentifier(), 0, 2) . '%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()

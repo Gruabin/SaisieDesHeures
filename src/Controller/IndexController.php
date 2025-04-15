@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\DetailHeures;
+use App\Entity\Employe;
 use App\Form\FiltreDateType;
 use App\Form\FiltreResponsableType;
 use App\Repository\CentreDeChargeRepository;
@@ -21,7 +22,7 @@ use Symfony\Component\Form\FormInterface as FormFormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -39,21 +40,24 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class IndexController extends AbstractController
 {
-    public function __construct(public LoggerInterface $logger, public CentreDeChargeRepository $CDGRepository, public DetailHeuresRepository $detailHeuresRepository, public DetailHeureService $detailHeureService, public EmployeRepository $employeRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public TypeHeuresRepository $typeHeuresRepo)
-    {
-    }
+    public function __construct(public LoggerInterface $logger, public CentreDeChargeRepository $CDGRepository, public DetailHeuresRepository $detailHeuresRepository, public DetailHeureService $detailHeureService, public EmployeRepository $employeRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public TypeHeuresRepository $typeHeuresRepo) {}
 
     // Affiche la page d'identification
     #[Route('/', name: 'home')]
     public function index(CacheInterface $cache): Response
     {
         return $cache->get(
-            'index_page', function (ItemInterface $item) {
+            'index_page',
+            function (ItemInterface $item) {
                 $item->expiresAfter(43200);
 
+                /**  @var Employe $user */
+                $user =  $this->getUser();
+
                 return $this->render(
-                    'connexion/identification.html.twig', [
-                        'user' => $this->getUser(),
+                    'connexion/identification.html.twig',
+                    [
+                        'user' => $user,
                     ]
                 );
             }
@@ -78,25 +82,28 @@ class IndexController extends AbstractController
     #[Route('/temps', name: 'temps')]
     public function temps(FavoriTypeHeureRepository $favoriTypeHeureRepository): Response
     {
-        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
         if ($nbHeures >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
             $this->addFlash('warning', $message);
         }
         $this->detailHeureService->cleanLastWeek();
 
-        $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $this->getUser()]);
-        $user = $this->getUser();
+        $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $user]);
 
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render(
-            'temps.html.twig', [
+            'temps.html.twig',
+            [
                 'details' => $this->detailHeuresRepository->findAllTodayUser(),
                 'types' => $this->typeHeuresRepo->findAll(),
                 'taches' => $this->tacheRepository->findAll(),
                 'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
                 'CDG' => $this->CDGRepository->findAllUser(),
-                'user' => $this->getUser(),
+                'user' => $user,
                 'nbHeures' => $nbHeures,
                 'favoriTypeHeure' => $favoriTypeHeure,
                 'site' => substr((string) $user->getUserIdentifier(), 0, 2),
@@ -108,7 +115,10 @@ class IndexController extends AbstractController
     #[Route('/historique', name: 'historique')]
     public function historique(): Response
     {
-        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
         if ($nbHeures >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
 
@@ -117,9 +127,10 @@ class IndexController extends AbstractController
         $this->detailHeureService->cleanLastWeek();
 
         return $this->render(
-            'historique.html.twig', [
+            'historique.html.twig',
+            [
                 'details' => $this->detailHeuresRepository->findAllTodayUser(),
-                'user' => $this->getUser(),
+                'user' => $user,
                 'nbHeures' => $nbHeures,
             ]
         );
@@ -129,18 +140,22 @@ class IndexController extends AbstractController
     #[Route('/console', name: 'console')]
     public function console(Request $request): Response
     {
+        /**  @var Employe $user */
+        $user =  $this->getUser();
+
         $session = $request->getSession();
         //  Utilisateur responsable par défaut
         if (!$session->has('responsablesId')) {
-            $responsablesId[0] = $this->getUser()->getUserIdentifier();
+            $responsablesId[0] = $user->getUserIdentifier();
             $session->set('responsablesId', $responsablesId);
         }
-        $user = $this->getUser();
         $heures = [];
 
         // Formulaire de filtre des responsables
         $formResponsable = $this->createForm(
-            FiltreResponsableType::class, null, [
+            FiltreResponsableType::class,
+            null,
+            [
                 'user' => $user,
                 'data' => $this->employeRepository->findEmploye($session->get('responsablesId')),
             ]
@@ -165,7 +180,9 @@ class IndexController extends AbstractController
         }
 
         $formDate = $this->createForm(
-            FiltreDateType::class, null, [
+            FiltreDateType::class,
+            null,
+            [
                 'dates' => $dates,
                 'data' => $data,
             ]
@@ -193,7 +210,8 @@ class IndexController extends AbstractController
         $employes = $this->filtreEmploye($heures);
 
         return $this->render(
-            'console/console.html.twig', [
+            'console/console.html.twig',
+            [
                 'formResponsable' => $formResponsable->createView(),
                 'formDate' => $formDate->createView(),
                 'user' => $user,

@@ -12,9 +12,9 @@ use Symfony\Bundle\SecurityBundle\Security;
  * @extends ServiceEntityRepository<TacheSpecifique>
  *
  * @method TacheSpecifique|null find($id, $lockMode = null, $lockVersion = null)
- * @method TacheSpecifique|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TacheSpecifique|null findOneBy(array<mixed> $criteria, array<mixed> $orderBy = null)
  * @method TacheSpecifique[]    findAll()
- * @method TacheSpecifique[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TacheSpecifique[]    findBy(array<mixed> $criteria, array<mixed> $orderBy = null, $limit = null, $offset = null)
  */
 class TacheSpecifiqueRepository extends ServiceEntityRepository
 {

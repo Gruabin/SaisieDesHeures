@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<TypeHeures>
  *
  * @method TypeHeures|null find($id, $lockMode = null, $lockVersion = null)
- * @method TypeHeures|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TypeHeures|null findOneBy(array<mixed> $criteria, array<mixed> $orderBy = null)
  * @method TypeHeures[]    findAll()
- * @method TypeHeures[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TypeHeures[]    findBy(array<mixed> $criteria, array<mixed> $orderBy = null, $limit = null, $offset = null)
  */
 class TypeHeuresRepository extends ServiceEntityRepository
 {

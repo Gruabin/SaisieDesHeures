@@ -17,9 +17,15 @@ class TacheSpecifique
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    /**
+     * @var Collection<int,Site>
+     */
     #[ORM\ManyToMany(targetEntity: Site::class, mappedBy: 'tacheSpecifique')]
     private Collection $sites;
 
+    /**
+     * @var Collection<int,DetailHeures>
+     */
     #[ORM\OneToMany(mappedBy: 'tacheSpecifique', targetEntity: DetailHeures::class)]
     private Collection $detailHeure;
 
