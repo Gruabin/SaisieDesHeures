@@ -7,20 +7,12 @@ trigger:
   - none
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: "app-azuredevops-groupegruau-pipelines-tst"
-
-  # Web app name
-  webAppName: "app-gruau-tst-saisie-heures-tst"
 
   # Agent VM image name
-  vmImageName: "ubuntu-20.04"
+  vmImageName: "ubuntu-24.04"
 
   # PHP version
-  phpVersion: "8.3"
-
-  # Environment name
-  environmentName: "app-gruau-tst-saisie-heures-tst"
+  phpVersion: "8.4"
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
@@ -34,6 +26,9 @@ stages:
         vmImage: $(vmImageName)
       steps:
         - script: |
+            sudo add-apt-repository ppa:ondrej/php -y
+            sudo apt-get update
+            sudo apt-get install -y php$(phpVersion) php$(phpVersion)-cli php$(phpVersion)-mbstring php$(phpVersion)-xml php$(phpVersion)-curl php$(phpVersion)-pgsql php$(phpVersion)-ldap
             sudo update-alternatives --set php /usr/bin/php$(phpVersion)
             sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
             sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
@@ -47,7 +42,7 @@ stages:
         - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
           workingDirectory: $(rootFolder)
           displayName: "Composer install"
-
+        
         #update les packages Symfony
         - script: composer update
           workingDirectory: $(rootFolder)
@@ -84,10 +79,10 @@ stages:
           displayName: "Clear cache"
 
         # Linter PHP CS fixer
-        - script: php vendor/bin/php-cs-fixer fix
-          workingDirectory: $(rootFolder)
-          displayName:
-            "Linter PHP CS fixer"
+        # * Actuellement indisponible en php 8.4
+        # - script: php vendor/bin/php-cs-fixer fix
+        #   workingDirectory: $(rootFolder)
+        #   displayName: "Linter PHP CS fixer"
 
         # Linter rector
         - script: php vendor/bin/rector process src
@@ -98,13 +93,25 @@ stages:
         - script: php vendor/bin/twig-cs-fixer lint --fix templates
           workingDirectory: $(rootFolder)
           displayName: "Linter twig CS fixer"
-      
+
+        # Mend
+        - task: WhiteSource@21
+          displayName: "Mend"
+          inputs:
+            cwd: '$(System.DefaultWorkingDirectory)'
+
+        # PHPStan analyse
+        - script: vendor/bin/phpstan analyse src --memory-limit=2G
+          workingDirectory: $(rootFolder)
+          displayName: "PHPStan analyse"
+          continueOnError: true
+
         # Démarrage du conteneur pour la bdd de test
         - script: |
             docker compose up -d
           workingDirectory: $(rootFolder)
           displayName: 'Exécuter docker-compose up'
-          
+
         # Création de la bdd de test
         - script: php bin/console doctrine:database:create --env=test
           workingDirectory: $(rootFolder)
@@ -131,64 +138,16 @@ stages:
           workingDirectory: $(rootFolder)
           displayName: "docker down"
 
-        # PHPStan analyse
-        - script: vendor/bin/phpstan analyse src tests --memory-limit=2G
-          workingDirectory: $(rootFolder)
-          displayName: "PHPStan analyse"
-          continueOnError: true
-
-        # Mend
-        - task: WhiteSource@21
-          displayName: "Mend"
-          inputs:
-            cwd: '$(rootFolder)'
-
+        # Publication de la couverture de code
         - task: PublishCodeCoverageResults@2
           inputs:
             codeCoverageTool: 'Cobertura'
-            summaryFileLocation: '$(rootFolder)/var/coverage/clover.xml'
-            reportDirectory: '$(rootFolder)/var/coverage/html'
+            summaryFileLocation: 'var/coverage/clover.xml'
+            reportDirectory: 'var/coverage/html'
             failIfCoverageEmpty: true
 
         - task: PublishTestResults@2
           inputs:
-            testResultsFiles: '$(rootFolder)/var/coverage/phpunit-results.xml'
+            testResultsFiles: '**/TEST-*.xml'
             failTaskOnFailedTests: true
             testRunTitle: 'PHPUnit Test Results'
-
-        - task: ArchiveFiles@2
-          displayName: "Archive files"
-          inputs:
-            rootFolderOrFile: "$(rootFolder)"
-            includeRootFolder: false
-            archiveType: zip
-            archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-            replaceExistingArchive: true
-
-        - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-          displayName: "Upload package"
-          artifact: drop
-
-- stage: Deploy
-  displayName: "Deploy Web App"
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: "Déploiement de l'application"
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: '$(azureSubscription)'
-              appType: 'webAppLinux'
-              WebAppName: '$(webAppName)'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              StartupCommand: '/home/site/wwwroot/startup.sh'
-              runtimeStack: 'PHP|$(phpVersion)'
