@@ -14,16 +14,22 @@ variables:
   webAppName: 'app-gruau-prd-saisie-heures'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-20.04'
+  vmImageName: 'ubuntu-24.04'
 
   # PHP version
-  phpVersion: "8.3"
+  phpVersion: "8.4"
 
   # Environment name
   environmentName: 'app-gruau-prd-saisie-heures'
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
+
+  # Slot name
+  slotName: 'deploiement'
+  
+  # Ressource Group
+  resourceGroup: 'rg-prd-webapps'
 
 stages:
 - stage: Build
@@ -33,8 +39,10 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-
     - script: |
+        sudo add-apt-repository ppa:ondrej/php -y
+        sudo apt-get update
+        sudo apt-get install -y php$(phpVersion) php$(phpVersion)-cli php$(phpVersion)-mbstring php$(phpVersion)-xml php$(phpVersion)-curl php$(phpVersion)-pgsql php$(phpVersion)-ldap
         sudo update-alternatives --set php /usr/bin/php$(phpVersion)
         sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
         sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
@@ -44,28 +52,25 @@ stages:
       workingDirectory: $(rootFolder)
       displayName: "Use PHP version $(phpVersion)"
 
-    #install les packages Symfony
+    # Install the Symfony CLI to test for requirements
+    - script: curl -sS https://get.symfony.com/cli/installer | bash 
+      workingDirectory: $(rootFolder)
+      displayName: "Install SymfonyCLI"
+
+    # install les packages Symfony
     - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
       workingDirectory: $(rootFolder)
       displayName: "Composer install"
-    #update les packages Symfony
+
+    # update les packages Symfony
     - script: composer update
       workingDirectory: $(rootFolder)
       displayName: 'Composer update'
+
     # Install the JavaScript packages with npm
     - script: npm install
       workingDirectory: $(rootFolder)
       displayName: "Run npm install"
-
-    # Install the Symfony CLI to test for requirements
-    - script: curl -sS https://get.symfony.com/cli/installer | bash
-      workingDirectory: $(rootFolder)
-      displayName: "Install SymfonyCLI"
-
-    # Check for requirements
-    - script: /home/vsts/.symfony5/bin/symfony check:requirements
-      workingDirectory: $(rootFolder)
-      displayName: "Symfony - Check requirements"
 
     # Build JavaScript assets
     - script: npm run build
@@ -76,32 +81,16 @@ stages:
     - script: composer dump-autoload --classmap-authoritative
       workingDirectory: $(rootFolder)
       displayName: "Generate cache file structure"
+      
+    # Check for requirements
+    - script: /home/vsts/.symfony5/bin/symfony check:requirements
+      workingDirectory: $(rootFolder)
+      displayName: "Symfony - Check requirements"
 
     # Clear cache
     - script: php bin/console cache:clear --no-warmup
       workingDirectory: $(rootFolder)
       displayName: "Clear cache"
-
-    # Linter PHP CS fixer
-    - script: php vendor/bin/php-cs-fixer fix
-      workingDirectory: $(rootFolder)
-      displayName: "Linter PHP CS fixer"
-
-    # Linter rector
-    - script: php vendor/bin/rector process src
-      workingDirectory: $(rootFolder)
-      displayName: "Linter Rector"
-
-    # Linter twig CS template
-    - script: php vendor/bin/twig-cs-fixer lint --fix templates
-      workingDirectory: $(rootFolder)
-      displayName: "Linter twig CS fixer"
-
-    # Mend
-    - task: WhiteSource@21
-      displayName: "Mend"
-      inputs:
-        cwd: '$(System.DefaultWorkingDirectory)'
 
     - task: ArchiveFiles@2
       displayName: "Archive files"
@@ -116,26 +105,29 @@ stages:
       displayName: "Upload package"
       artifact: drop
 
-- stage: Deploy
-  displayName: "Deploy Web App"
+- stage: DeployToStaging
+  displayName: 'Déploiement vers le slot $(slotName)'
   dependsOn: Build
   condition: succeeded()
   jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
+  - deployment: Deploy
+    environment: 'staging'
     strategy:
       runOnce:
         deploy:
           steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: "Déploiement de l'application"
+          - task: DownloadBuildArtifacts@0
             inputs:
-              ConnectionType: 'AzureRM'
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          - task: AzureWebApp@1
+            inputs:
               azureSubscription: '$(azureSubscription)'
-              appType: 'webAppLinux'
-              WebAppName: '$(webAppName)'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              StartupCommand: '/home/site/wwwroot/startup.sh'
-              runtimeStack: 'PHP|$(phpVersion)'
+              appName: '$(webAppName)'
+              deployToSlotOrASE: true
+              resourceGroupName: '$(resourceGroup)'
+              slotName: '$(slotName)'
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'

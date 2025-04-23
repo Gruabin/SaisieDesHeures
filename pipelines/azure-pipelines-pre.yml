@@ -1,0 +1,124 @@
+# PHP as Linux Web App on Azure
+# Build, package and deploy your PHP project to Azure Linux Web App.
+# Add steps that run tests and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/php
+
+trigger:
+  - PRE-PROD
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: "app-azuredevops-groupegruau-pipelines-pre-webapps"
+
+  # Web app name
+  webAppName: "app-gruau-pre-saisie-heures"
+
+  # Agent VM image name
+  vmImageName: "ubuntu-24.04"
+
+  # PHP version
+  phpVersion: "8.4"
+
+  # Environment name
+  environmentName: "app-gruau-pre-saisie-heures"
+
+  # Root folder under which your composer.json file is available.
+  rootFolder: $(System.DefaultWorkingDirectory)
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+    - job: BuildJob
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+        - script: |
+            sudo add-apt-repository ppa:ondrej/php -y
+            sudo apt-get update
+            sudo apt-get install -y php$(phpVersion) php$(phpVersion)-cli php$(phpVersion)-mbstring php$(phpVersion)-xml php$(phpVersion)-curl php$(phpVersion)-pgsql php$(phpVersion)-ldap
+            sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+            sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+            sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+            sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+            sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+            php -version
+          workingDirectory: $(rootFolder)
+          displayName: "Use PHP version $(phpVersion)"
+
+        # Install the Symfony CLI to test for requirements
+        - script: curl -sS https://get.symfony.com/cli/installer | bash 
+          workingDirectory: $(rootFolder)
+          displayName: "Install SymfonyCLI"
+
+        # install les packages Symfony
+        - script: composer install --no-ansi --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --prefer-dist
+          workingDirectory: $(rootFolder)
+          displayName: "Composer install"
+
+        # update les packages Symfony
+        - script: composer update
+          workingDirectory: $(rootFolder)
+          displayName: 'Composer update'
+
+        # Install the JavaScript packages with npm
+        - script: npm install
+          workingDirectory: $(rootFolder)
+          displayName: "Run npm install"
+
+        # Build JavaScript assets
+        - script: npm run build
+          workingDirectory: $(rootFolder)
+          displayName: "Build JS assets"
+
+        # Generate cache file structure
+        - script: composer dump-autoload --classmap-authoritative
+          workingDirectory: $(rootFolder)
+          displayName: "Generate cache file structure"
+          
+        # Check for requirements
+        - script: /home/vsts/.symfony5/bin/symfony check:requirements
+          workingDirectory: $(rootFolder)
+          displayName: "Symfony - Check requirements"
+
+        # Clear cache
+        - script: php bin/console cache:clear --no-warmup
+          workingDirectory: $(rootFolder)
+          displayName: "Clear cache"
+
+        - task: ArchiveFiles@2
+          displayName: "Archive files"
+          inputs:
+            rootFolderOrFile: "$(rootFolder)"
+            includeRootFolder: false
+            archiveType: zip
+            archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            replaceExistingArchive: true
+
+        - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          displayName: "Upload package"
+          artifact: drop
+
+- stage: Deploy
+  displayName: "Deploy Web App"
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeploymentJob
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Déploiement de l'application"
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: '$(azureSubscription)'
+              appType: 'webAppLinux'
+              WebAppName: '$(webAppName)'
+              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              StartupCommand: '/home/site/wwwroot/startup.sh'
+              runtimeStack: 'PHP|$(phpVersion)'
