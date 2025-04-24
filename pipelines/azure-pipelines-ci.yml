@@ -26,7 +26,6 @@ stages:
         vmImage: $(vmImageName)
       steps:
         - script: |
-
             sudo update-alternatives --set php /usr/bin/php$(phpVersion)
             sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
             sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
@@ -78,9 +77,9 @@ stages:
 
         # Linter PHP CS fixer
         # * Actuellement indisponible en php 8.4
-        # - script: php vendor/bin/php-cs-fixer fix
-        #   workingDirectory: $(rootFolder)
-        #   displayName: "Linter PHP CS fixer"
+        - script: php vendor/bin/php-cs-fixer fix
+          workingDirectory: $(rootFolder)
+          displayName: "Linter PHP CS fixer"
 
         # Linter rector
         - script: php vendor/bin/rector process src
