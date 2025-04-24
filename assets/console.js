@@ -554,3 +554,11 @@ const tomSelectInstance = new TomSelect("#filtre_responsable_responsable", {
         element.style.overflow = 'auto';
     }
 });
+
+document.getElementById('check-all').addEventListener('click', function (event) {
+    const allValues = tomSelectInstance.options;
+    var valuesToSelect = Object.keys(allValues).map(function (key) {
+        return allValues[key].value;
+    });
+    tomSelectInstance.setValue(valuesToSelect);
+});
