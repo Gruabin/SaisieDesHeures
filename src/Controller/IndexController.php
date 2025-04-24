@@ -228,6 +228,12 @@ class IndexController extends AbstractController
         );
     }
 
+    #[Route('/centreon', name: 'centreon', methods: ['GET'])]
+    public function centreon(): Response
+    {
+        return new Response('OK', 200);
+    }
+
     /**
      * Défini les responsables.
      *
