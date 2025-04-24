@@ -12,7 +12,7 @@ variables:
   vmImageName: "ubuntu-24.04"
 
   # PHP version
-  phpVersion: "8.4"
+  phpVersion: "8.3"
 
   # Root folder under which your composer.json file is available.
   rootFolder: $(System.DefaultWorkingDirectory)
@@ -26,9 +26,7 @@ stages:
         vmImage: $(vmImageName)
       steps:
         - script: |
-            sudo add-apt-repository ppa:ondrej/php -y
-            sudo apt-get update
-            sudo apt-get install -y php$(phpVersion) php$(phpVersion)-cli php$(phpVersion)-mbstring php$(phpVersion)-xml php$(phpVersion)-curl php$(phpVersion)-pgsql php$(phpVersion)-ldap php$(phpVersion)-zip
+
             sudo update-alternatives --set php /usr/bin/php$(phpVersion)
             sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
             sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
