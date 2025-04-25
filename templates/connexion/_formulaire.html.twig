@@ -1,15 +1,16 @@
 <turbo-frame id="identification">
     <form id="identificationForm" action="{{ path('connexion') }}" method="post">
         <fieldset class="w-full max-w-xs">
-                <legend class="fieldset-legend justify-between"> 
+            <legend class="fieldset-legend justify-between"> 
                 <span class="text-left">Code employé</span>
-                <span id="informationEmploye" class=" text-right">Non identifié</span></legend>
+                <span id="informationEmploye" class=" text-right">Non identifié</span>
+            </legend>
             {{ form_widget(form.id, {attr: {class: 'input w-full max-w-xs'}}) }}
             <div class="label">
                 <span class="label-text-alt text-gruau-red">{{ form_errors(form) }}</span>
             </div>
         </fieldset>
-            {{ form_row(form.bouton, {attr: {class: 'btn btn-primary btn-outline btn-disabled justify-center'}}) }}
+        {{ form_row(form.bouton, {attr: {class: 'btn btn-primary btn-outline btn-disabled justify-center'}}) }}
         {{ form_rest(form) }}
     </form>
 </turbo-frame>
