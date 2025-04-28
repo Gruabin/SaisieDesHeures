@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "gruau-light";
+  default: true;
+  prefersdark: true;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(98% 0 0);
+  --color-base-300: oklch(95% 0 0);
+  --color-base-content:oklch(13% 0.028 261.692);
+  --color-primary: oklch(41% 0.0943 239.62);
+  --color-primary-content: white;
+  --color-secondary: oklch(74% 0.14148 226.2718);
+  --color-secondary-content:  oklch(29% 0.066 243.157);
+  --color-accent: oklch(61% 0.2107 26.5);
+  --color-accent-content:white;
+  --color-neutral: oklch(14% 0.005 285.823);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: oklch(74% 0.14148 226.2718);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(77% 0.152 181.912);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(61% 0.2107 26.5);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}

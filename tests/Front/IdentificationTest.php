@@ -23,8 +23,8 @@ class IdentificationTest extends WebTestCase
 
         // Vérification des labels du formulaire de connexion
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('label div span.label-text', 'Code employé');
-        $this->assertSelectorTextContains('label div span.label-text-alt', 'Non identifié');
+        $this->assertSelectorTextContains('fieldset legend span.text-left', 'Code employé');
+        $this->assertSelectorTextContains('fieldset legend span.text-right', 'Non identifié');
 
         // Vérification de la présence de l'input de matricule
         $this->assertSelectorExists('input[name="connexion[id]"]');

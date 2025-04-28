@@ -3,128 +3,132 @@
     Saisie des heures | Historique
 {% endblock %}
 {% block body %}
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Synthèse employé</h2>
-        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-col lg:flex-row lg:items-center p-2">
-            <div class="m-2 flex-1">
-                <div class="m-2">
-                    <b>Employé</b>
+    <section class="card mx-24 my-4 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 bg-base-100 border-b-[5px] border-accent text-lg max-sm:text-base" id="temps">
+        <div class="card-body">
+            <div class="flex flex-row items-center max-sm:text-center">
+                <div class="m-2 flex-1">
+                    <div class="m-2">
+                        <b>Employé</b>
+                    </div>
+                    <div id="codeEmploye" class="m-2">{{ app.user.id }}
+                        {{ app.user.nomEmploye }}</div>
                 </div>
-                <div class="m-2">{{ user.id }}
-                    {{ user.nomEmploye }}
+                <div class="m-2 flex-1 md:block hidden">
+                    <div class="m-2">
+                        <b>Centre de charge</b>
+                    </div>
+                    <div class="m-2" id="CDGUser">
+                        {{ app.user.centreDeCharge.id }}
+                    </div>
                 </div>
-            </div>
-            <div class="m-2 flex-1">
-                <div class="m-2">
-                    <b>Centre de charge</b>
+                <div class="m-2 flex-1 md:block hidden">
+                    <div class="m-2">
+                        <b>Date</b>
+                    </div>
+                    <div class="m-2">
+                        {{ 'now'|date('d/m/Y', 'Europe/Paris') }}
+                    </div>
                 </div>
-                <div class="m-2">
-                    {{ user.centreDeCharge.id }}
-                </div>
-            </div>
-            <div class="m-2 flex-1">
-                <div class="m-2">
-                    <b>Date</b>
-                </div>
-                <div class="m-2">{{ 'now'|date('d/m/Y', 'Europe/Paris') }}
-                </div>
-            </div>
-            <div class="m-2 flex-1">
-                <div class="m-2">
-                    <b>Temps journalier</b>
-                </div>
-                <div class="m-2">
-                    <span>
-                        {% if nbHeures > 0 %}
-                            {{ nbHeures }}
-                            {% if nbHeures < 2 %}
-                                heure
-                            {% else %}
-                                heures
+                <div class="m-2 flex-1">
+                    <div class="m-2">
+                        <b>Temps journalier</b>
+                    </div>
+                    <div class="m-2">
+                        <span>
+                            {% if nbHeures > 0 %}
+                                {{ nbHeures }}
+                                {% if nbHeures < 2 %}
+                                    heure
+                                {% else %}
+                                    heures
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="m-2 flex-1">
-                <a class="btn btn-primary mt-5" href="{{ path('temps') }}"  target="_self">
-                    Saisie des heures
-                </a>
+                <div class="m-2 flex-1 md:block hidden">
+                    <div class="m-2">
+                    <a class="btn btn-primary mt-5" href="{{ path('temps') }}"  target="_self">
+                        Saisie des heures
+                    </a>
+                </div>
             </div>
         </div>
     </section>
-    <section class="mx-24 my-16 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 rounded-md bg-neutral-100 border-b-[5px] border-gruau-red py-6 text-lg max-sm:text-base shadow-md">
-        <h2 class="text-center text-4xl text-gruau-dark-blue font-bold">Détails des heures</h2>
-        <hr class="w-14 mx-auto h-[3px] bg-gruau-red my-6 text-gruau-red">
-        <div class="flex flex-row flex-wrap items-center space-x-2 p-2">
-            <table class="table-fixed w-full">
-                <thead>
-                <tr class="flex">
-                    <th class="hidden basis-1/6 lg:block">Date de transaction</th>
-                    <th class="basis-1/6">Type d'heure</th>
-                    <th class="basis-1/2">
-                        <span class="block md:inline">Ordre</span>
-                        <span class="hidden md:inline"> | </span>
-                        <span class="block md:inline">Opération</span>
-                        <span class="hidden md:inline"> | </span>
-                        <span class="block md:inline">Activité</span>
-                        <span class="hidden md:inline"> | </span>
-                        <span class="block md:inline">Tâche</span>
-                        <span class="hidden md:inline"> | </span>
-                        <span class="block md:inline">Centre de charge</span>
-                        <span class="hidden md:inline"> | </span>
-                        <span class="block md:inline">Tâche spécifique</span>
-                    </th>
-                    <th class="basis-1/6">Temps main d'œuvre</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for heures in details %}
+   <section class="card mx-24 my-4 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 bg-base-100 border-b-[5px] border-accent text-lg max-sm:text-base" id="temps">
+        <div class="card-body">
+            <h2 class="text-center text-4xl text-primary font-bold">Détails des heures</h2>
+            <hr class="w-14 mx-auto h-[3px] bg-accent my-6 text-accent">
+            <div class="flex flex-row flex-wrap items-center space-x-2 p-2">
+                <table class="table-fixed w-full">
+                    <thead>
                     <tr class="flex">
-                        <td class="text-center basis-1/6 hidden lg:block">
-                            {{ heures.date|date('d/m/Y H:i') }}
-                        </td>
-                        <td class="text-center basis-1/6">
-                            {% if (heures.typeHeures.nomType is not empty) %}
-                                {{ heures.typeHeures.nomType }}
-                            {% endif %}
-                        <td class="text-center basis-1/2">
-                            {% set name = [] %}
-                            {% if (heures.ordre is not empty) %}
-                                {% set name = name|merge({ordre: heures.ordre}) %}
-                            {% endif %}
-                            {% if (heures.operation is not empty) %}
-                                {% set name = name|merge({operation: heures.operation}) %}
-                            {% endif %}
-                            {% if (heures.activite is not empty) %}
-                                {% set name = name|merge({activite: heures.activite.name}) %}
-                            {% endif %}
-                            {% if (heures.tache is not empty) %}
-                                {% set name = name|merge({tache: heures.tache.name}) %}
-                            {% endif %}
-                            {% if (heures.centreDeCharge is not empty) %}
-                                {% set name = name|merge({centreDeCharge: heures.centreDeCharge.name}) %}
-                            {% endif %}
-                            {% if (heures.tacheSpecifique is not empty) %}
-                                {% set name = name|merge({tacheSpecifique: heures.tacheSpecifique.name}) %}
-                            {% endif %}
-                            {{ name|join('  |  ') }}
-                        </td>
-                        <td class="text-center basis-1/6">{{ heures.tempsMainOeuvre }}
-                            heures
-                        </td>
+                        <th class="hidden basis-1/6 lg:block">Date de transaction</th>
+                        <th class="basis-1/6">Type d'heure</th>
+                        <th class="basis-1/2">
+                            <span class="block md:inline">Ordre</span>
+                            <span class="hidden md:inline"> | </span>
+                            <span class="block md:inline">Opération</span>
+                            <span class="hidden md:inline"> | </span>
+                            <span class="block md:inline">Activité</span>
+                            <span class="hidden md:inline"> | </span>
+                            <span class="block md:inline">Tâche</span>
+                            <span class="hidden md:inline"> | </span>
+                            <span class="block md:inline">Centre de charge</span>
+                            <span class="hidden md:inline"> | </span>
+                            <span class="block md:inline">Tâche spécifique</span>
+                        </th>
+                        <th class="basis-1/6">Temps main d'œuvre</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="m-2 flex-1">
-            <div class="m-2 text-center">
-                <a class="btn btn-primary mt-5" href="{{ path('temps') }}" target="_self">
-                    Saisie des heures
-                </a>
+                    </thead>
+                    <tbody>
+                    {% for heures in details %}
+                        <tr class="flex">
+                            <td class="text-center basis-1/6 hidden lg:block">
+                                {{ heures.date|date('d/m/Y H:i') }}
+                            </td>
+                            <td class="text-center basis-1/6">
+                                {% if (heures.typeHeures.nomType is not empty) %}
+                                    {{ heures.typeHeures.nomType }}
+                                {% endif %}
+                            <td class="text-center basis-1/2">
+                                {% set name = [] %}
+                                {% if (heures.ordre is not empty) %}
+                                    {% set name = name|merge({ordre: heures.ordre}) %}
+                                {% endif %}
+                                {% if (heures.operation is not empty) %}
+                                    {% set name = name|merge({operation: heures.operation}) %}
+                                {% endif %}
+                                {% if (heures.activite is not empty) %}
+                                    {% set name = name|merge({activite: heures.activite.name}) %}
+                                {% endif %}
+                                {% if (heures.tache is not empty) %}
+                                    {% set name = name|merge({tache: heures.tache.name}) %}
+                                {% endif %}
+                                {% if (heures.centreDeCharge is not empty) %}
+                                    {% set name = name|merge({centreDeCharge: heures.centreDeCharge.name}) %}
+                                {% endif %}
+                                {% if (heures.tacheSpecifique is not empty) %}
+                                    {% set name = name|merge({tacheSpecifique: heures.tacheSpecifique.name}) %}
+                                {% endif %}
+                                {{ name|join('  |  ') }}
+                            </td>
+                            <td class="text-center basis-1/6">{{ heures.tempsMainOeuvre }}
+                                heures
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="m-2 flex-1">
+                <div class="m-2 text-center">
+                    <a class="btn btn-primary mt-5" href="{{ path('temps') }}" target="_self">
+                        Saisie des heures
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+</section>
 {% endblock %}

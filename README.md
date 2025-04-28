@@ -50,7 +50,7 @@ Pour utiliser l'application en localhost vous avez juste à suivre les étapes s
 Aide pour executer les linters
 
 ```shell
-vendor/bin/phpstan analyse src tests --memory-limit=2G
+vendor/bin/phpstan analyse src --memory-limit=2G
 ```
 
 ```shell
