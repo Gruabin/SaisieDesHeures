@@ -125,11 +125,11 @@ function tacheChange(id) {
 // 
 document.getElementById('btnEnregistrerQuitter').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
         }
         else {
             window.location.href = '/deconnexion';
@@ -138,11 +138,11 @@ document.getElementById('btnEnregistrerQuitter').addEventListener('click', async
 })
 document.getElementById('btnEnregistrerContinue').addEventListener('click', async function () {
     if (verif()) {
-        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
         const state = await formSubmit();
         if (!state) {
             alert("Une erreur s'est produite")
-            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
         }
         else {
             window.location.href = '/temps';
@@ -194,7 +194,7 @@ function verif() {
 //* Envoie les données du formulaire au serveur
 // 
 async function formSubmit() {
-    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("informationSaisiHeures").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
 
     const type_heures = document.getElementById("type").value;
     let ordre = "";
@@ -215,13 +215,13 @@ async function formSubmit() {
     }
     if (type_heures == "-1") {
         alert("Veuillez selectionner un type d'heure");
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
 
         return respnse.status = 400;
     }
     if (temps_main_oeuvre == "") {
         alert("Veuillez insérer un temps de main d'oeuvre");
-        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("informationSaisiHeures").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
 
         return respnse.status = 400;
     }
@@ -370,7 +370,7 @@ document.getElementById("activite").addEventListener("input", function () {
 //
 document.getElementById('btnEnregistrerParDefaut').addEventListener('click', function (event) {
     // Envoie une requête POST contenant le type d'heure sélectionné de manière asynchrone avec une animation de chargement pendant l'envoi
-    document.getElementById("btnEnregistrerParDefaut").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("btnEnregistrerParDefaut").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
     document.getElementById("btnEnregistrerParDefaut").classList.add("btn-disabled");
     document.getElementById("iconPlein").classList.add("hidden");
     document.getElementById("iconTransparent").classList.add("hidden");
@@ -386,7 +386,7 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
     })
         .then(response => {
             if (!response.ok) {
-                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
 
                 document.getElementById("alertError").classList.remove("hidden");
                 setTimeout(function () {
@@ -395,7 +395,7 @@ document.getElementById('btnEnregistrerParDefaut').addEventListener('click', fun
             }, 5000);
         }
             else {
-                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+                document.getElementById("btnEnregistrerParDefaut").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
 
                 document.getElementById("alertSuccess").classList.remove("hidden");
                 selectedOption = document.getElementById("type").value;
