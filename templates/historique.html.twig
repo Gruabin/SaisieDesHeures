@@ -5,30 +5,28 @@
 {% block body %}
     <section class="card mx-24 my-4 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 bg-base-100 border-b-[5px] border-accent text-lg max-sm:text-base" id="temps">
         <div class="card-body">
-            <h2 class="text-center text-4xl text-primary font-bold">Synthèse employé</h2>
-            <hr class="w-14 mx-auto h-[3px] bg-accent my-6 text-accent">
-            <div class="flex flex-col lg:flex-row lg:items-center p-2">
+            <div class="flex flex-row items-center max-sm:text-center">
                 <div class="m-2 flex-1">
                     <div class="m-2">
                         <b>Employé</b>
                     </div>
-                    <div class="m-2">{{ user.id }}
-                        {{ user.nomEmploye }}
-                    </div>
+                    <div id="codeEmploye" class="m-2">{{ app.user.id }}
+                        {{ app.user.nomEmploye }}</div>
                 </div>
-                <div class="m-2 flex-1">
+                <div class="m-2 flex-1 md:block hidden">
                     <div class="m-2">
                         <b>Centre de charge</b>
                     </div>
-                    <div class="m-2">
-                        {{ user.centreDeCharge.id }}
+                    <div class="m-2" id="CDGUser">
+                        {{ app.user.centreDeCharge.id }}
                     </div>
                 </div>
-                <div class="m-2 flex-1">
+                <div class="m-2 flex-1 md:block hidden">
                     <div class="m-2">
                         <b>Date</b>
                     </div>
-                    <div class="m-2">{{ 'now'|date('d/m/Y', 'Europe/Paris') }}
+                    <div class="m-2">
+                        {{ 'now'|date('d/m/Y', 'Europe/Paris') }}
                     </div>
                 </div>
                 <div class="m-2 flex-1">
@@ -48,7 +46,8 @@
                         </span>
                     </div>
                 </div>
-                <div class="m-2 flex-1">
+                <div class="m-2 flex-1 md:block hidden">
+                    <div class="m-2">
                     <a class="btn btn-primary mt-5" href="{{ path('temps') }}"  target="_self">
                         Saisie des heures
                     </a>

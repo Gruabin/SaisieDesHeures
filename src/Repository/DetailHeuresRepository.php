@@ -92,7 +92,7 @@ class DetailHeuresRepository extends ServiceEntityRepository
                 ->join('d.employe', 'employe')
                 ->where('d.date_export IS NULL')
                 ->andWhere('employe.id LIKE :employe')
-                ->setParameter('employe', substr((string) $user->getUserIdentifier(), 0, 2) . '%')
+                ->setParameter('employe', substr((string) $user->getUserIdentifier(), 0, 2).'%')
                 ->orderBy('employe.id', 'DESC')
                 ->orderBy('d.date', 'DESC')
                 ->getQuery()

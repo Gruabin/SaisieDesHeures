@@ -69,9 +69,9 @@ class Employe implements UserInterface
     }
 
     /**
-     * Summary of setRoles
+     * Summary of setRoles.
+     *
      * @param array<string> $roles
-     * @return Employe
      */
     public function setRoles(array $roles): self
     {

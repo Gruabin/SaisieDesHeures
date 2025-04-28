@@ -165,7 +165,7 @@ checkboxes.forEach(checkbox => {
 let donnees = [];
 document.getElementById('validation').addEventListener('click', function () {
     document.getElementById('validation').classList.add("hidden");
-    document.getElementById("loading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("loading").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
 
     ligne.forEach(element => {
         if (element.querySelector('input[type=checkbox]').checked) {
@@ -188,13 +188,13 @@ document.getElementById('validation').addEventListener('click', function () {
     ).then((response) => {
         if (!response.ok) {
             document.getElementById('validation').classList.remove("hidden");
-            document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+            document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
             throw new Error("Réponse inattendue du serveur");
         }
         window.location.href = '/console';
     }).catch((error) => {
         document.getElementById('validation').classList.remove("hidden");
-        document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("loading").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
         window.location.href = '/console';
         throw new Error("Réponse inattendue du serveur");
     });
@@ -208,7 +208,7 @@ function APISuppression(ligneASupprimer) {
     token = ligneASupprimer.querySelector("input[name='ligneToken']").value;
     document.getElementById('btnModalSuppr').classList.add("hidden");
     document.getElementById('btnModalAnnuler').classList.add("hidden");
-    document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+    document.getElementById("modalLoading").classList.add("loading", "loading-dots", "loading-lg", "text-primary");
 
     const data = {
         id: ligneASupprimer.dataset.idligne,
@@ -243,7 +243,7 @@ function APISuppression(ligneASupprimer) {
         }
         document.getElementById('btnModalSuppr').classList.remove("hidden");
         document.getElementById('btnModalAnnuler').classList.remove("hidden");
-        document.getElementById("modalLoading").classList.remove("loading", "loading-dots", "loading-lg", "text-gruau-dark-blue");
+        document.getElementById("modalLoading").classList.remove("loading", "loading-dots", "loading-lg", "text-primary");
         document.getElementById('modalSuppr').close();
     }).catch((error) => {
         throw new Error("Réponse inattendue du serveur");
@@ -368,8 +368,8 @@ async function APIModification(element) {
 //
 function MAJDonnees(element, data) {
     element.dataset.statut = 3;
-    element.querySelector(".fa-circle-check").classList.remove("hidden");
-    element.querySelector(".fa-circle-xmark").classList.add("hidden");
+    element.querySelector(".divSuccess").classList.remove("hidden");
+    element.querySelector(".divXmark").classList.add("hidden");
     element.querySelector("input[name='checkbox_ligne']").disabled = false;
     element.querySelector("p[name='texte_type_heure']").innerHTML = element.querySelector("select[name='type_heure']").selectedOptions[0].text;
     element.querySelector("p[name='texte_ordre']").innerHTML = data.ordre;

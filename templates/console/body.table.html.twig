@@ -61,15 +61,18 @@
                     <p class="texte" name="texte_saisieTemps">{{ heure.tempsMainOeuvre }}</p>
                 </th>
                 <td>
-                    {{ heure.statut.id }}
-                    <i class="fa-solid fa-circle-check fa-xl text-success {% if heure.statut.id == 2 %}hidden{% endif %}"></i>
-                    <i class="fa-solid fa-circle-xmark fa-xl text-accent {% if heure.statut.id == 3 %}hidden{% endif %}"></i>
+                    <div class="divSuccess {% if heure.statut.id == 2 %} hidden {% endif %}">
+                        <i class="fa-solid fa-circle-check fa-xl text-success "></i>
+                    </div>
+                    <div class="divXmark {% if heure.statut.id == 3 %}hidden{% endif %}">
+                        <i class="fa-solid fa-circle-xmark fa-xl text-accent "></i>
+                    </div>
                 </td>
                 <td>
                     <p class="texte">{{ heure.motifErreur ?? null }}</p>
                 </td>
                 <td>
-                    <span class="loading loading-dots loading-lg text-gruau-dark-blue hidden"></span>
+                    <span class="loading loading-dots loading-lg text-primary hidden"></span>
                     <button type="button" data-ligne="{{ heure.id }}" class="btn btn-link check hidden" value="" ><i class="fa-solid fa-check fa-xl"></i></button>
                     <button type="button" data-ligne="{{ heure.id }}" class="btn btn-link xmark hidden" value="" ><i class="fa-solid fa-xmark fa-xl"></i></button>
                     <button type="button" data-ligne="{{ heure.id }}" class="btn btn-link pen" value=""><i class="fa-solid fa-pencil fa-xl"></i></i></button>
