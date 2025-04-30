@@ -19,8 +19,8 @@
   --color-neutral-content: oklch(92% 0.004 286.32);
   --color-info: oklch(74% 0.14148 226.2718);
   --color-info-content: oklch(29% 0.066 243.157);
-  --color-success: oklch(77% 0.152 181.912);
-  --color-success-content: oklch(37% 0.077 168.94);
+  --color-success: oklch(0.69 0.123 162.71);
+  --color-success-content: white;
   --color-warning: oklch(82% 0.189 84.429);
   --color-warning-content: oklch(41% 0.112 45.904);
   --color-error: oklch(61% 0.2107 26.5);
