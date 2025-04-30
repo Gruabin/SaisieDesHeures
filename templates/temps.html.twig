@@ -107,7 +107,7 @@
                         </label>
                     </div>
                     <div class="flex-1 text-left items-center">
-                        <label class="input flex items-center gap-2 mx-3 max-w-40 dark:border-primary">
+                        <label class="input flex items-center gap-1 mx-3 max-w-40 dark:border-primary">
                             <span id="labelOrdre">{{ site }}</span>
                             <input type="text" name="ordre" id="ordre" class="w-28" maxlength="9" pattern="^[0-9A-Za-z]{2}[0-9]{5}$"/>
                         </label>
@@ -180,7 +180,7 @@
                         </label>
                     </div>
                     <div class="flex-1 text-left md:flex md:self-center items-center">
-                        <select class="select mx- dark:border-primary" name="centrecharge" id="centrecharge">
+                        <select class="select mx-3 dark:border-primary" name="centrecharge" id="centrecharge">
                             {% for centre_charge in CDG %}
                                 <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
                             {% endfor %}
