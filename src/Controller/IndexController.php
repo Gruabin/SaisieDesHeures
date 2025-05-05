@@ -51,8 +51,8 @@ class IndexController extends AbstractController
             function (ItemInterface $item) {
                 $item->expiresAfter(43200);
 
-                /**  @var Employe $user */
-                $user =  $this->getUser();
+                /** @var Employe $user */
+                $user = $this->getUser();
 
                 return $this->render(
                     'connexion/identification.html.twig',
@@ -82,8 +82,8 @@ class IndexController extends AbstractController
     #[Route('/temps', name: 'temps')]
     public function temps(FavoriTypeHeureRepository $favoriTypeHeureRepository): Response
     {
-        /**  @var Employe $user */
-        $user =  $this->getUser();
+        /** @var Employe $user */
+        $user = $this->getUser();
 
         $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
         if ($nbHeures >= 12) {
@@ -103,7 +103,6 @@ class IndexController extends AbstractController
                 'taches' => $this->tacheRepository->findAll(),
                 'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
                 'CDG' => $this->CDGRepository->findAllUser(),
-                'user' => $user,
                 'nbHeures' => $nbHeures,
                 'favoriTypeHeure' => $favoriTypeHeure,
                 'site' => substr((string) $user->getUserIdentifier(), 0, 2),
@@ -115,9 +114,8 @@ class IndexController extends AbstractController
     #[Route('/historique', name: 'historique')]
     public function historique(): Response
     {
-        /**  @var Employe $user */
-        $user =  $this->getUser();
-
+        /** @var Employe $user */
+        $user = $this->getUser();
         $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
         if ($nbHeures >= 12) {
             $message = "Votre avez atteint votre limite d'heures journalières";
@@ -130,7 +128,6 @@ class IndexController extends AbstractController
             'historique.html.twig',
             [
                 'details' => $this->detailHeuresRepository->findAllTodayUser(),
-                'user' => $user,
                 'nbHeures' => $nbHeures,
             ]
         );
@@ -140,8 +137,8 @@ class IndexController extends AbstractController
     #[Route('/console', name: 'console')]
     public function console(Request $request): Response
     {
-        /**  @var Employe $user */
-        $user =  $this->getUser();
+        /** @var Employe $user */
+        $user = $this->getUser();
 
         $session = $request->getSession();
         //  Utilisateur responsable par défaut
@@ -226,6 +223,12 @@ class IndexController extends AbstractController
                 'types' => $this->typeHeuresRepo->findAll(),
             ]
         );
+    }
+
+    #[Route('/centreon', name: 'centreon', methods: ['GET'])]
+    public function centreon(): Response
+    {
+        return new Response('OK', \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**

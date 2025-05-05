@@ -1,12 +1,12 @@
 {
     "theme_color": "#005179",
-    "background_color": "#00bbee",
+    "background_color": "#ffffff",
     "display": "fullscreen",
     "scope": "/",
     "start_url": "/",
-    "name": "Saisie des Heures",
-    "short_name": "Saisie des Heures",
-    "description": "Saisie des Heures",
+    "name": "",
+    "short_name": "",
+    "description": "",
     "icons": [
         {
             "src": "/manifest/icon-192x192.png",

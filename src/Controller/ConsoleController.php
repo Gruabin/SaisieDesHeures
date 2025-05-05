@@ -2,22 +2,22 @@
 
 namespace App\Controller;
 
-use App\Entity\Employe;
 use App\Entity\DetailHeures;
-use Psr\Log\LoggerInterface;
-use App\Repository\TacheRepository;
-use App\Repository\StatutRepository;
+use App\Entity\Employe;
 use App\Repository\ActiviteRepository;
+use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\StatutRepository;
+use App\Repository\TacheRepository;
+use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DetailHeuresRepository;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\Repository\CentreDeChargeRepository;
-use App\Repository\TacheSpecifiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property ActiviteRepository        $activiteRepository
@@ -32,7 +32,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class ConsoleController extends AbstractController
 {
-    public function __construct(public ActiviteRepository $activiteRepository, public TypeHeuresRepository $typeHeuresRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository) {}
+    public function __construct(public ActiviteRepository $activiteRepository, public TypeHeuresRepository $typeHeuresRepository, public CentreDeChargeRepository $centreDeChargeRepository, public LoggerInterface $logger, public EntityManagerInterface $entityManager, public DetailHeuresRepository $detailHeuresRepository, public Security $security, public StatutRepository $statutRepository, public TacheRepository $tacheRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository)
+    {
+    }
 
     /**
      * Fonction pour approuver les lignes de détails des heures via une requête POST.
@@ -43,8 +45,8 @@ class ConsoleController extends AbstractController
     public function approuverLigne(Request $request): Response
     {
         try {
-            /**  @var Employe $user */
-            $user =  $this->getUser();
+            /** @var Employe $user */
+            $user = $this->getUser();
 
             // Récupérer les données JSON envoyées dans la requête POST
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -61,7 +63,7 @@ class ConsoleController extends AbstractController
                         $unDetail->setStatut($statutApprouve);
                         $this->entityManager->persist($unDetail);
                         $this->entityManager->flush();
-                        $this->logger->info('Détail n°' . $ligne . ' approuvé par ' . $user->getNomEmploye());
+                        $this->logger->info('Détail n°'.$ligne.' approuvé par '.$user->getNomEmploye());
                     }
                 }
                 $message = 'Saisies approuvées';
@@ -89,15 +91,15 @@ class ConsoleController extends AbstractController
     public function supprimerligne(Request $request): Response
     {
         try {
-            /**  @var Employe $user */
-            $user =  $this->getUser();
+            /** @var Employe $user */
+            $user = $this->getUser();
 
             // Récupérer les données JSON envoyées dans la requête POST de manière sécurisée
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $token = $data['token'] ?? '';
 
             // Vérifie si le jeton CSRF est valide
-            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_' . $data['id'], $token)) {
+            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
                 $statutSupprime = $this->statutRepository->getStatutSupprime();
                 $statutConforme = $this->statutRepository->getStatutConforme();
                 $statutAnomalie = $this->statutRepository->getStatutAnomalie();
@@ -108,7 +110,7 @@ class ConsoleController extends AbstractController
                     $unDetail->setMotifErreur(null);
                     $this->entityManager->persist($unDetail);
                     $this->entityManager->flush();
-                    $this->logger->info('Détail n°' . $data['id'] . ' supprimé par ' . $user->getNomEmploye());
+                    $this->logger->info('Détail n°'.$data['id'].' supprimé par '.$user->getNomEmploye());
 
                     $message = 'Saisie Supprimé';
                     $code = Response::HTTP_OK;
@@ -137,15 +139,15 @@ class ConsoleController extends AbstractController
     public function modifierLigne(Request $request): Response
     {
         try {
-            /**  @var Employe $user */
-            $user =  $this->getUser();
+            /** @var Employe $user */
+            $user = $this->getUser();
 
             $data = [];
             // Récupérer les données JSON envoyées dans la requête POST
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $token = $data['token'];
             // Vérifie si le jeton CSRF est valide
-            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_' . $data['id'], $token)) {
+            if (!empty($token) && $this->isCsrfTokenValid('ligneToken_'.$data['id'], $token)) {
                 $statutAnomalie = $this->statutRepository->getStatutAnomalie();
                 $statutConforme = $this->statutRepository->getStatutConforme();
                 $unDetail = $this->detailHeuresRepository->findOneBy(['id' => $data['id']]);
@@ -154,7 +156,7 @@ class ConsoleController extends AbstractController
                     $unDetail = $this->setDetailHeures($unDetail, $data);
                     $this->entityManager->persist($unDetail);
                     $this->entityManager->flush();
-                    $this->logger->info('Détail n°' . $data['id'] . ' modifié par ' . $user->getNomEmploye());
+                    $this->logger->info('Détail n°'.$data['id'].' modifié par '.$user->getNomEmploye());
                 }
                 $message = 'Saisie modifié';
                 $code = Response::HTTP_OK;

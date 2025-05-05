@@ -2,25 +2,25 @@
 
 namespace App\Controller\API;
 
-use App\Entity\Statut;
-use App\Entity\Employe;
-use App\Entity\TypeHeures;
 use App\Entity\DetailHeures;
-use Psr\Log\LoggerInterface;
-use App\Repository\TacheRepository;
-use App\Service\DetailHeureService;
-use App\Repository\StatutRepository;
+use App\Entity\Employe;
+use App\Entity\Statut;
+use App\Entity\TypeHeures;
 use App\Repository\ActiviteRepository;
-use App\Repository\TypeHeuresRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DetailHeuresRepository;
-use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\CentreDeChargeRepository;
+use App\Repository\DetailHeuresRepository;
+use App\Repository\StatutRepository;
+use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
+use App\Repository\TypeHeuresRepository;
+use App\Service\DetailHeureService;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @property TypeHeuresRepository      $typeHeuresRepository
@@ -34,7 +34,9 @@ class DetailHeuresAPIController extends AbstractController
 {
     public StatutRepository $statutRepository;
 
-    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger) {}
+    public function __construct(public ActiviteRepository $activiteRepository, public CentreDeChargeRepository $centreDeChargeRepository, public TacheRepository $tacheRepository, public TypeHeuresRepository $typeHeuresRepository, public TacheSpecifiqueRepository $tacheSpecifiqueRepository, public LoggerInterface $logger)
+    {
+    }
 
     // * READ
     #[Route('/api/get/detail_heures', name: 'api_get_detail_heures', methods: ['GET'])]
@@ -82,8 +84,8 @@ class DetailHeuresAPIController extends AbstractController
     #[Route('/api/post/detail_heures', name: 'api_post_detail_heures', methods: ['POST'])]
     public function post(Request $request, DetailHeuresRepository $detailHeuresRepo, EntityManagerInterface $entityManager, StatutRepository $statutRepo, Security $security, DetailHeureService $detailHeureService): Response
     {
-        /**  @var Employe $user */
-        $user =  $this->getUser();
+        /** @var Employe $user */
+        $user = $this->getUser();
 
         // Récupérer les données JSON envoyées dans la requête POST
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -159,8 +161,8 @@ class DetailHeuresAPIController extends AbstractController
         // Créer une nouvelle instance de l'entité DetailHeures
         $detailHeures = new DetailHeures();
 
-        /**  @var Employe $user */
-        $user =  $this->getUser();
+        /** @var Employe $user */
+        $user = $this->getUser();
 
         // Remplir les propriétés de l'entité avec les données reçues
         $now = new \DateTime();

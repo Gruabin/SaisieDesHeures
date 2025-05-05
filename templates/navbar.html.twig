@@ -1,45 +1,42 @@
-<nav class="bg-gruau-dark-blue w-full z-20 top-0 left-0">
-    <div class=" flex flex-wrap items-center justify-between mx-auto p-4 max-sm:justify-center">
-        <a href="{{ path('home') }}" class="w-56">
-            <img src="https://cdn.gruau.com/image/logo/grp-reversed.svg" class="mr-3" alt="Logo Gruau">
+<nav class="bg-primary w-full z-20 top-0 left-0">
+    <div class=" flex flex-wrap items-center justify-between mx-auto p-4 ">
+        <a href="{{ path('home') }}" class="w-16 md:w-56">
+            <img src="https://cdn.gruau.com/image/logo/icon-reversed.svg" class="mr-3 block md:hidden" alt="Logo Gruau">
+            <img src="https://cdn.gruau.com/image/logo/grp-reversed.svg" class="mr-3 hidden md:block" alt="Logo Gruau">
         </a>
-        <div class="flex md:order-2 w-56 justify-end max-sm:justify-center items-center max-sm:mt-1">
-            {% if user is not null %}
-                <div class="dropdown md:dropdown-end dropdown-bottom" >
+        <div class="items-center justify-between md:flex md:w-auto">
+            <h1 class="text-xl md:text-4xl text-center text-white font-bold">{% if titrePage is defined %}{{ titrePage }}{% else %}Saisie des heures{% endif %}</h1>
+        </div>
+        <div class="flex md:order-2 w-16 md:w-56 justify-end items-center max-sm:mt-1">
+            {% if app.user is not null %}
+                <div class="dropdown dropdown-end" >
                     <div  tabindex="0" role="button" class="btn btn-circle m-1">
                         <span class="sr-only">Menu</span>
-                        <span class="text-xl font font-bold text-center" id="couleurLettre">{{ user.nomEmploye|slice(0, 1) }}</span>
+                        <span class="text-xl font font-bold text-center" id="couleurLettre">{{ app.user.nomEmploye|slice(0, 1) }}</span>
                     </div>
-                    <div tabindex="0" id="menu" class="dropdown-content z-20 menu p-2 shadow bg-gruau-dark-blue divide-gruau-dark-blue rounded-box w-60">
+                    <div tabindex="0" class="dropdown-content z-20 menu p-2 shadow bg-primary rounded-box w-60">
                         <div class="px-4 py-3">
-                            <span class="block text-sm text-white">{{ user.nomEmploye }}</span>
-                            <span class="block text-sm text-gray-300 truncate">{{ user.id }}</span>
+                            <span class="block text-sm text-white">{{ app.user.nomEmploye }}</span>
+                            <span class="block text-sm text-gray-300 truncate">{{ app.user.id }}</span>
                         </div>
                         <ul>
                             <li>
-                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
+                                <a href="{{ path('temps') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-secondary" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-pen-to-square"></i>  Saisie des temps</a>
                             </li>
                             <li>
-                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
+                                <a href="{{ path('historique') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-secondary" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-table-columns"></i>  Détail des temps</a>
                             </li>
                             {% if is_granted('ROLE_MANAGER') %}
                                 <li>
-                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
+                                    <a href="{{ path('console') }}" target="_self" class="block text-sm text-white focus:text-white hover:bg-secondary" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-eye"></i>  Console d'approbation</a>
                                 </li>
                             {% endif %}
                             <li>
-                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-gruau-light-blue" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
+                                <a id="deconnexion" href="{{ path('deconnexion') }}" target="_self" class="block text-sm text-white hover:bg-secondary" onclick="this.parentNode.style.display = 'none'"><i class="fa-solid fa-right-to-bracket text-accent"></i>  Quitter</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-            {% endif %}
-        </div>
-        <div class="items-center justify-between w-full md:flex md:w-auto">
-            {% if titrePage is defined %}
-                <h1 class="text-4xl text-center text-white font-bold">{{ titrePage }}</h1>
-            {% else %}
-                <h1 class="text-4xl text-center text-white font-bold">Saisie des heures</h1>
             {% endif %}
         </div>
     </div>
