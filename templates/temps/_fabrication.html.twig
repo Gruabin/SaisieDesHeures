@@ -1,0 +1,58 @@
+<turbo-frame id="formulaire_saisie">
+    <div class="flex md:flex-row flex-col" id="divOrdre">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="ordre">
+                <b>Ordre</b>
+            </label>
+        </div>
+        <div class="flex-1 text-left items-center">
+            <label class="input flex items-center gap-1 mx-3 max-w-40 dark:border-primary">
+                <span id="labelOrdre">{{ site }}</span>
+                <input type="text" name="ordre" id="ordre" class="w-28" maxlength="9" pattern="^[0-9A-Za-z]{2}[0-9]{5}$"/>
+            </label>
+        </div>
+    </div>
+
+    <div class="flex md:flex-row flex-col" id="divOperation">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label  for="operation">
+                <b>Opération</b>
+            </label>
+        </div>
+        <div class="flex-1 text-left md:self-center  items-center">
+            <input class="input mx-3 dark:border-primary max-w-16" type="number" name="operation" id="operation" max="999" min="0" step="10">
+        </div>
+    </div>
+
+    <div class="flex md:flex-row flex-col max-sm:items-center" id="divTacheSpe">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="tacheSpe">
+                <b>Tâche spécifique</b>
+            </label>
+        </div>
+        <div class="flex-1 flex text-left md:flex md:self-center items-center">
+            <div class="mx-3 flex gap-2 items-center">
+                <input type="checkbox" class="checkbox checkbox-primary dark:border-primary" id="cbTacheSpe"/>
+                <select class="select dark:border-primary" disabled name="tacheSpe" id="tacheSpe">
+                    <option value="-1" selected>-- Sélectionner une tâche spécifique --</option>
+                    {% for tache in tachesSpe %}
+                        <option value="{{ tache.id }}">{{ tache.id }}
+                            -
+                            {{ tache.description }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex md:flex-row flex-col" id="divSaisieTemps">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="saisieTemps">
+                <b>Temps main d'oeuvre (en h)</b>
+            </label>
+        </div>
+        <div class="flex-1 md:flex md:self-center items-center">
+            <input class="input mx-3 dark:border-primary max-w-24" type="number" max="100" step=".25" name="saisieTemps" id="saisieTemps">
+        </div>
+    </div>
+</turbo-frame>

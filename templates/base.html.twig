@@ -41,23 +41,18 @@
         <!-- End Matomo Code -->
     </head>
     <body class="flex flex-col min-h-[100vh] bg-base-200">
-        <header class="invisible">
+        <header>
             {% block navbar %}
                 {{ include('navbar.html.twig') }}
             {% endblock %}
         </header>
-        <section id="boxAlertMessage" class="invisible">
+        <section id="boxAlertMessage">
             {{ include('alert.html.twig') }}
         </section>
-        <div id="loader">
-            <img class="scale-down-tl" src="{{ asset('images/logo-symbole-haut.svg') }}">
-            Chargement
-            <img class="scale-down-br" src="{{ asset('images/gruau-symbole-bas.svg') }}">
-        </div>
-        <main class="invisible">
+        <main>
             {% block body %}{% endblock %}
         </main>
-        <footer class="mt-auto invisible">
+        <footer class="mt-auto">
             {{ include('footer.html.twig') }}
         </footer>
     </body>

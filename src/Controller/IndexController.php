@@ -16,6 +16,7 @@ use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
 use App\Service\DetailHeureService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface as FormFormInterface;
@@ -25,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @property LoggerInterface           $logger
@@ -96,7 +98,7 @@ class IndexController extends AbstractController
 
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render(
-            'temps.html.twig',
+            'temps/temps.html.twig',
             [
                 'details' => $this->detailHeuresRepository->findAllTodayUser(),
                 'types' => $this->typeHeuresRepo->findAll(),
@@ -108,6 +110,49 @@ class IndexController extends AbstractController
                 'site' => substr((string) $user->getUserIdentifier(), 0, 2),
             ]
         );
+    }
+
+    #[Route('/chargement-formulaire/{typeId}', name: 'chargement_formulaire')]
+    public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo, Request $request, KernelInterface $kernel): Response
+    {
+        // Récupérer données nécessaires selon le type
+        $type = $typeRepo->find($typeId);
+
+        if (!$type) {
+            return $this->render('temps/_default.html.twig', [
+                'type' => null,
+                'taches' => [],
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $cdgRepo->findAll(),
+                'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2)
+            ]);
+        }
+
+        $slugger = new AsciiSlugger();
+        $nomType = strtolower($slugger->slug($type->getNomType()));
+
+        $template = sprintf('temps/_%s.html.twig', $nomType);
+        
+        return $this->render($template, [
+            'type' => $type,
+            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+            'CDG' => $cdgRepo->findAll(),
+            'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2)
+        ]);
+    }
+
+    #[Route('/type-select', name: 'type_select', methods: ['GET'])]
+    public function typeSelectRedirect(Request $request): Response
+    {
+        $typeId = $request->query->get('type');
+
+        if ($typeId && $typeId != -1) {
+            return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
+        }
+
+        // fallback : redirection vide ou vers une version par défaut
+        return $this->redirectToRoute('chargement_formulaire', ['typeId' => 0]);
     }
 
     // Affiche la page d'historique

@@ -1,0 +1,48 @@
+<turbo-frame id="formulaire_saisie">
+    <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="tache">
+                <b>Tâche</b>
+            </label>
+        </div>
+        <div class="flex-1 text-left md:flex md:self-center items-center">
+            <div class="md:self-center">
+                <select class="select mx-3 dark:border-primary" name="tache" id="tache">
+                    <option value="-1">-- Sélectionner une tâche --</option>
+                    {% for tache in taches %}
+                        <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }}
+                            -
+                            {{ tache.nomTache }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex md:flex-row flex-col" id="divCentreCharge">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="centrecharge">
+                <b>Centre de charge</b>
+            </label>
+        </div>
+        <div class="flex-1 text-left md:flex md:self-center items-center">
+            <select class="select mx-3 dark:border-primary" name="centrecharge" id="centrecharge">
+                {% for centre_charge in CDG %}
+                    <option value="{{ centre_charge.id }}">{{ centre_charge.id }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="flex md:flex-row flex-col" id="divSaisieTemps">
+        <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <label for="saisieTemps">
+                <b>Temps main d'oeuvre (en h)</b>
+            </label>
+        </div>
+        <div class="flex-1 md:flex md:self-center items-center">
+            <input class="input mx-3 dark:border-primary max-w-24" type="number" max="100" step=".25" name="saisieTemps" id="saisieTemps">
+        </div>
+    </div>
+</turbo-frame>
