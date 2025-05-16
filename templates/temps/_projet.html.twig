@@ -1,59 +1,72 @@
 <turbo-frame id="formulaire_saisie">
-    <div class="flex md:flex-row flex-col" id="divOrdre">
-        <div class="flex-1 text-center md:text-right md:self-center m-3">
-            <label for="ordre">
-                <b>Ordre</b>
-            </label>
-        </div>
-        <div class="flex-1 text-left items-center">
-            <label class="input flex items-center gap-1 mx-3 max-w-40 dark:border-primary">
-                <span id="labelOrdre">{{ site }}</span>
-                <input type="text" name="ordre" id="ordre" class="w-28" maxlength="9" pattern="^[0-9A-Za-z]{2}[0-9]{5}$"/>
-            </label>
-        </div>
-    </div>
+    {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id}) }) }}
 
-    <div class="flex md:flex-row flex-col" id="divActivite">
-        <div class="flex-1 text-center md:text-right md:self-center m-3">
-            <label for="activite">
-                <b>Activité</b>
-            </label>
-        </div>
-        <div class="flex-1 text-left md:self-center items-center">
-            <input class="input mx-3 dark:border-primary" type="text" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$">
-            <p class="mx-3" id="infoActivite"></p>
-        </div>
-    </div>
-
-    <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
-        <div class="flex-1 text-center md:text-right md:self-center m-3">
-            <label for="tache">
-                <b>Tâche</b>
-            </label>
-        </div>
-        <div class="flex-1 text-left md:flex md:self-center items-center">
-            <div class="md:self-center">
-                <select class="select mx-3 dark:border-primary" name="tache" id="tache">
-                    <option value="-1">-- Sélectionner une tâche --</option>
-                    {% for tache in taches %}
-                        <option data-idtype="{{ tache.typeHeures.id }}" value="{{ tache.id }}">{{ tache.id }}
-                            -
-                            {{ tache.nomTache }}
-                        </option>
-                    {% endfor %}
-                </select>
+        <div class="flex md:flex-row flex-col" id="divOrdre">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
+                {{ form_label(formHeures.ordre, "<b>Ordre</b>", { 'label_html': true }) }}
+            </div>
+            <div class="flex-1 text-left items-center">
+                <div class="mx-3 max-w-40">
+                    <label class="input flex items-center gap-1 dark:border-primary">
+                        <span id="labelOrdre">{{ site }}</span>
+                        {{ form_widget(formHeures.ordre, { attr: {class: 'w-28', maxlength: 9, pattern: '^[0-9A-Za-z]{2}[0-9]{5}$'}}) }}
+                    </label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="flex md:flex-row flex-col" id="divSaisieTemps">
-        <div class="flex-1 text-center md:text-right md:self-center m-3">
-            <label for="saisieTemps">
-                <b>Temps main d'oeuvre (en h)</b>
-            </label>
+        <div class="flex md:flex-row flex-col" id="divActivite">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
+                {{ form_label(formHeures.activite, "<b>Activité</b>", { 'label_html': true }) }}
+            </div>
+            <div class="flex-1 text-left md:self-center items-center">
+                {# <input class="input mx-3 dark:border-primary" type="text" name="activite" id="activite" maxlength="4" pattern="^[0-9]{4}$"> #}
+
+                <div class="flex-1 text-left md:self-center items-center">
+                    <div class="w-full mx-3">
+                        {{ form_widget(formHeures.activite, {attr: {class: 'select dark:border-primary'}, placeholder: '-- Sélectionner une activité --'}) }}
+                    </div>
+                </div>
+
+                <p class="mx-3" id="infoActivite"></p>
+            </div>
         </div>
-        <div class="flex-1 md:flex md:self-center items-center">
-            <input class="input mx-3 dark:border-primary max-w-24" type="number" max="100" step=".25" name="saisieTemps" id="saisieTemps">
+
+        <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
+                {{ form_label(formHeures.tache, "<b>Tâche</b>", { 'label_html': true }) }}
+            </div>
+            <div class="flex-1 text-left md:flex md:self-center items-center">
+                <div class="md:self-center w-full mx-3">
+                    {{ form_widget(formHeures.tache, {attr: {class: 'select dark:border-primary', required: true}, placeholder: '-- Sélectionner une tâche --'}) }}
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div class="flex md:flex-row flex-col" id="divSaisieTemps">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
+                {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
+            </div>
+            <div class="flex-1 md:flex md:self-center items-center">
+                <div class="mx-3">
+                    {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input dark:border-primary max-w-24', type: 'number', max: 100, step: 0.25}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-row justify-center items-center p-2 gap-2">
+            <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
+                Quitter
+            </a>
+            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerQuitter">
+                Enregistrer et quitter
+            </button>
+            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerContinue">
+                Enregistrer
+            </button>
+        </div>
+
+        {{ form_widget(formHeures._token) }}
+
+    {{ form_end(formHeures, {'render_rest': false}) }}
 </turbo-frame>

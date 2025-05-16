@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 use App\Entity\DetailHeures;
 use App\Entity\Employe;
+use App\Form\AjoutHeuresType;
 use App\Form\FiltreDateType;
 use App\Form\FiltreResponsableType;
 use App\Repository\CentreDeChargeRepository;
@@ -113,33 +116,73 @@ class IndexController extends AbstractController
     }
 
     #[Route('/chargement-formulaire/{typeId}', name: 'chargement_formulaire')]
-    public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo, Request $request, KernelInterface $kernel): Response
+    public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response
     {
-        // Récupérer données nécessaires selon le type
+        $type = $typeRepo->find($typeId);
+        $formHeures = $this->createForm(AjoutHeuresType::class, new DetailHeures());
+    
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
+    
+        $template = $type
+            ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
+            : 'temps/_default.html.twig';
+    
+        return $this->render($template, [
+            'nbHeures' => $nbHeures,
+            'formHeures' => $formHeures->createView(),
+            'type' => $type,
+            'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
+            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+            'CDG' => $cdgRepo->findAll(),
+            'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+        ]);
+    }
+
+    #[Route('/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
+    public function soumettreFormulaireParType(int $typeId, Request $request, TypeHeuresRepository $typeRepo, EntityManagerInterface $entityManager, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response 
+    {
         $type = $typeRepo->find($typeId);
 
         if (!$type) {
-            return $this->render('temps/_default.html.twig', [
-                'type' => null,
-                'taches' => [],
-                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                'CDG' => $cdgRepo->findAll(),
-                'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2)
-            ]);
+            $this->addFlash('error', 'Type d\'heure invalide.');
+            return $this->redirectToRoute('temps');
         }
 
-        $slugger = new AsciiSlugger();
-        $nomType = strtolower($slugger->slug($type->getNomType()));
+        $heure = new DetailHeures();
 
-        $template = sprintf('temps/_%s.html.twig', $nomType);
+        $form = $this->createForm(AjoutHeuresType::class, $heure);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $heure->setEmploye($this->getUser());
+            $heure->setDate(new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')));
+            $heure->setTypeHeures($type);
         
-        return $this->render($template, [
-            'type' => $type,
-            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
-            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $cdgRepo->findAll(),
-            'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2)
-        ]);
+            $entityManager->persist($heure);
+            $entityManager->flush();
+        
+            $this->addFlash('success', 'Heure enregistrée avec succès.');
+        
+            if ($request->headers->get('Turbo-Frame')) {
+                return $this->forward('App\\Controller\\IndexController::loadFormulaireParType', [
+                    'typeId' => $typeId
+                ]);
+            }
+        
+            return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
+        }
+
+        if ($request->headers->get('Turbo-Frame')) {
+            return $this->render('temps/temps.html.twig', [
+                'formHeures' => $form->createView(),
+                'type' => $type,
+                'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $cdgRepo->findAll(),
+                'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+            ]);
+        }
     }
 
     #[Route('/type-select', name: 'type_select', methods: ['GET'])]

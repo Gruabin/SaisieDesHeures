@@ -92,7 +92,6 @@
                                     {% endfor %}
                                 </select>
                             </form>
-
                             <div class="tooltip" data-tip="Enregistrer par défaut">
                                 <button class="btn btn-sm btn-success" id="btnEnregistrerParDefaut">
                                     <span id="iconTransparent" class="w-4 hidden">
@@ -114,18 +113,6 @@
                 <div class="flex flex-row flex-wrap justify-center items-center p-2">
                     <div id="informationSaisiHeures"></div>
                 </div>
-            </div>
-            <input type="hidden" name="token" id="saisieToken" value="{{ csrf_token('saisieToken') }}">
-            <div class="flex flex-row  justify-center items-center p-2 gap-2">
-                <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
-                    Quitter
-                </a>
-                <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerQuitter">
-                    Enregistrer et quitter
-                </button>
-                <button class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" id="btnEnregistrerContinue">
-                    Enregistrer
-                </button>
             </div>
         </div>
     </section>
