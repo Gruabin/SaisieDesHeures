@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\DetailHeures;
 use App\Entity\Employe;
+use App\Entity\FavoriTypeHeure;
 use App\Form\AjoutHeuresType;
 use App\Form\FiltreDateType;
 use App\Form\FiltreResponsableType;
@@ -111,6 +112,7 @@ class IndexController extends AbstractController
                 'nbHeures' => $nbHeures,
                 'favoriTypeHeure' => $favoriTypeHeure,
                 'site' => substr((string) $user->getUserIdentifier(), 0, 2),
+                'selectedTypeId' => $favoriTypeHeure?->getTypeHeure()?->getId() ?? null,
             ]
         );
     }
@@ -158,8 +160,27 @@ class IndexController extends AbstractController
             $heure->setDate(new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')));
             $heure->setTypeHeures($type);
         
+
+            $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
+
+            // Nouvelle durée saisie
+            $heuresSaisies = $form->getData()->getTempsMainOeuvre();
+
+            if (($nbHeures + $heuresSaisies) > 12) {
+                $this->addFlash('error', 'Impossible d’ajouter cette saisie : vous dépasseriez les 12 heures autorisées par jour.');
+                
+                return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
+            }
+
+
             $entityManager->persist($heure);
             $entityManager->flush();
+
+            $action = $request->request->get('action');
+
+            if ($action === 'quitter') {
+                return $this->redirectToRoute('deconnexion');
+            }
         
             $this->addFlash('success', 'Heure enregistrée avec succès.');
         
@@ -196,6 +217,33 @@ class IndexController extends AbstractController
 
         // fallback : redirection vide ou vers une version par défaut
         return $this->redirectToRoute('chargement_formulaire', ['typeId' => 0]);
+    }
+
+    #[Route('/favori/type-heure', name: 'favori_type_heure', methods: ['POST'])]
+    public function setFavoriTypeHeure(Request $request, Security $security, EntityManagerInterface $em, TypeHeuresRepository $typeHeuresRepo, FavoriTypeHeureRepository $favoriRepo): Response
+    {
+        $employe = $security->getUser();
+
+        $typeId = $request->request->get('type_heure_id');
+
+        $typeHeure = $typeHeuresRepo->find($typeId);
+
+        $ancienFavori = $favoriRepo->findOneBy(['employe' => $employe]);
+
+        if ($ancienFavori) {
+            $ancienFavori->setTypeHeure($typeHeure);
+        } else {
+            $favori = new FavoriTypeHeure();
+            $favori->setEmploye($employe);
+            $favori->setTypeHeure($typeHeure);
+            $em->persist($favori);
+        }
+        $em->flush();
+
+
+        $this->addFlash('success', 'Type d\'heure favori enregistré !');
+
+        return new Response('', 204);
     }
 
     // Affiche la page d'historique
