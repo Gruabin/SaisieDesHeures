@@ -2,7 +2,6 @@
 
 namespace App\Tests\Form;
 
-use App\Entity\Employe;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
