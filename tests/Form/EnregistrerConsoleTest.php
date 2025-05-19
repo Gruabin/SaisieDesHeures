@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EnregistrerConsoleTest extends WebTestCase
 {
+    // Tests de soumissions de formulaires
     public function testSoumissionFormulaireValideGeneral()
     {
         // Tester la connexion
@@ -25,7 +26,7 @@ class EnregistrerConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/soumission/1');
+        $crawler = $client->request('GET', '/soumission-formulaire/1');
 
         $this->assertResponseIsSuccessful();
 
@@ -62,7 +63,7 @@ class EnregistrerConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/soumission/2');
+        $crawler = $client->request('GET', '/soumission-formulaire/2');
 
         $this->assertResponseIsSuccessful();
 
@@ -100,7 +101,7 @@ class EnregistrerConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/soumission/3');
+        $crawler = $client->request('GET', '/soumission-formulaire/3');
 
         $this->assertResponseIsSuccessful();
 
@@ -137,7 +138,7 @@ class EnregistrerConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/soumission/4');
+        $crawler = $client->request('GET', '/soumission-formulaire/4');
 
         $this->assertResponseIsSuccessful();
 
@@ -175,7 +176,7 @@ class EnregistrerConsoleTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/soumission/4');
+        $crawler = $client->request('GET', '/soumission-formulaire/4');
 
         $this->assertResponseIsSuccessful();
 
