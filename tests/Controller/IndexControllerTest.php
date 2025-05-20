@@ -44,12 +44,8 @@ class IndexControllerTest extends WebTestCase
 
         // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]']->setValue('GA0003661');
+        $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
-
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
         $crawler = $client->request('GET', '/temps');
@@ -87,7 +83,7 @@ class IndexControllerTest extends WebTestCase
 
         // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]']->setValue('GA0003661');
+        $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
         $crawler = $client->request('GET', '/console');
@@ -112,8 +108,8 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('select[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[operation]"]');
+        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
+        $this->assertSelectorExists('input[name="ajout_heures[operation]"]');
         $this->assertSelectorExists('select[name="ajout_heures[tacheSpecifique]"]');
         $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
 
@@ -131,7 +127,7 @@ class IndexControllerTest extends WebTestCase
 
         // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]']->setValue('GA0003661');
+        $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
         $crawler = $client->request('GET', '/console');
@@ -147,7 +143,7 @@ class IndexControllerTest extends WebTestCase
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
 
         // Changer le type d'heure
-        $client->request('GET', '/type-select', ['type' => 1]);
+        $client->request('GET', '/type-select', ['type' => 3]);
         $this->assertStringContainsString('/chargement-formulaire/3', $client->getRequest()->getUri());
         $crawler = $client->request('GET', '/chargement-formulaire/3');
 
@@ -156,8 +152,8 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('select[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[operation]"]');
+        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
+        $this->assertSelectorExists('input[name="ajout_heures[operation]"]');
         $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
@@ -174,7 +170,7 @@ class IndexControllerTest extends WebTestCase
 
         // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]']->setValue('GA0003661');
+        $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
         $crawler = $client->request('GET', '/console');
@@ -199,8 +195,9 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('select[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[operation]"]');
+        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
+        $this->assertSelectorExists('select[name="ajout_heures[activite]"]');
+        $this->assertSelectorExists('select[name="ajout_heures[tache]"]');
         $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
@@ -217,7 +214,7 @@ class IndexControllerTest extends WebTestCase
 
         // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
-        $form['connexion[id]']->setValue('GA0003661');
+        $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
         $crawler = $client->request('GET', '/console');

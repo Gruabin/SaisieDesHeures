@@ -37,4 +37,5 @@ security:
         - { path: ^/historique, roles: ROLE_EMPLOYE }
         - { path: ^/console, roles: ROLE_MANAGER }
         - { path: ^/centreon, roles: PUBLIC_ACCESS }
+        - { path: ^/_connexion, roles: PUBLIC_ACCESS }
         

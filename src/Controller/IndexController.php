@@ -100,6 +100,8 @@ class IndexController extends AbstractController
 
         $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $user]);
 
+        // dd('', $favoriTypeHeure);
+
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render(
             'temps/temps.html.twig',
@@ -128,6 +130,8 @@ class IndexController extends AbstractController
         $template = $type
             ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
             : 'temps/_default.html.twig';
+
+        // dd($template);
     
         return $this->render($template, [
             'nbHeures' => $nbHeures,
@@ -140,7 +144,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    #[Route('/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
+    #[Route('/temps/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
     public function soumettreFormulaireParType(int $typeId, Request $request, TypeHeuresRepository $typeRepo, EntityManagerInterface $entityManager, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response 
     {
         $type = $typeRepo->find($typeId);
@@ -204,6 +208,9 @@ class IndexController extends AbstractController
                 'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
             ]);
         }
+
+        return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
+
     }
 
     #[Route('/type-select', name: 'type_select', methods: ['GET'])]

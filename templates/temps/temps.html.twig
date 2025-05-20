@@ -98,7 +98,7 @@
                             <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages">
                                 <input type="hidden" name="type_heure_id" id="hiddenTypeId" value="{{ selectedTypeId }}">
                                 <button type="submit" class="btn btn-sm btn-success" title="Enregistrer par défaut">
-                                    {% if favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
+                                    {% if favoriTypeHeure is defined and favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
                                         <i class="fa-regular fa-floppy-disk"></i>
                                     {% else %}
                                         <i class="fa-solid fa-floppy-disk"></i>
@@ -109,7 +109,11 @@
                     </div>
                 </div>
                 
-                <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': favoriTypeHeure.typeHeure.id }) }}">
+                {% if favoriTypeHeure is defined and favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id  %}
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': favoriTypeHeure.typeHeure.id }) }}">
+                {% else %}
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': 0 }) }}">
+                {% endif %}
                     Chargement...
                 </turbo-frame>
 
