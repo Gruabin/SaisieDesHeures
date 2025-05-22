@@ -100,8 +100,6 @@ class IndexController extends AbstractController
 
         $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $user]);
 
-        // dd('', $favoriTypeHeure);
-
         // Rendre la vue 'temps/temps.html.twig' en passant les variables
         return $this->render(
             'temps/temps.html.twig',
@@ -123,15 +121,15 @@ class IndexController extends AbstractController
     public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response
     {
         $type = $typeRepo->find($typeId);
-        $formHeures = $this->createForm(AjoutHeuresType::class, new DetailHeures());
+        $formTypeClass = $this->getFormTypeByNom($type->getNomType());
+        $formHeures = $this->createForm($formTypeClass, new DetailHeures());
+
     
         $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
     
         $template = $type
             ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
             : 'temps/_default.html.twig';
-
-        // dd($template);
     
         return $this->render($template, [
             'nbHeures' => $nbHeures,
@@ -151,31 +149,46 @@ class IndexController extends AbstractController
 
         if (!$type) {
             $this->addFlash('error', 'Type d\'heure invalide.');
+            
+            if ($request->headers->get('Turbo-Frame')) {
+                return new Response(
+                    $this->renderView('alert.html.twig'),
+                    200,
+                    ['Content-Type' => 'text/vnd.turbo-stream.html']
+                );
+            }
+
             return $this->redirectToRoute('temps');
         }
 
         $heure = new DetailHeures();
 
-        $form = $this->createForm(AjoutHeuresType::class, $heure);
-        $form->handleRequest($request);
+        $formTypeClass = $this->getFormTypeByNom($type->getNomType());
+        $form = $this->createForm($formTypeClass, $heure);
 
+        $form->handleRequest($request);
+        
+        // dd($form->isSubmitted() && $form->isValid());
         if ($form->isSubmitted() && $form->isValid()) {
             $heure->setEmploye($this->getUser());
             $heure->setDate(new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')));
             $heure->setTypeHeures($type);
-        
 
             $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
-
-            // Nouvelle durée saisie
             $heuresSaisies = $form->getData()->getTempsMainOeuvre();
 
             if (($nbHeures + $heuresSaisies) > 12) {
-                $this->addFlash('error', 'Impossible d’ajouter cette saisie : vous dépasseriez les 12 heures autorisées par jour.');
+                $this->addFlash('warning', 'Impossible d’ajouter cette saisie : vous dépasseriez les 12 heures autorisées par jour.');
                 
+                if ($request->headers->get('Turbo-Frame')) {
+                    return new Response(
+                        $this->renderView('alert.html.twig'),
+                        200,
+                        ['Content-Type' => 'text/vnd.turbo-stream.html']
+                    );
+                }
                 return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
             }
-
 
             $entityManager->persist($heure);
             $entityManager->flush();
@@ -187,30 +200,68 @@ class IndexController extends AbstractController
             }
         
             $this->addFlash('success', 'Heure enregistrée avec succès.');
-        
             if ($request->headers->get('Turbo-Frame')) {
-                return $this->forward('App\\Controller\\IndexController::loadFormulaireParType', [
-                    'typeId' => $typeId
-                ]);
+                return new Response(
+                    $this->renderView('alert.html.twig'),
+                    200,
+                    ['Content-Type' => 'text/vnd.turbo-stream.html']
+                );
             }
         
+            if ($request->headers->get('Turbo-Frame')) {
+                $alertsHtml = $this->renderView('alert.html.twig');
+                $formHtml = $this->forward('App\\Controller\\IndexController::loadFormulaireParType', [
+                    'typeId' => $typeId
+                ])->getContent();
+
+                return new Response($alertsHtml . $formHtml, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            }
+
             return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
         }
 
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $template = $type
+                ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
+                : 'temps/_default.html.twig';
+
+
+                return new Response(
+                    $this->renderView($template, [
+                        'formHeures' => $form->createView(),
+                        'type' => $type,
+                        'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                        'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
+                        'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                        'CDG' => $cdgRepo->findAll(),
+                        'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+                    ]),
+                );
+
+        }
+
+
+        $template = $type
+            ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
+            : 'temps/_default.html.twig';
+
         if ($request->headers->get('Turbo-Frame')) {
-            return $this->render('temps/temps.html.twig', [
-                'formHeures' => $form->createView(),
-                'type' => $type,
-                'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
-                'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
-                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                'CDG' => $cdgRepo->findAll(),
-                'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
-            ]);
+            return new Response(
+                $this->renderView($template, [
+                    'formHeures' => $form->createView(),
+                    'type' => $type,
+                    'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                    'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
+                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                    'CDG' => $cdgRepo->findAll(),
+                    'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+                ]),
+                200,
+                ['Content-Type' => 'text/vnd.turbo-stream.html']
+            );
         }
 
         return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
-
     }
 
     #[Route('/type-select', name: 'type_select', methods: ['GET'])]
@@ -249,6 +300,10 @@ class IndexController extends AbstractController
 
 
         $this->addFlash('success', 'Type d\'heure favori enregistré !');
+        if (str_contains($request->headers->get('Accept'), 'text/vnd.turbo-stream.html')) {
+            $alertsHtml = $this->renderView('alert.html.twig');
+            return new Response($alertsHtml, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+        }
 
         return new Response('', 204);
     }
@@ -427,5 +482,16 @@ class IndexController extends AbstractController
         array_shift($tab);
 
         return $tab;
+    }
+
+    private function getFormTypeByNom(string $nomType): string
+    {
+        return match (strtolower($nomType)) {
+            'générale', 'generale' => \App\Form\AjoutGeneraleType::class,
+            'fabrication' => \App\Form\AjoutFabricationType::class,
+            'service' => \App\Form\AjoutServiceType::class,
+            'projet' => \App\Form\AjoutProjetType::class,
+            default => \App\Form\AjoutHeuresType::class,
+        };
     }
 }

@@ -1,5 +1,5 @@
 <turbo-frame id="formulaire_saisie">
-    {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id}) }) }}
+    {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id})}) }}
 
         <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
             <div class="flex-1 text-center md:text-right md:self-center m-3">
@@ -7,7 +7,16 @@
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
                 <div class="md:self-center w-full mx-3">
-                    {{ form_widget(formHeures.tache, {attr: {class: 'select dark:border-primary', required: true}, placeholder: '-- Sélectionner une tâche --'}) }}
+                    {{ form_widget(formHeures.tache, {attr: {class: 'select dark:border-primary'}}) }}
+                    {{ form_errors(formHeures.tache) }}
+                    {# {% if formHeures.tache.vars.errors|length > 0 %}
+                        <div class='text-red-600'>
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            {% for error in formHeures.tache.vars.errors %}
+                                {{ error.message }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %} #}
                 </div>
             </div>
         </div>
@@ -18,21 +27,41 @@
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
                 <div class="w-full mx-3">
-                    {{ form_widget(formHeures.centre_de_charge, {attr: {class: 'select dark:border-primary', required: true}}) }}
+                    {{ form_widget(formHeures.centre_de_charge, {attr: {class: 'select dark:border-primary'}}) }}
+                    {{ form_errors(formHeures.centre_de_charge) }}
+                    {# {% if formHeures.centre_de_charge.vars.errors|length > 0 %}
+                        <div class='text-red-600'>
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            {% for error in formHeures.centre_de_charge.vars.errors %}
+                                {{ error.message }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %} #}
                 </div>
             </div>
         </div>
 
         <div class="flex md:flex-row flex-col" id="divSaisieTemps">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
                 <div class="mx-3">
-                    {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input dark:border-primary max-w-24', type: 'number', max: 100, step: 0.25}}) }}
+                    {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input dark:border-primary max-w-24', min: 0.1, step: 0.25}}) }}
+                    {{ form_errors(formHeures.temps_main_oeuvre) }}
+                    {# {% if formHeures.temps_main_oeuvre.vars.errors|length > 0 %}
+                        <div class='text-red-600'>
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            {% for error in formHeures.temps_main_oeuvre.vars.errors %}
+                                {{ error.message }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %} #}
                 </div>
             </div>
         </div>
+
+        {{ form_widget(formHeures._token) }}
 
         <div class="flex flex-row justify-center items-center p-2 gap-2">
             <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
@@ -46,7 +75,13 @@
             </button>
         </div>
 
-        {{ form_widget(formHeures._token) }}
+        {% for error in formHeures.vars.errors %}
+            <div class="text-red-600">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error.message }}
+            </div>
+        {% endfor %}
+
 
     {{ form_end(formHeures, {'render_rest': false}) }}
 </turbo-frame>

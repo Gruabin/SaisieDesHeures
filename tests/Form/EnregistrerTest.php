@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Employe;
 use App\Repository\DetailHeuresRepository;
 
-class EnregistrerConsoleTest extends WebTestCase
+class EnregistrerTest extends WebTestCase
 {
     public function testSoumissionFormulaireValideGeneralManager(): void
     {
@@ -34,9 +34,9 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir et soumettre le formulaire
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_generale[tache]']->setValue(5);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
         
         $client->submit($form);
 
@@ -70,9 +70,9 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir et soumettre le formulaire
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_generale[tache]']->setValue(5);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
         
         $client->submit($form);
 
@@ -108,10 +108,10 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('LV1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumission du formulaire
         $client->submit($form);
@@ -148,10 +148,10 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('LV1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumission du formulaire
         $client->submit($form);
@@ -186,9 +186,9 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_service[ordre]']->setValue('1111111');
+        $form['ajout_service[operation]']->setValue(10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);
 
@@ -222,9 +222,9 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_service[ordre]']->setValue('1111111');
+        $form['ajout_service[operation]']->setValue(10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);
 
@@ -258,10 +258,10 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[activite]']->setValue('100');
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_projet[ordre]']->setValue('1111111');
+        $form['ajout_projet[activite]']->setValue('100');
+        $form['ajout_projet[tache]']->setValue(5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);
 
@@ -295,10 +295,10 @@ class EnregistrerConsoleTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[activite]']->setValue('100');
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_projet[ordre]']->setValue('1111111');
+        $form['ajout_projet[activite]']->setValue('100');
+        $form['ajout_projet[tache]']->setValue(5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);
 
@@ -329,10 +329,10 @@ class EnregistrerConsoleTest extends WebTestCase
         $form = $crawler->selectButton('Enregistrer et quitter')->form();
 
         // Remplir le formulaire
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumettre le formulaire avec ce bouton
         $client->submit($form);
@@ -363,10 +363,10 @@ class EnregistrerConsoleTest extends WebTestCase
         $form = $crawler->selectButton('Enregistrer et quitter')->form();
 
         // Remplir le formulaire
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumettre le formulaire avec ce bouton
         $client->submit($form);
@@ -388,9 +388,9 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/1');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_generale[tache]']->setValue(5);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -417,9 +417,9 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/1');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_generale[tache]']->setValue(5);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -446,10 +446,10 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/2');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('LV1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -477,10 +477,10 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/2');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('LV1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[tacheSpecifique]']->setValue('AMT902');
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[operation]']->setValue(10);
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -508,9 +508,9 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/3');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_service[ordre]']->setValue('1111111');
+        $form['ajout_service[operation]']->setValue(10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -537,9 +537,9 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/3');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[operation]']->setValue(10);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_service[ordre]']->setValue('1111111');
+        $form['ajout_service[operation]']->setValue(10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -566,10 +566,10 @@ class EnregistrerConsoleTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/4');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[activite]']->setValue('100');
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_projet[ordre]']->setValue('1111111');
+        $form['ajout_projet[activite]']->setValue('100');
+        $form['ajout_projet[tache]']->setValue(5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();

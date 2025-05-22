@@ -95,7 +95,7 @@
                                 </select>
                             </form>
 
-                            <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages">
+                            <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages" id="favoriForm">
                                 <input type="hidden" name="type_heure_id" id="hiddenTypeId" value="{{ selectedTypeId }}">
                                 <button type="submit" class="btn btn-sm btn-success" title="Enregistrer par défaut">
                                     {% if favoriTypeHeure is defined and favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}

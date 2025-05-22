@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('main').classList.remove('invisible');
         document.querySelector('header').classList.remove('invisible');
         document.querySelector('footer').classList.remove('invisible');
-        document.getElementById('boxAlertMessage').classList.remove('invisible');
+        // document.getElementById('boxAlertMessage').classList.remove('invisible');
         const form = document.querySelectorAll('form');
         const loader = document.querySelector('#loader');
         loader.style.display = 'none';
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('main').classList.add('invisible');
                     document.querySelector('header').classList.add('invisible');
                     document.querySelector('footer').classList.add('invisible');
-                    document.getElementById('boxAlertMessage').classList.add('invisible');
+                    // document.getElementById('boxAlertMessage').classList.add('invisible');
                 });
             });
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('main').classList.add('invisible');
             document.querySelector('header').classList.add('invisible');
             document.querySelector('footer').classList.add('invisible');
-            document.getElementById('boxAlertMessage').classList.add('invisible');
+            // document.getElementById('boxAlertMessage').classList.add('invisible');
         }
 
         document.addEventListener('keyup', fkey)
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('main').classList.add('invisible');
                 document.querySelector('header').classList.add('invisible');
                 document.querySelector('footer').classList.add('invisible');
-                document.getElementById('boxAlertMessage').classList.add('invisible');
+                // document.getElementById('boxAlertMessage').classList.add('invisible');
             }
         }
 

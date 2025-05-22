@@ -65,9 +65,9 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('select[name="ajout_heures[tache]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[centre_de_charge]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
+        $this->assertSelectorExists('select[name="ajout_generale[tache]"]');
+        $this->assertSelectorExists('select[name="ajout_generale[centre_de_charge]"]');
+        $this->assertSelectorExists('input[name="ajout_generale[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
     }
@@ -108,10 +108,10 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[operation]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[tacheSpecifique]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
+        $this->assertSelectorExists('input[name="ajout_fabrication[ordre]"]');
+        $this->assertSelectorExists('input[name="ajout_fabrication[operation]"]');
+        $this->assertSelectorExists('select[name="ajout_fabrication[tacheSpecifique]"]');
+        $this->assertSelectorExists('input[name="ajout_fabrication[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
     }
@@ -152,9 +152,9 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[operation]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
+        $this->assertSelectorExists('input[name="ajout_service[ordre]"]');
+        $this->assertSelectorExists('input[name="ajout_service[operation]"]');
+        $this->assertSelectorExists('input[name="ajout_service[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
     }
@@ -195,10 +195,10 @@ class IndexControllerTest extends WebTestCase
         // Verifier que tous les champs soient bien présent
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('input[name="ajout_heures[ordre]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[activite]"]');
-        $this->assertSelectorExists('select[name="ajout_heures[tache]"]');
-        $this->assertSelectorExists('input[name="ajout_heures[temps_main_oeuvre]"]');
+        $this->assertSelectorExists('input[name="ajout_projet[ordre]"]');
+        $this->assertSelectorExists('select[name="ajout_projet[activite]"]');
+        $this->assertSelectorExists('select[name="ajout_projet[tache]"]');
+        $this->assertSelectorExists('input[name="ajout_projet[temps_main_oeuvre]"]');
 
         $this->assertStringContainsString('Temps main d\'oeuvre', $client->getResponse()->getContent());
     }

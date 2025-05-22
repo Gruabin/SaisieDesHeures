@@ -21,6 +21,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Range;
+
 
 class AjoutHeuresType extends AbstractType
 {
@@ -32,31 +36,63 @@ class AjoutHeuresType extends AbstractType
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
                 'scale' => 2,
+                'constraints' => [
+                    new Range([
+                        'min' => 0.1,
+                        'max' => 12,
+                        'notInRangeMessage' => 'Le temps doit être compris entre 0.1 et 12 heures.',
+                    ])
+                ]
             ])
             ->add('type_heures', EntityType::class, [
                 'class' => TypeHeures::class,
                 'choice_label' => 'nomType',
+                'required' => true,
             ])
             ->add('operation', IntegerType::class, [
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez saisir une opération.']),
+                    new Range([
+                        'min' => 0,
+                        'max' => 999,
+                        'notInRangeMessage' => 'L\'opération doit être comprise entre {{ min }} et {{ max }}.',
+                    ])
+                ]
             ])
             ->add('ordre', TextType::class, [
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez saisir un ordre.']),
+                    new Regex([
+                        'pattern' => '/^[A-Z]{2}[0-9]{5}$/',
+                        'message' => 'L\'ordre doit contenir 2 lettres suivies de 5 chiffres (ex: XX12345).'
+                    ])
+                ]
             ])
             ->add('tache', EntityType::class, [
                 'class' => Tache::class,
                 'choice_label' => 'name',
-                'required' => false,
+                'placeholder' => '-- Sélectionner une tâche --',
+                'required' => true,
+                'multiple' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez sélectionner une tâche.']),
+                ]
             ])
             ->add('activite', EntityType::class, [
                 'class' => Activite::class,
                 'choice_label' => 'name',
-                'required' => false,
+                'required' => true,
             ])
             ->add('centre_de_charge', EntityType::class, [
                 'class' => CentreDeCharge::class,
                 'choice_label' => 'name',
-                'required' => false,
+                'placeholder' => '-- Sélectionner une charge --',
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez sélectionner une charge.']),
+                ]
             ])
             ->add('employe', EntityType::class, [
                 'class' => Employe::class,
@@ -65,8 +101,11 @@ class AjoutHeuresType extends AbstractType
             ->add('tacheSpecifique', EntityType::class, [
                 'class' => TacheSpecifique::class,
                 'choice_label' => 'name',
-                'required' => false,
+                'required' => true,
                 'disabled' => false,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez sélectionner une tâche.']),
+                ]
             ])
             ->add('statut', EntityType::class, [
                 'class' => Statut::class,
@@ -93,6 +132,7 @@ class AjoutHeuresType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DetailHeures::class,
+            'validation_groups' => ['Default'],
         ]);
     }
 }

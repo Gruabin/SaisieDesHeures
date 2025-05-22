@@ -47,9 +47,7 @@
                 {{ include('navbar.html.twig') }}
             {% endblock %}
         </header>
-        <section id="boxAlertMessage">
-            {{ include('alert.html.twig') }}
-        </section>
+        <div id="flash-messages"></div>
         <main>
             {% block body %}{% endblock %}
         </main>
