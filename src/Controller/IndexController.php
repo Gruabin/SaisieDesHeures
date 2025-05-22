@@ -121,26 +121,36 @@ class IndexController extends AbstractController
     public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response
     {
         $type = $typeRepo->find($typeId);
-        $formTypeClass = $this->getFormTypeByNom($type->getNomType());
-        $formHeures = $this->createForm($formTypeClass, new DetailHeures());
 
-    
-        $nbHeures = $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier());
-    
-        $template = $type
-            ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
-            : 'temps/_default.html.twig';
-    
-        return $this->render($template, [
-            'nbHeures' => $nbHeures,
-            'formHeures' => $formHeures->createView(),
-            'type' => $type,
-            'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
-            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $cdgRepo->findAll(),
-            'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
-        ]);
-    }
+            // Gestion des cas où le typeId est invalide (null en base)
+            if (!$type) {
+                return $this->render('temps/_default.html.twig', [
+                    'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                    'formHeures' => null,
+                    'type' => null,
+                    'taches' => [],
+                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                    'CDG' => $cdgRepo->findAll(),
+                    'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+                ]);
+            }
+
+            // On peut appeler getNomType() maintenant en toute sécurité
+            $formTypeClass = $this->getFormTypeByNom($type->getNomType());
+            $formHeures = $this->createForm($formTypeClass, new DetailHeures());
+
+            $template = sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())));
+
+            return $this->render($template, [
+                'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                'formHeures' => $formHeures->createView(),
+                'type' => $type,
+                'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                'CDG' => $cdgRepo->findAll(),
+                'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+            ]);
+        }
 
     #[Route('/temps/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
     public function soumettreFormulaireParType(int $typeId, Request $request, TypeHeuresRepository $typeRepo, EntityManagerInterface $entityManager, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response 
@@ -149,7 +159,7 @@ class IndexController extends AbstractController
 
         if (!$type) {
             $this->addFlash('error', 'Type d\'heure invalide.');
-            
+
             if ($request->headers->get('Turbo-Frame')) {
                 return new Response(
                     $this->renderView('alert.html.twig'),
@@ -162,13 +172,11 @@ class IndexController extends AbstractController
         }
 
         $heure = new DetailHeures();
-
         $formTypeClass = $this->getFormTypeByNom($type->getNomType());
         $form = $this->createForm($formTypeClass, $heure);
 
         $form->handleRequest($request);
-        
-        // dd($form->isSubmitted() && $form->isValid());
+
         if ($form->isSubmitted() && $form->isValid()) {
             $heure->setEmploye($this->getUser());
             $heure->setDate(new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')));
@@ -179,7 +187,7 @@ class IndexController extends AbstractController
 
             if (($nbHeures + $heuresSaisies) > 12) {
                 $this->addFlash('warning', 'Impossible d’ajouter cette saisie : vous dépasseriez les 12 heures autorisées par jour.');
-                
+
                 if ($request->headers->get('Turbo-Frame')) {
                     return new Response(
                         $this->renderView('alert.html.twig'),
@@ -187,27 +195,20 @@ class IndexController extends AbstractController
                         ['Content-Type' => 'text/vnd.turbo-stream.html']
                     );
                 }
+
                 return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
             }
 
             $entityManager->persist($heure);
             $entityManager->flush();
 
-            $action = $request->request->get('action');
+            $this->addFlash('success', 'Heure enregistrée avec succès.');
 
+            $action = $request->request->get('action');
             if ($action === 'quitter') {
                 return $this->redirectToRoute('deconnexion');
             }
-        
-            $this->addFlash('success', 'Heure enregistrée avec succès.');
-            if ($request->headers->get('Turbo-Frame')) {
-                return new Response(
-                    $this->renderView('alert.html.twig'),
-                    200,
-                    ['Content-Type' => 'text/vnd.turbo-stream.html']
-                );
-            }
-        
+
             if ($request->headers->get('Turbo-Frame')) {
                 $alertsHtml = $this->renderView('alert.html.twig');
                 $formHtml = $this->forward('App\\Controller\\IndexController::loadFormulaireParType', [
@@ -220,48 +221,27 @@ class IndexController extends AbstractController
             return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
         }
 
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $template = $type
-                ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
-                : 'temps/_default.html.twig';
+        $template = sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())));
 
-
-            return new Response(
-                $this->renderView($template, [
-                    'formHeures' => $form->createView(),
-                    'type' => $type,
-                    'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
-                    'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
-                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                    'CDG' => $cdgRepo->findAll(),
-                    'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
-                ]),
-            );
-
-        }
-
-
-        $template = $type
-            ? sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())))
-            : 'temps/_default.html.twig';
+        $context = [
+            'formHeures' => $form->createView(),
+            'type' => $type,
+            'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+            'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+            'CDG' => $cdgRepo->findAll(),
+            'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+        ];
 
         if ($request->headers->get('Turbo-Frame')) {
             return new Response(
-                $this->renderView($template, [
-                    'formHeures' => $form->createView(),
-                    'type' => $type,
-                    'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
-                    'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
-                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                    'CDG' => $cdgRepo->findAll(),
-                    'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
-                ]),
+                $this->renderView($template, $context),
                 200,
                 ['Content-Type' => 'text/vnd.turbo-stream.html']
             );
         }
 
-        return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
+        return $this->render($template, $context);
     }
 
     #[Route('/type-select', name: 'type_select', methods: ['GET'])]
@@ -273,7 +253,6 @@ class IndexController extends AbstractController
             return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
         }
 
-        // fallback : redirection vide ou vers une version par défaut
         return $this->redirectToRoute('chargement_formulaire', ['typeId' => 0]);
     }
 

@@ -86,9 +86,10 @@
                                     <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>
                                         -- Sélectionner un type d'heure --
                                     </option>
+                                    {% set favoriTypeId = favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null ? favoriTypeHeure.typeHeure.id : null %}
                                     {% for type in types %}
                                         <option value="{{ type.id }}"
-                                                {% if favoriTypeHeure is not null and favoriTypeHeure.typeHeure.id == type.id %}selected{% endif %}>
+                                                {% if favoriTypeId == type.id %}selected{% endif %}>
                                             {{ type.nomType }}
                                         </option>
                                     {% endfor %}
@@ -98,7 +99,7 @@
                             <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages" id="favoriForm">
                                 <input type="hidden" name="type_heure_id" id="hiddenTypeId" value="{{ selectedTypeId }}">
                                 <button type="submit" class="btn btn-sm btn-success" title="Enregistrer par défaut">
-                                    {% if favoriTypeHeure is defined and favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
+                                    {% if favoriTypeId is not null and selectedTypeId == favoriTypeId %}
                                         <i class="fa-regular fa-floppy-disk"></i>
                                     {% else %}
                                         <i class="fa-solid fa-floppy-disk"></i>
@@ -109,7 +110,7 @@
                     </div>
                 </div>
                 
-                {% if favoriTypeHeure is defined and favoriTypeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id  %}
+                {% if favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
                     <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': favoriTypeHeure.typeHeure.id }) }}">
                 {% else %}
                     <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': 0 }) }}">

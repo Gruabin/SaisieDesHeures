@@ -3,8 +3,6 @@
 namespace App\Tests\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Employe;
 use App\Repository\DetailHeuresRepository;
 
 class EnregistrerTest extends WebTestCase
