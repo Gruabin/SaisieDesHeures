@@ -226,17 +226,17 @@ class IndexController extends AbstractController
                 : 'temps/_default.html.twig';
 
 
-                return new Response(
-                    $this->renderView($template, [
-                        'formHeures' => $form->createView(),
-                        'type' => $type,
-                        'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
-                        'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
-                        'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                        'CDG' => $cdgRepo->findAll(),
-                        'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
-                    ]),
-                );
+            return new Response(
+                $this->renderView($template, [
+                    'formHeures' => $form->createView(),
+                    'type' => $type,
+                    'nbHeures' => $this->detailHeuresRepository->getNbHeures($this->getUser()->getUserIdentifier()),
+                    'taches' => $type ? $tacheRepo->findBy(['typeHeures' => $type]) : [],
+                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                    'CDG' => $cdgRepo->findAll(),
+                    'site' => substr((string) $this->getUser()->getUserIdentifier(), 0, 2),
+                ]),
+            );
 
         }
 

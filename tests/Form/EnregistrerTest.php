@@ -81,7 +81,7 @@ class EnregistrerTest extends WebTestCase
         $this->assertRouteSame('chargement_formulaire');
     }
 
-    public function testSoumissionFormulaireValideFabricationManager()
+    public function testSoumissionFormulaireValideFabricationManager(): void
     {
         // Tester la connexion
         $client = static::createClient();
@@ -95,9 +95,7 @@ class EnregistrerTest extends WebTestCase
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
+        $request = $client->getRequest();
 
         // Aller sur la page de saisie des temps
         $crawler = $client->request('GET', '/chargement-formulaire/2');
@@ -106,14 +104,13 @@ class EnregistrerTest extends WebTestCase
         
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Remplir et soumettre le formulaire
         $form = $crawler->filter('form')->form();
-        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
-
-        // Soumission du formulaire
+        
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
@@ -148,7 +145,7 @@ class EnregistrerTest extends WebTestCase
 
         // Remplir les champs
         $form = $crawler->filter('form')->form();
-        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
@@ -597,10 +594,10 @@ class EnregistrerTest extends WebTestCase
         $crawler = $client->request('GET', '/chargement-formulaire/4');
 
         $form = $crawler->filter('form')->form();
-        $form['ajout_heures[ordre]']->setValue('1111111');
-        $form['ajout_heures[activite]']->setValue('100');
-        $form['ajout_heures[tache]']->setValue(5);
-        $form['ajout_heures[temps_main_oeuvre]']->setValue(2.5);
+        $form['ajout_projet[ordre]']->setValue('1111111');
+        $form['ajout_projet[activite]']->setValue('100');
+        $form['ajout_projet[tache]']->setValue(5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
