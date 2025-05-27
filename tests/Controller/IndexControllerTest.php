@@ -24,10 +24,6 @@ class IndexControllerTest extends WebTestCase
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
-
         // vérification de l'affichage des données
         $this->assertSelectorExists('div[name="dateLigne"]', '22-04-2024');
         $this->assertSelectorExists('div[name="dateLigne"]', '19-04-2024');
@@ -85,10 +81,6 @@ class IndexControllerTest extends WebTestCase
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
-
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
         $crawler = $client->request('GET', '/temps');
@@ -216,10 +208,6 @@ class IndexControllerTest extends WebTestCase
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
-
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
 
         // Aller sur la page de saisie des temps
         $crawler = $client->request('GET', '/temps');

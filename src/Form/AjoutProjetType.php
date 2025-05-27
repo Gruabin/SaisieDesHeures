@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\DetailHeures;
 use App\Entity\Tache;
 use App\Entity\Activite;
+use App\Repository\TacheRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,43 +22,60 @@ class AjoutProjetType extends AbstractType
     {
         $builder
             ->add('ordre', TextType::class, [
+                'mapped' => false,
                 'required' => true,
+                'attr' => [
+                    'maxlength' => 5,
+                    'pattern' => '\d{5}',
+                    'placeholder' => '12345',
+                    'class' => 'w-20',
+                ],
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un numéro d\'ordre.']),
+                    new NotBlank(['message' => 'Veuillez saisir la partie numérique.']),
                     new Regex([
-                        'pattern' => '/^[0-9A-Za-z]{2}[0-9]{5}$/',
-                        'message' => 'L\'ordre doit contenir exactement 5 chiffres.',
+                        'pattern' => '/^\d{5}$/',
+                        'message' => 'La partie numérique doit contenir exactement 5 chiffres.',
                     ]),
                 ],
             ])
-            ->add('tache', EntityType::class, [
-                'class' => Tache::class,
+            ->add('tache', EntityType::class, ['class' => Tache::class,
                 'choice_label' => 'name',
                 'placeholder' => '-- Sélectionner une tâche --',
                 'required' => true,
+                'attr' => ['required' => true],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez sélectionner une tâche.']),
-                ]
+                ],
+                'query_builder' => function (TacheRepository $repo) {
+                    return $repo->createQueryBuilder('t')
+                                ->where('t.id < 100');
+                },
             ])
             ->add('activite', EntityType::class, ['class' => Activite::class,
                 'choice_label' => 'name',
                 'placeholder' => '-- Sélectionner une activité --',
                 'required' => true,
+                'attr' => ['required' => true],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez sélectionner une activité.']),
                 ]
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
-                'required' => true,
                 'scale' => 2,
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un temps de main d\'œuvre.']),
-                    new Range([
-                        'min' => 0,
-                        'max' => 100,
-                        'notInRangeMessage' => 'Le temps doit être compris entre {{ min }} et {{ max }} heures.',
-                    ]),
+                'required' => true,
+                'attr' => [
+                    'required' => true,
+                    'max' => 12,
+                    'step' => 0.1,
                 ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez renseigner un temps.']),
+                    new Range([
+                        'min' => 0.1,
+                        'max' => 12,
+                        'notInRangeMessage' => 'Le temps doit être compris entre {{min}} et {{max}} heures.',
+                    ])
+                ]
             ]);
     }
 
@@ -65,6 +83,7 @@ class AjoutProjetType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DetailHeures::class,
+            'site' => null,
         ]);
     }
 }

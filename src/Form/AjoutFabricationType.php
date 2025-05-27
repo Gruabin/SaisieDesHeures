@@ -21,19 +21,25 @@ class AjoutFabricationType extends AbstractType
     {
         $builder
             ->add('ordre', TextType::class, [
-                'required' => false,
-                'attr' => ['required' => false],
+                'mapped' => false,
+                'required' => true,
+                'attr' => [
+                    'maxlength' => 5,
+                    'pattern' => '\d{5}',
+                    'placeholder' => '12345',
+                    'class' => 'w-20',
+                ],
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un numéro d\'ordre.']),
+                    new NotBlank(['message' => 'Veuillez saisir la partie numérique.']),
                     new Regex([
-                        'pattern' => '/^[0-9A-Za-z]{2}[0-9]{5}$/',
-                        'message' => 'L\'ordre doit contenir exactement 5 chiffres.',
+                        'pattern' => '/^\d{5}$/',
+                        'message' => 'La partie numérique doit contenir exactement 5 chiffres.',
                     ]),
                 ],
             ])
             ->add('operation', IntegerType::class, [
-                'required' => false,
-                'attr' => ['required' => false],
+                'required' => true,
+                'attr' => ['required' => true],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez saisir une opération.']),
                     new Range([
@@ -48,22 +54,23 @@ class AjoutFabricationType extends AbstractType
                 'choice_label' => 'name',
                 'required' => false,
                 'attr' => ['required' => false],
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez sélectionner une tâche spécifique.']),
-                ],
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
-                'required' => false,
-                'attr' => ['required' => false],
                 'scale' => 2,
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un temps de main d\'œuvre.']),
-                    new Range([
-                        'min' => 0,
-                        'max' => 100,
-                        'notInRangeMessage' => 'Le temps doit être compris entre {{ min }} et {{ max }} heures.',
-                    ]),
+                'required' => true,
+                'attr' => [
+                    'required' => true,
+                    'max' => 12,
+                    'step' => 0.1,
                 ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez renseigner un temps.']),
+                    new Range([
+                        'min' => 0.1,
+                        'max' => 12,
+                        'notInRangeMessage' => 'Le temps doit être compris entre {{min}} et {{max}} heures.',
+                    ])
+                ]
             ]);
     }
 
@@ -71,6 +78,7 @@ class AjoutFabricationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DetailHeures::class,
+            'site' => null,
         ]);
     }
 }
