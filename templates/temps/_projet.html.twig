@@ -88,4 +88,45 @@
         {{ form_widget(formHeures._token) }}
 
     {{ form_end(formHeures, {'render_rest': false}) }}
+
+    <script>
+        (function () {
+            const input = document.getElementById('ajout_projet_activite');
+            const info = document.getElementById('infoActivite');
+
+            if (!input || !info) return;
+
+            input.removeEventListener('input', handleInput);
+
+            function handleInput() {
+                const id = input.value.trim();
+
+                input.classList.remove('border-green-500', 'border-red-500');
+                info.textContent = '';
+
+                if (id === '') return;
+
+                fetch(`/verifier-activite/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.trouve) {
+                            input.classList.add('border-green-500');
+                            info.textContent = `Activité : ${data.nom}`;
+                            info.className = 'text-green-600 mx-3 text-sm mt-1';
+                        } else {
+                            input.classList.add('border-red-500');
+                            info.textContent = `Aucune activité trouvée pour cet ID`;
+                            info.className = 'text-red-600 mx-3 text-sm mt-1 font-bold';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la vérification de l\'activité:', error);
+                    });
+            }
+
+            input.addEventListener('input', handleInput);
+        })();
+    </script>
+
 </turbo-frame>
+

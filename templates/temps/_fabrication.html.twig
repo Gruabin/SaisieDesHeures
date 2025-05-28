@@ -66,7 +66,6 @@
                         </div>
                     {% endif %}
                 </div>
-                </div>
             </div>
         </div>
 
@@ -85,4 +84,24 @@
         {{ form_widget(formHeures._token) }}
 
     {{ form_end(formHeures, {'render_rest': false}) }}
+
+    <script>
+        (function () {
+            const checkbox = document.getElementById('cbTacheSpe');
+            const selectTacheSpe = document.querySelector('[data-tache-spe="true"]');
+
+            checkbox.addEventListener('change', function () {
+                if (selectTacheSpe) {
+                    if (this.checked) {
+                        selectTacheSpe.removeAttribute('disabled');
+                    } else {
+                        selectTacheSpe.setAttribute('disabled', 'disabled');
+                        selectTacheSpe.selectedIndex = 0;
+                    }
+                } else {
+                    console.error('Champ tâche spécifique introuvable !');
+                }
+            })
+        })();
+    </script>
 </turbo-frame>
