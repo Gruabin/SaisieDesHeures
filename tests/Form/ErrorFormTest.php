@@ -152,7 +152,7 @@ class ErrorFormTest extends WebTestCase
 
         // Vérifier si les erreurs sont affichées
         $this->assertStringContainsString('Veuillez saisir la partie numérique.', $content);
-        $this->assertStringContainsString('Veuillez sélectionner une activité.', $content);
+        $this->assertStringContainsString('Veuillez saisir une activité.', $content);
         $this->assertStringContainsString('Veuillez sélectionner une tâche.', $content);
         $this->assertStringContainsString('Veuillez renseigner un temps.', $content);
     }
