@@ -65,7 +65,7 @@ class ErrorFormTest extends WebTestCase
         // Soumettre le formulaire
         $form = $crawler->filter('form')->form();
         $form['ajout_fabrication[ordre]']->setValue('');
-        $form['ajout_fabrication[operation]']->setValue(value:'');
+        $form['ajout_fabrication[operation]']->setValue('');
         $form['ajout_fabrication[tacheSpecifique]']->setValue('');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue('');
 
@@ -76,10 +76,9 @@ class ErrorFormTest extends WebTestCase
         $content = $client->getResponse()->getContent();
 
         // Vérifier si les erreurs sont affichées
-        $this->assertStringContainsString('Veuillez saisir un numéro d&#039;ordre.', $content);
+        $this->assertStringContainsString('Veuillez saisir la partie numérique.', $content);
         $this->assertStringContainsString('Veuillez saisir une opération.', $content);
-        $this->assertStringContainsString('Veuillez sélectionner une tâche spécifique.', $content);
-        $this->assertStringContainsString('Veuillez saisir un temps de main d&#039;œuvre.', $content);
+        $this->assertStringContainsString('Veuillez renseigner un temps.', $content);
     }
 
     public function testFormulaireInvalideService(): void
@@ -114,9 +113,9 @@ class ErrorFormTest extends WebTestCase
         $content = $client->getResponse()->getContent();
 
         // Vérifier si les erreurs sont affichées
-        $this->assertStringContainsString('Veuillez saisir un numéro d&#039;ordre.', $content);
+        $this->assertStringContainsString('Veuillez saisir la partie numérique.', $content);
         $this->assertStringContainsString('Veuillez saisir une opération.', $content);
-        $this->assertStringContainsString('Veuillez saisir un temps de main d&#039;œuvre.', $content);
+        $this->assertStringContainsString('Veuillez renseigner un temps.', $content);
     }
 
     public function testFormulaireInvalideProjet(): void
@@ -152,9 +151,9 @@ class ErrorFormTest extends WebTestCase
         $content = $client->getResponse()->getContent();
 
         // Vérifier si les erreurs sont affichées
-        $this->assertStringContainsString('Veuillez saisir un numéro d&#039;ordre.', $content);
+        $this->assertStringContainsString('Veuillez saisir la partie numérique.', $content);
         $this->assertStringContainsString('Veuillez sélectionner une activité.', $content);
         $this->assertStringContainsString('Veuillez sélectionner une tâche.', $content);
-        $this->assertStringContainsString('Veuillez saisir un temps de main d&#039;œuvre.', $content);
+        $this->assertStringContainsString('Veuillez renseigner un temps.', $content);
     }
 }

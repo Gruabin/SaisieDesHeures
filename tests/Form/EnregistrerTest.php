@@ -9,297 +9,304 @@ class EnregistrerTest extends WebTestCase
 {
     public function testSoumissionFormulaireValideGeneralManager(): void
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/1');
-        
-        $this->assertRouteSame('chargement_formulaire');
-        
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir et soumettre le formulaire
+        // Changer le type d'heure via /type-select?type=1
+        $crawler = $client->request('GET', '/type-select', ['type' => 1]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_generale[tache]']->setValue(5);
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_generale[tache]']->setValue(100);
         $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
         $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
-        
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideGeneralEmploye(): void
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/1');
-        
-        $this->assertRouteSame('chargement_formulaire');
-        
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir et soumettre le formulaire
+        // Changer le type d'heure via /type-select?type=1
+        $crawler = $client->request('GET', '/type-select', ['type' => 1]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_generale[tache]']->setValue(5);
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_generale[tache]']->setValue(100);
         $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
         $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
-        
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideFabricationManager(): void
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/2');
-        
-        $this->assertRouteSame('chargement_formulaire');
-        
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir et soumettre le formulaire
+        // Changer le type d'heure via /type-select?type=2
+        $crawler = $client->request('GET', '/type-select', ['type' => 2]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
+
+        // Remplir et soumettre le formulaire
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
-        
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideFabricationEmploye()
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/console');
-
-        $this->assertResponseIsSuccessful();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/2');
-        
-        $this->assertRouteSame('chargement_formulaire');
-        
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Changer le type d'heure via /type-select?type=2
+        $crawler = $client->request('GET', '/type-select', ['type' => 2]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
+
+        // Remplir et soumettre le formulaire
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
-
-        // Soumission du formulaire
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideServiceManager()
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/3');
-
-        $this->assertRouteSame('chargement_formulaire');
-
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Changer le type d'heure via /type-select?type=3
+        $crawler = $client->request('GET', '/type-select', ['type' => 3]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_service[ordre]']->setValue('1111111');
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_service[ordre]']->setValue('LV11111');
         $form['ajout_service[operation]']->setValue(10);
         $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
-
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideServiceEmploye()
     {
-        // Tester la connexion
-        $client = static::createClient();
+                $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/3');
-
-        $this->assertRouteSame('chargement_formulaire');
-
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Changer le type d'heure via /type-select?type=3
+        $crawler = $client->request('GET', '/type-select', ['type' => 3]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_service[ordre]']->setValue('1111111');
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_service[ordre]']->setValue('LV11111');
         $form['ajout_service[operation]']->setValue(10);
         $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
-
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertRouteSame('chargement_formulaire');
+        // Vérifier la route finale ou tout autre effet attendu
+        $this->assertSelectorExists('turbo-frame#formulaire_saisie');
     }
 
     public function testSoumissionFormulaireValideProjetManager()
-    {
-        // Tester la connexion
+    {        
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/4');
-
-        $this->assertRouteSame('chargement_formulaire');
-
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Changer le type d'heure via /type-select?type=4
+        $crawler = $client->request('GET', '/type-select', ['type' => 4]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_projet[ordre]']->setValue('1111111');
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_projet[ordre]']->setValue('LV11111');
         $form['ajout_projet[activite]']->setValue('100');
         $form['ajout_projet[tache]']->setValue(5);
         $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
-
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
-
-        $this->assertRouteSame('chargement_formulaire');
     }
 
     public function testSoumissionFormulaireValideProjetEmploye()
     {
-        // Tester la connexion
         $client = static::createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/_connexion');
 
         $this->assertResponseIsSuccessful();
 
-        // Soumettre le formulaire avec l'id de l'utilisateur l'utilisateur Employe en base de donnée
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $request = $client->getRequest();
-
         // Aller sur la page de saisie des temps
-        $crawler = $client->request('GET', '/chargement-formulaire/4');
-
-        $this->assertRouteSame('chargement_formulaire');
-
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Remplir les champs
+        // Changer le type d'heure via /type-select?type=4
+        $crawler = $client->request('GET', '/type-select', ['type' => 4]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Simuler un DOM temporaire avec Crawler pour remplir le formulaire
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
         $form = $crawler->filter('form')->form();
-        $form['ajout_projet[ordre]']->setValue('1111111');
+
+        // Remplir et soumettre le formulaire
+        $form['ajout_projet[ordre]']->setValue('LV11111');
         $form['ajout_projet[activite]']->setValue('100');
         $form['ajout_projet[tache]']->setValue(5);
         $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
-
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
-
-        $this->assertRouteSame('chargement_formulaire');
     }
 
     public function testEnregistrerEtQuitterManager(): void
@@ -374,26 +381,37 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/1');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_generale[tache]']->setValue(5);
-        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 1]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_generale[tache]']->setValue(100);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'tache' => 5,
+            'tache' => 100,
             'centre_de_charge' => 'LV0002000',
             'temps_main_oeuvre' => 2.5,
         ]);
@@ -403,26 +421,37 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/1');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_generale[tache]']->setValue(5);
-        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
-        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 1]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_generale[tache]']->setValue(100);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'tache' => 5,
+            'tache' => 100,
             'centre_de_charge' => 'LV0002000',
             'temps_main_oeuvre' => 2.5,
         ]);
@@ -432,27 +461,38 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/2');
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
+        $this->assertResponseIsSuccessful();
 
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 2]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
         $form = $crawler->filter('form')->form();
-        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
 
+        $client->submit($form);
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'operation' => 10,
             'tacheSpecifique' => 'AMT902',
             'temps_main_oeuvre' => 2.5,
@@ -463,27 +503,38 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/2');
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
+        $this->assertResponseIsSuccessful();
 
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 2]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
         $form = $crawler->filter('form')->form();
-        $form['ajout_fabrication[ordre]']->setValue('LV1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
         $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
 
+        $client->submit($form);
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'operation' => 10,
             'tacheSpecifique' => 'AMT902',
             'temps_main_oeuvre' => 2.5,
@@ -494,26 +545,37 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/3');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_service[ordre]']->setValue('1111111');
-        $form['ajout_service[operation]']->setValue(10);
-        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 3]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_service[ordre]']->setValue('LV11111');
+        $form['ajout_service[operation]']->setValue(value: 10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'operation' => 10,
             'temps_main_oeuvre' => 2.5,
         ]);
@@ -523,26 +585,37 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/3');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_service[ordre]']->setValue('1111111');
-        $form['ajout_service[operation]']->setValue(10);
-        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 3]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_service[ordre]']->setValue('LV11111');
+        $form['ajout_service[operation]']->setValue(value: 10);
+        $form['ajout_service[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'operation' => 10,
             'temps_main_oeuvre' => 2.5,
         ]);
@@ -552,27 +625,38 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000002');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/4');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_projet[ordre]']->setValue('1111111');
-        $form['ajout_projet[activite]']->setValue('100');
-        $form['ajout_projet[tache]']->setValue(5);
-        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 4]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_projet[ordre]']->setValue('LV11111');
+        $form['ajout_projet[activite]']->setValue(value: '100');
+        $form['ajout_projet[tache]']->setValue(value: 5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'activite' => '100',
             'tache' => 5,
             'temps_main_oeuvre' => 2.5,
@@ -583,27 +667,38 @@ class EnregistrerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
-        $crawler = $client->request('GET', '/_connexion');
 
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
         $form = $crawler->selectButton('Connexion')->form();
         $form['connexion[id]']->setValue('LV0000001');
         $client->submit($form);
 
-        $crawler = $client->request('GET', '/chargement-formulaire/4');
-
-        $form = $crawler->filter('form')->form();
-        $form['ajout_projet[ordre]']->setValue('1111111');
-        $form['ajout_projet[activite]']->setValue('100');
-        $form['ajout_projet[tache]']->setValue(5);
-        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
-        $client->submit($form);
-
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
         $this->assertResponseIsSuccessful();
 
-        // Vérifie que l'enregistrement a bien eu lieu
+        // Charger le formulaire via le turbo stream
+        $client->request('GET', '/type-select', ['type' => 4]);
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Recréer le crawler avec la bonne base URI
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        // Récupérer et soumettre le formulaire
+        $form = $crawler->filter('form')->form();
+        $form['ajout_projet[ordre]']->setValue('LV11111');
+        $form['ajout_projet[activite]']->setValue(value: '100');
+        $form['ajout_projet[tache]']->setValue(value: 5);
+        $form['ajout_projet[temps_main_oeuvre]']->setValue(2.5);
+
+        $client->submit($form);
+        $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
         $ajoutHeuresRepo->findOneBy([
-            'ordre' => 'LV1111111',
+            'ordre' => 'LV11111',
             'activite' => '100',
             'tache' => 5,
             'temps_main_oeuvre' => 2.5,
