@@ -81,18 +81,6 @@ class IndexController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
-    #[Route('/type-select', name: 'type_select', methods: ['GET'])]
-    public function typeSelectRedirect(Request $request): Response
-    {
-        $typeId = $request->query->get('type');
-
-        if ($typeId && $typeId != -1) {
-            return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
-        }
-
-        return $this->redirectToRoute('chargement_formulaire', ['typeId' => 0]);
-    }
-
     #[Route('/favori/type-heure', name: 'favori_type_heure', methods: ['POST'])]
     public function setFavoriTypeHeure(Request $request, Security $security, EntityManagerInterface $em, TypeHeuresRepository $typeHeuresRepo, FavoriTypeHeureRepository $favoriRepo): Response
     {

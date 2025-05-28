@@ -51,14 +51,12 @@ class AjoutProjetType extends AbstractType
                                 ->where('t.id < 100');
                 },
             ])
-            ->add('activite', EntityType::class, ['class' => Activite::class,
-                'choice_label' => 'name',
-                'placeholder' => '-- Sélectionner une activité --',
+            ->add('activite', TextType::class, [
                 'required' => true,
-                'attr' => ['required' => true],
+                'attr' => ['required' => true, 'id' => 'activiteInput'],
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez sélectionner une activité.']),
-                ]
+                    new NotBlank(['message' => 'Veuillez saisir une activité.']),
+                ],
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
                 'scale' => 2,

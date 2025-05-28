@@ -27,7 +27,7 @@
             <div class="flex-1 text-left md:self-center items-center">
                 <div class="flex-1 text-left md:self-center items-center">
                     <div class="w-full mx-3">
-                        {{ form_widget(formHeures.activite, {attr: {class: 'select dark:border-primary'}, placeholder: '-- Sélectionner une activité --'}) }}
+                        {{ form_widget(formHeures.activite, {attr: {class: 'input input-bordered dark:border-primary', id: 'activiteInput'}}) }}
                         {% if formHeures.activite.vars.errors|length > 0 %}
                             <div class="text-red-600 text-sm mt-1 font-bold">
                                 {{ form_errors(formHeures.activite) }}

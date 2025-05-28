@@ -14,6 +14,7 @@ use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TacheSpecifiqueRepository;
 use App\Repository\TypeHeuresRepository;
+use App\Repository\ActiviteRepository;
 use App\Service\DetailHeureService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -21,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -329,4 +331,23 @@ class TempsController extends AbstractController
             'projet' => \App\Form\AjoutProjetType::class,
         };
     }
+
+    #[Route('/verifier-activite/{id}', name: 'verifier_activite', methods: ['GET'])]
+    public function verifierActivite(int $id, ActiviteRepository $activiteRepository): JsonResponse 
+    {
+        $activite = $activiteRepository->find($id);
+
+        if ($activite) {
+            return new JsonResponse([
+                'trouve' => true,
+                'nom' => $activite->getName(),
+            ]);
+        }
+
+        return new JsonResponse([
+            'trouve' => false,
+            'message' => 'Aucune activité trouvée avec cet ID.'
+        ]);
+    }
+
 }
