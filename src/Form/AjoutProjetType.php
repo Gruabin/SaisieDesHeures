@@ -52,6 +52,7 @@ class AjoutProjetType extends AbstractType
                 },
             ])
             ->add('activite', TextType::class, [
+                'mapped' => false,
                 'required' => true,
                 'attr' => ['required' => true, 'id' => 'activiteInput'],
                 'constraints' => [

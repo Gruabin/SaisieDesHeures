@@ -273,6 +273,7 @@ class EnregistrerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
     }
 
+
     public function testSoumissionFormulaireValideProjetEmploye()
     {
         $client = static::createClient();

@@ -2,7 +2,7 @@
     <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages" id="favoriForm">
         <input type="hidden" name="type_heure_id" id="hiddenTypeId" value="{{ selectedTypeId }}">
         <button type="submit"
-                class="btn btn-sm bg-green-600 {{ favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure.id == selectedTypeId ? 'text-white' : 'text-black' }}"
+                class="btn btn-sm bg-success {{ favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure.id == selectedTypeId ? 'text-white' : 'text-black' }}"
                 title="Enregistrer par défaut"
                 id="btnEnregistrerParDefaut">
             <i class="fa-regular fa-floppy-disk"></i>
