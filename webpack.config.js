@@ -26,6 +26,7 @@ Encore
 .addEntry("temps", "./assets/temps.js")
 .addEntry("console", "./assets/console.js")
 
+.enableVersioning()
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge("./assets/controllers.json")

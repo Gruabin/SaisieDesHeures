@@ -61,13 +61,13 @@
                         <span>Une erreur est survenue. Veuillez contacter le <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="underline noLoading" target="_blank">Support informatique</a>.</span>
                     </div>
                 </div>
-                <div class=" flex md:flex-row flex-col" id="divType">
-                    <div class="flex-1 text-center md:text-right md:self-center m-3">
+                <div class="flex md:flex-row" id="divType">
+                    <div class="flex-1 md:text-right md:self-center m-3">
                         <label for="type">
                             <b>Type d'heures</b>
                         </label>
                     </div>
-                    <div class="flex-1 text-center flex items-center">
+                    <div class="flex-1 flex">
                         <div class="flex flex-row items-center gap-2 mx-3">
                             <form method="GET" action="{{ path('chargement_formulaire_redirect') }}" data-turbo-frame="formulaire_saisie" class="noLoading" id="formType">
                                 <select class="select w-auto dark:border-primary" {% if nbHeures >= 12 %}disabled{% endif %} name="typeId" id="type" onchange="this.form.requestSubmit();">

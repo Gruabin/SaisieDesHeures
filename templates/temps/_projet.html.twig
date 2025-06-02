@@ -1,8 +1,8 @@
 <turbo-frame id="formulaire_saisie">
     {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id})}, {'attr': {'data-turbo-disable': 'true'}}) }}
 
-        <div class="flex md:flex-row flex-col" id="divOrdre">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex md:flex-row" id="divOrdre">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.ordre, "<b>Ordre</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
@@ -20,15 +20,14 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divActivite">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex md:flex-row" id="divActivite">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.activite, "<b>Activité</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
                 <div class="flex-1 text-left md:self-center items-center">
                     <div class="w-full mx-3">
                         {{ form_widget(formHeures.activite, {attr: {class: 'input input-bordered dark:border-primary', id: 'ajout_projet_activite'}}) }}
-                        {# {{ dump(formHeures.activite.vars.id) }} #}
                         {% if formHeures.activite.vars.errors|length > 0 %}
                             <div class="text-red-600 text-sm mt-1 font-bold">
                                 {{ form_errors(formHeures.activite) }}
@@ -41,8 +40,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex md:flex-row max-sm:items-center" id="divTache">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.tache, "<b>Tâche</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
@@ -57,8 +56,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divSaisieTemps">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex md:flex-row" id="divSaisieTemps">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
