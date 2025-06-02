@@ -9,21 +9,3 @@ function verifChampOrdre(evt){
         evt.target.value = evt.target.value.slice(0, -1);
     }
 }
-
-document.addEventListener('turbo:load', function () {
-    const checkbox = document.getElementById('cbTacheSpe');
-    const selectTacheSpe = document.querySelector('[data-tache-spe="true"]');
-
-    checkbox.addEventListener('change', function () {
-        if (selectTacheSpe) {
-            if (this.checked) {
-                selectTacheSpe.removeAttribute('disabled');
-            } else {
-                selectTacheSpe.setAttribute('disabled', 'disabled');
-                selectTacheSpe.selectedIndex = 0;
-            }
-        } else {
-            console.error('Champ tâche spécifique introuvable !');
-        }
-    });
-});
