@@ -22,18 +22,18 @@ class FiltreConsoleTest extends WebTestCase
         $client->submit($form);
 
         $crawler = $client->request('GET', '/console');
-
+        
         $this->assertResponseIsSuccessful();
-
+        
         // Récupérer le formulaire
         $form = $crawler->selectButton('Appliquer la date')->form([]);
-
+        
         // Remplir le formulaire
-        $form['filtre_date[date]']->setValue('04-06-2025');
-
+        $form['filtre_date[date]']->setValue('19-04-2024');
+        
         // Soumettre le formulaire
         $client->submit($form);
-
+        
         // Vérifier la redirection
         $client->followRedirects();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -41,7 +41,7 @@ class FiltreConsoleTest extends WebTestCase
         $client->followRedirects();
 
         // vérification de l'affichage des données
-        $this->assertSelectorTextContains('div[name="dateLigne"]', '04-06-2025');
+        $this->assertSelectorTextContains('div[name="dateLigne"]', '19-04-2024');
         $this->assertSelectorTextNotContains('div[name="dateLigne"]', '22-04-2024');
     }
 
