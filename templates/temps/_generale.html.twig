@@ -1,9 +1,9 @@
 <turbo-frame id="formulaire_saisie">
-    {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id})}, {'attr': {'data-turbo-disable': 'true'}}) }}
+    {{ form_start(formHeures, {action: path('soumission_formulaire', {typeId: type.id})}, {attr: {'data-turbo-disable': 'true'}}) }}
 
         <div class="flex max-sm:items-center" id="divTache">
             <div class="flex-1 md:text-right md:self-center m-3">
-                {{ form_label(formHeures.tache, "<b>Tâche</b>", { 'label_html': true }) }}
+                {{ form_label(formHeures.tache, '<b>Tâche</b>', {label_html: true}) }}
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
                 <div class="md:self-center w-full mx-3">
@@ -19,7 +19,7 @@
 
         <div class="flex" id="divCentreCharge">
             <div class="flex-1 md:text-right md:self-center m-3">
-                {{ form_label(formHeures.centre_de_charge, "<b>Centre de charge</b>", { 'label_html': true }) }}
+                {{ form_label(formHeures.centre_de_charge, '<b>Centre de charge</b>', {label_html: true}) }}
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
                 <div class="w-full mx-3">
@@ -35,7 +35,7 @@
 
         <div class="flex" id="divSaisieTemps">
             <div class="flex-1 md:text-right md:self-center m-3">
-                {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
+                {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", {label_html: true}) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
                 <div class="mx-3">
@@ -70,6 +70,5 @@
             </div>
         {% endfor %}
 
-
-    {{ form_end(formHeures, {'render_rest': false}) }}
+    {{ form_end(formHeures, {render_rest: false}) }}
 </turbo-frame>

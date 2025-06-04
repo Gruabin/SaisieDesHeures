@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class ActiviteExistValidator extends ConstraintValidator
 {
-    public function __construct(private ActiviteRepository $repository) {}
+    public function __construct(private readonly ActiviteRepository $repository) {}
 
     public function validate($value, Constraint $constraint)
     {

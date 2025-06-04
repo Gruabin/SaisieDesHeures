@@ -35,7 +35,7 @@
                         <b>Temps journalier</b>
                     </div>
                     <turbo-frame id="frameNbHeures">
-                        {% include 'temps/_nbHeures.html.twig' with { nbHeures: nbHeures } %}
+                        {{ include('temps/_nbHeures.html.twig', {nbHeures: nbHeures}) }}
                     </turbo-frame>
                 </div>
                 <div class="m-2 flex-1 md:block">
@@ -85,10 +85,10 @@
                             </form>
 
                             <turbo-frame id="frame-favori-btn">
-                                {% include 'temps/_btnFavoris.html.twig' with {
+                                {{ include('temps/_btnFavoris.html.twig', {
                                     selectedTypeId: selectedTypeId,
-                                    favoriTypeHeure: favoriTypeHeure
-                                } %}
+                                    favoriTypeHeure: favoriTypeHeure,
+                                }) }}
                             </turbo-frame>
 
                         </div>
@@ -96,9 +96,9 @@
                 </div>
 
                 {% if favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
-                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': favoriTypeHeure.typeHeure.id }) }}">
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: favoriTypeHeure.typeHeure.id}) }}">
                 {% else %}
-                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': 0 }) }}">
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: 0}) }}">
                 {% endif %}
                     <div class="flex justify-center items-center min-h-[200px]">
                         <div class="w-1/5 flex flex-col gap-4">

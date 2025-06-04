@@ -102,7 +102,7 @@ class IndexController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'Le type d\'heure favori a bien été mis à jour.');
-        if (str_contains($request->headers->get('Accept'), 'text/vnd.turbo-stream.html')) {
+        if (str_contains((string) $request->headers->get('Accept'), 'text/vnd.turbo-stream.html')) {
             $alertsHtml = $this->renderView('alert.html.twig');
             $favoriHtml = $this->renderView('temps/_btnFavoris.html.twig', [
                 'selectedTypeId' => $typeId,
@@ -116,11 +116,11 @@ class IndexController extends AbstractController
                 </turbo-stream>
             HTML;
 
-            return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
 
 
-        return new Response('', 204);
+        return new Response('', \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 
     // Affiche la page d'historique

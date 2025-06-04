@@ -29,7 +29,7 @@ class FiltreConsoleTest extends WebTestCase
         $form = $crawler->selectButton('Appliquer la date')->form([]);
 
         // Remplir le formulaire
-        $form['filtre_date[date]']->setValue('19-04-2024');
+        $form['filtre_date[date]']->setValue('04-06-2025');
 
         // Soumettre le formulaire
         $client->submit($form);
@@ -41,7 +41,7 @@ class FiltreConsoleTest extends WebTestCase
         $client->followRedirects();
 
         // vérification de l'affichage des données
-        $this->assertSelectorTextContains('div[name="dateLigne"]', '19-04-2024');
+        $this->assertSelectorTextContains('div[name="dateLigne"]', '04-06-2025');
         $this->assertSelectorTextNotContains('div[name="dateLigne"]', '22-04-2024');
     }
 

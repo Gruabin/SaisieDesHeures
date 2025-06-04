@@ -109,7 +109,7 @@ class TempsController extends AbstractController
                 </turbo-stream>
             HTML;
 
-            return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
 
 
@@ -132,7 +132,7 @@ class TempsController extends AbstractController
                 </turbo-stream>
             HTML;
 
-            return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
 
         $detailHeures = new DetailHeures();
@@ -185,7 +185,7 @@ class TempsController extends AbstractController
             </turbo-stream>
         HTML;
 
-        return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+        return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
     }
 
     #[Route('/temps/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
@@ -202,7 +202,7 @@ class TempsController extends AbstractController
                     <turbo-stream action="update" target="flash-messages">
                         <template>$alertsHtml</template>
                     </turbo-stream>
-                HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+                HTML, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
             }
 
             return $this->redirectToRoute('temps');
@@ -265,7 +265,7 @@ class TempsController extends AbstractController
                         <turbo-stream action="update" target="frameNbHeures">
                             <template>$nbHeuresHtml</template>
                         </turbo-stream>
-                    HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+                    HTML, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
                 }
 
                 return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
@@ -301,7 +301,7 @@ class TempsController extends AbstractController
                         <turbo-stream action="update" target="frameNbHeures">
                             <template>$nbHeuresHtml</template>
                         </turbo-stream>
-                    HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+                    HTML, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
                 }
 
                 return $this->redirectToRoute('temps');
@@ -336,7 +336,7 @@ class TempsController extends AbstractController
                 <turbo-stream action="update" target="frameNbHeures">
                     <template>$nbHeuresHtml</template>
                 </turbo-stream>
-            HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            HTML, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
 
         return $this->render($template, $context);
@@ -353,7 +353,7 @@ class TempsController extends AbstractController
         // Sécurité minimale
         if (!$type) {
             $template = $this->renderView('temps/_default.html.twig');
-            return new Response($template, 200, ['Content-Type' => 'text/html']);
+            return new Response($template, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/html']);
         }
 
         $heure = new DetailHeures();
@@ -390,7 +390,7 @@ class TempsController extends AbstractController
             </turbo-stream>
         HTML;
 
-        return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+        return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
     }
 
     #[Route('/chargement-formulaire', name: 'chargement_formulaire_redirect', methods: ['GET'])]

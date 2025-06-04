@@ -30,10 +30,8 @@ class AjoutGeneraleType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez sélectionner une tâche.']),
                 ],
-                'query_builder' => function (TacheRepository $repo) {
-                    return $repo->createQueryBuilder('t')
-                                ->where('t.id >= 100');
-                },
+                'query_builder' => fn(TacheRepository $repo) => $repo->createQueryBuilder('t')
+                            ->where('t.id >= 100'),
             ])
             ->add('centre_de_charge', EntityType::class, [
                 'class' => CentreDeCharge::class,
