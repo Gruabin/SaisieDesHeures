@@ -48,19 +48,20 @@ class AjoutServiceType extends AbstractType
                 ],
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
-                'scale' => 2,
                 'required' => true,
+                'html5' => true,
                 'attr' => [
                     'required' => true,
                     'max' => 12,
                     'step' => 0.1,
+                    'type' => 'number',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un temps.']),
                     new Range([
                         'min' => 0.1,
                         'max' => 12,
-                        'notInRangeMessage' => 'Le temps doit être compris entre {{min}} et {{max}} heures.',
+                        'notInRangeMessage' => 'Le temps doit être compris entre {{ min }} et {{ max }} heures.',
                     ])
                 ]
             ]);

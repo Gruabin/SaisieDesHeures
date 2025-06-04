@@ -14,7 +14,7 @@
                         {{ app.user.nomEmploye }}
                     </div>
                 </div>
-                <div class="m-2 flex-1 md:block hidden">
+                <div class="m-2 flex-1 md:block">
                     <div class="m-2">
                         <b>Centre de charge</b>
                     </div>
@@ -22,7 +22,7 @@
                         {{ app.user.centreDeCharge.id }}
                     </div>
                 </div>
-                <div class="m-2 flex-1 md:block hidden">
+                <div class="m-2 flex-1 md:block">
                     <div class="m-2">
                         <b>Date</b>
                     </div>
@@ -35,10 +35,10 @@
                         <b>Temps journalier</b>
                     </div>
                     <turbo-frame id="frameNbHeures">
-                        {% include 'temps/_nbHeures.html.twig' with { nbHeures: nbHeures } %}
+                        {{ include('temps/_nbHeures.html.twig', {nbHeures: nbHeures}) }}
                     </turbo-frame>
                 </div>
-                <div class="m-2 flex-1 md:block hidden">
+                <div class="m-2 flex-1 md:block">
                     <div class="m-2">
                         <a target="_self" class="btn btn-primary mt-5" id="btnConsulterDetails" href="{{ path('historique') }}">
                             Consulter le détail
@@ -61,7 +61,7 @@
                         <span>Une erreur est survenue. Veuillez contacter le <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="underline noLoading" target="_blank">Support informatique</a>.</span>
                     </div>
                 </div>
-                <div class="flex md:flex-row" id="divType">
+                <div class="flex" id="divType">
                     <div class="flex-1 md:text-right md:self-center m-3">
                         <label for="type">
                             <b>Type d'heures</b>
@@ -85,10 +85,10 @@
                             </form>
 
                             <turbo-frame id="frame-favori-btn">
-                                {% include 'temps/_btnFavoris.html.twig' with {
+                                {{ include('temps/_btnFavoris.html.twig', {
                                     selectedTypeId: selectedTypeId,
-                                    favoriTypeHeure: favoriTypeHeure
-                                } %}
+                                    favoriTypeHeure: favoriTypeHeure,
+                                }) }}
                             </turbo-frame>
 
                         </div>
@@ -96,9 +96,9 @@
                 </div>
 
                 {% if favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
-                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': favoriTypeHeure.typeHeure.id }) }}">
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: favoriTypeHeure.typeHeure.id}) }}">
                 {% else %}
-                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {'typeId': 0 }) }}">
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: 0}) }}">
                 {% endif %}
                     <div class="flex justify-center items-center min-h-[200px]">
                         <div class="w-1/5 flex flex-col gap-4">

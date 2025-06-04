@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\DetailHeures;
 use App\Entity\TacheSpecifique;
+use App\Repository\TacheSpecifiqueRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,21 +55,29 @@ class AjoutFabricationType extends AbstractType
                 'choice_label' => 'name',
                 'required' => false,
                 'attr' => ['required' => false],
+                'query_builder' => function (TacheSpecifiqueRepository $repo) use ($options) {
+                    $prefix = substr($options['site'] ?? '', 0, 2);
+                    return $repo->createQueryBuilder('t')
+                                ->where('t.id LIKE :prefix')
+                                ->setParameter('prefix', $prefix . '%')
+                                ->orderBy('t.id', 'ASC');
+                },
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
-                'scale' => 2,
                 'required' => true,
+                'html5' => true,
                 'attr' => [
                     'required' => true,
                     'max' => 12,
                     'step' => 0.1,
+                    'type' => 'number',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un temps.']),
                     new Range([
                         'min' => 0.1,
                         'max' => 12,
-                        'notInRangeMessage' => 'Le temps doit être compris entre {{min}} et {{max}} heures.',
+                        'notInRangeMessage' => 'Le temps doit être compris entre {{ min }} et {{ max }} heures.',
                     ])
                 ]
             ]);
