@@ -10,7 +10,7 @@
                 <span class="label-text-alt text-error">{{ form_errors(form) }}</span>
             </div>
         </fieldset>
-        {{ form_row(form.bouton, {attr: {class: 'btn btn-primary btn-outline btn-disabled justify-center'}}) }}
+        {{ form_row(form.bouton, {attr: {class: 'btn btn-primary btn-outline justify-center', id: 'btnLoading'}}) }}
         {{ form_rest(form) }}
     </form>
 </turbo-frame>

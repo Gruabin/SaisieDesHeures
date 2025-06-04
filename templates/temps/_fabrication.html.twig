@@ -1,8 +1,8 @@
 <turbo-frame id="formulaire_saisie">
     {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id})}, {'attr': {'data-turbo-disable': 'true'}}) }}
 
-        <div class="flex md:flex-row flex-col" id="divOrdre">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divOrdre">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.ordre, "<b>Ordre</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
@@ -20,8 +20,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divOperation">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divOperation">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.operation, "<b>Opération</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center  items-center">
@@ -36,8 +36,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col max-sm:items-center" id="divTacheSpe">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex max-sm:items-center" id="divTacheSpe">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.tacheSpecifique, "<b>Tâche spécifique</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 flex text-left md:flex md:self-center items-center">
@@ -53,8 +53,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divSaisieTemps">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divSaisieTemps">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
@@ -73,10 +73,10 @@
             <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
                 Quitter
             </a>
-            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter">
+            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter btnLoading">
                 Enregistrer et quitter
             </button>
-            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue">
+            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue btnLoading">
                 Enregistrer
             </button>
         </div>
@@ -84,24 +84,4 @@
         {{ form_widget(formHeures._token) }}
 
     {{ form_end(formHeures, {'render_rest': false}) }}
-
-    <script>
-        (function () {
-            const checkbox = document.getElementById('cbTacheSpe');
-            const selectTacheSpe = document.querySelector('[data-tache-spe="true"]');
-
-            checkbox.addEventListener('change', function () {
-                if (selectTacheSpe) {
-                    if (this.checked) {
-                        selectTacheSpe.removeAttribute('disabled');
-                    } else {
-                        selectTacheSpe.setAttribute('disabled', 'disabled');
-                        selectTacheSpe.selectedIndex = 0;
-                    }
-                } else {
-                    console.error('Champ tâche spécifique introuvable !');
-                }
-            })
-        })();
-    </script>
 </turbo-frame>

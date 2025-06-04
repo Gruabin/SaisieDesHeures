@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -51,19 +52,20 @@ class AjoutGeneraleType extends AbstractType
                 },
             ])
             ->add('temps_main_oeuvre', NumberType::class, [
-                'scale' => 2,
                 'required' => true,
+                'html5' => true,
                 'attr' => [
                     'required' => true,
                     'max' => 12,
                     'step' => 0.1,
+                    'type' => 'number',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un temps.']),
                     new Range([
                         'min' => 0.1,
                         'max' => 12,
-                        'notInRangeMessage' => 'Le temps doit être compris entre {{min}} et {{max}} heures.',
+                        'notInRangeMessage' => 'Le temps doit être compris entre {{ min }} et {{ max }} heures.',
                     ])
                 ]
             ]);

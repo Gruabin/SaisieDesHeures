@@ -25,9 +25,10 @@ class FavorisTest extends WebTestCase
         $this->assertRouteSame('chargement_formulaire');
         
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('#btnReturn');
     }
 
-    public function testConnecterAvecChoixFavori(): void
+    public function testConnecterAvecFavori(): void
     {
         $client = static::createClient();
         $client->followRedirects(true);

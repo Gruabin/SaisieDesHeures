@@ -43,6 +43,14 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'tache' => 100,
+            'centre_de_charge' => 'LV0002000',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideGeneralEmploye(): void
@@ -81,6 +89,14 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'tache' => 100,
+            'centre_de_charge' => 'LV0002000',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideFabricationManager(): void
@@ -112,7 +128,7 @@ class EnregistrerTest extends WebTestCase
         // Remplir et soumettre le formulaire
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
@@ -120,6 +136,15 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'tacheSpecifique' => 'LVT203',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideFabricationEmploye()
@@ -151,7 +176,7 @@ class EnregistrerTest extends WebTestCase
         // Remplir et soumettre le formulaire
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
         $client->submit($form);
 
@@ -159,6 +184,15 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'tacheSpecifique' => 'LVT203',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideServiceManager()
@@ -197,6 +231,14 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideServiceEmploye()
@@ -235,6 +277,14 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifier la route finale ou tout autre effet attendu
         $this->assertSelectorExists('turbo-frame#formulaire_saisie');
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSoumissionFormulaireValideProjetManager()
@@ -271,8 +321,16 @@ class EnregistrerTest extends WebTestCase
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
-    }
 
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'activite' => '100',
+            'tache' => 5,
+            'temps_main_oeuvre' => 2.5,
+        ]);
+    }
 
     public function testSoumissionFormulaireValideProjetEmploye()
     {
@@ -308,6 +366,15 @@ class EnregistrerTest extends WebTestCase
         $client->submit($form);
 
         $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'activite' => '100',
+            'tache' => 5,
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testEnregistrerEtQuitterManager(): void
@@ -332,9 +399,9 @@ class EnregistrerTest extends WebTestCase
         $form = $crawler->selectButton('Enregistrer et quitter')->form();
 
         // Remplir le formulaire
-        $form['ajout_fabrication[ordre]']->setValue('1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumettre le formulaire avec ce bouton
@@ -342,6 +409,15 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifie qu'on est redirigé vers la bonne page
         $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'tacheSpecifique' => 'LVT203',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testEnregistrerEtQuitterEmploye(): void
@@ -366,9 +442,9 @@ class EnregistrerTest extends WebTestCase
         $form = $crawler->selectButton('Enregistrer et quitter')->form();
 
         // Remplir le formulaire
-        $form['ajout_fabrication[ordre]']->setValue('1111111');
+        $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         // Soumettre le formulaire avec ce bouton
@@ -376,6 +452,15 @@ class EnregistrerTest extends WebTestCase
 
         // Vérifie qu'on est redirigé vers la bonne page
         $this->assertResponseIsSuccessful();
+
+        // Vérification de l'enregistrement en base
+        $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
+        $ajoutHeuresRepo->findOneBy([
+            'ordre' => 'LV11111',
+            'operation' => 10,
+            'tacheSpecifique' => 'LVT203',
+            'temps_main_oeuvre' => 2.5,
+        ]);
     }
 
     public function testSauvegardeDonneesGeneralManager(): void
@@ -484,7 +569,7 @@ class EnregistrerTest extends WebTestCase
         $form = $crawler->filter('form')->form();
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);
@@ -495,7 +580,7 @@ class EnregistrerTest extends WebTestCase
         $ajoutHeuresRepo->findOneBy([
             'ordre' => 'LV11111',
             'operation' => 10,
-            'tacheSpecifique' => 'AMT902',
+            'tacheSpecifique' => 'LVT203',
             'temps_main_oeuvre' => 2.5,
         ]);
     }
@@ -526,7 +611,7 @@ class EnregistrerTest extends WebTestCase
         $form = $crawler->filter('form')->form();
         $form['ajout_fabrication[ordre]']->setValue('LV11111');
         $form['ajout_fabrication[operation]']->setValue(10);
-        $form['ajout_fabrication[tacheSpecifique]']->setValue('AMT902');
+        $form['ajout_fabrication[tacheSpecifique]']->setValue('LVT203');
         $form['ajout_fabrication[temps_main_oeuvre]']->setValue(2.5);
 
         $client->submit($form);

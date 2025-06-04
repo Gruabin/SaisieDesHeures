@@ -1,8 +1,8 @@
 <turbo-frame id="formulaire_saisie">
     {{ form_start(formHeures, { action: path('soumission_formulaire', {typeId: type.id})}, {'attr': {'data-turbo-disable': 'true'}}) }}
 
-        <div class="flex md:flex-row flex-col" id="divOrdre">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divOrdre">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.ordre, "<b>Ordre</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
@@ -20,15 +20,14 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divActivite">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divActivite">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.activite, "<b>Activité</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
                 <div class="flex-1 text-left md:self-center items-center">
                     <div class="w-full mx-3">
                         {{ form_widget(formHeures.activite, {attr: {class: 'input input-bordered dark:border-primary', id: 'ajout_projet_activite'}}) }}
-                        {# {{ dump(formHeures.activite.vars.id) }} #}
                         {% if formHeures.activite.vars.errors|length > 0 %}
                             <div class="text-red-600 text-sm mt-1 font-bold">
                                 {{ form_errors(formHeures.activite) }}
@@ -41,8 +40,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex max-sm:items-center" id="divTache">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.tache, "<b>Tâche</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
@@ -57,8 +56,8 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col" id="divSaisieTemps">
-            <div class="flex-1 text-center md:text-right md:self-center m-3">
+        <div class="flex" id="divSaisieTemps">
+            <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", { 'label_html': true }) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
@@ -77,10 +76,10 @@
             <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
                 Quitter
             </a>
-            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter">
+            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter btnLoading">
                 Enregistrer et quitter
             </button>
-            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue">
+            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue btnLoading">
                 Enregistrer
             </button>
         </div>
@@ -88,45 +87,5 @@
         {{ form_widget(formHeures._token) }}
 
     {{ form_end(formHeures, {'render_rest': false}) }}
-
-    <script>
-        (function () {
-            const input = document.getElementById('ajout_projet_activite');
-            const info = document.getElementById('infoActivite');
-
-            if (!input || !info) return;
-
-            input.removeEventListener('input', handleInput);
-
-            function handleInput() {
-                const id = input.value.trim();
-
-                input.classList.remove('border-green-500', 'border-red-500');
-                info.textContent = '';
-
-                if (id === '') return;
-
-                fetch(`/verifier-activite/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.trouve) {
-                            input.classList.add('border-green-500');
-                            info.textContent = `Activité : ${data.nom}`;
-                            info.className = 'text-green-600 mx-3 text-sm mt-1';
-                        } else {
-                            input.classList.add('border-red-500');
-                            info.textContent = `Aucune activité trouvée pour cet ID`;
-                            info.className = 'text-red-600 mx-3 text-sm mt-1 font-bold';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la vérification de l\'activité:', error);
-                    });
-            }
-
-            input.addEventListener('input', handleInput);
-        })();
-    </script>
-
 </turbo-frame>
 

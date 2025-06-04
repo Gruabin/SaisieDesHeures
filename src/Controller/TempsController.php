@@ -49,10 +49,6 @@ class TempsController extends AbstractController
         $user = $this->getUser();
 
         $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
-        if ($nbHeures >= 12) {
-            $message = "Votre avez atteint votre limite d'heures journalières";
-            $this->addFlash('warning', $message);
-        }
         $this->detailHeureService->cleanLastWeek();
 
         $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $user]);
@@ -70,16 +66,52 @@ class TempsController extends AbstractController
                 'favoriTypeHeure' => $favoriTypeHeure,
                 'site' => substr((string) $user->getUserIdentifier(), 0, 2),
                 'selectedTypeId' => $favoriTypeHeure?->getTypeHeure()?->getId() ?? null,
+                'limiteAtteinte' => $nbHeures >= 12,
             ]
         );
     }
 
     #[Route('/chargement-formulaire/{typeId}', name: 'chargement_formulaire')]
-    public function loadFormulaireParType(int $typeId, TypeHeuresRepository $typeRepo, FavoriTypeHeureRepository $favoriRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo, Request $request, EntityManagerInterface $entityManager): Response 
+    public function loadFormulaireParType(int $typeId, FavoriTypeHeureRepository $favoriRepo, Request $request, EntityManagerInterface $entityManager): Response 
     {
-        $type = $typeRepo->find($typeId);
+        $type = $this->typeHeuresRepo->find($typeId);
         /** @var Employe $user */
         $user = $this->getUser();
+
+        $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
+        $nbHeuresHtml = $this->renderView('temps/_nbHeures.html.twig', [
+            'nbHeures' => $nbHeures,
+        ]);
+
+        if ($nbHeures >= 12) {
+            $formulaireHtml = $this->renderView('temps/_default.html.twig', [
+                'nbHeures' => $nbHeures,
+            ]);
+
+            $favoriHtml = $this->renderView('temps/_btnFavoris.html.twig', [
+                'selectedTypeId' => $typeId,
+                'favoriTypeHeure' => $favoriRepo->findOneBy(['employe' => $user])
+            ]);
+
+            $this->addFlash('warning', 'Vous avez atteint le maximum de 12 heures autorisées.');
+
+            $alertsHtml = $this->renderView('alert.html.twig');
+
+            $turboStreams = <<<HTML
+                <turbo-stream action="update" target="frameNbHeures">
+                    <template>$nbHeuresHtml</template>
+                </turbo-stream>
+                <turbo-stream action="update" target="flash-messages">
+                    <template>$alertsHtml</template>
+                </turbo-stream>
+                <turbo-stream action="replace" target="formulaire_saisie">
+                    <template>$formulaireHtml</template>
+                </turbo-stream>
+            HTML;
+
+            return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+        }
+
 
         if (!$type || !$user) {
             $formulaireHtml = $this->renderView('temps/_default.html.twig', []);
@@ -89,6 +121,9 @@ class TempsController extends AbstractController
             ]);
 
             $turboStreams = <<<HTML
+                <turbo-stream action="update" target="frameNbHeures">
+                    <template>$nbHeuresHtml</template>
+                </turbo-stream>
                 <turbo-stream action="replace" target="formulaire_saisie">
                     <template>$formulaireHtml</template>
                 </turbo-stream>
@@ -127,9 +162,9 @@ class TempsController extends AbstractController
             'nbHeures' => $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier()),
             'formHeures' => $form->createView(),
             'type' => $type,
-            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+            'taches' => $this->tacheRepository->findBy(['typeHeures' => $type]),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $centre ? $cdgRepo->findBySitePrefix(substr($centre->getId(), 0, 3)) : [],
+            'CDG' => $centre ? $this->CDGRepository->findBySitePrefix(substr($centre->getId(), 0, 3)) : [],
             'site' => substr($user->getUserIdentifier(), 0, 2),
         ]);
 
@@ -139,6 +174,9 @@ class TempsController extends AbstractController
         ]);
 
         $turboStreams = <<<HTML
+            <turbo-stream action="update" target="frameNbHeures">
+                <template>$nbHeuresHtml</template>
+            </turbo-stream>
             <turbo-stream action="replace" target="formulaire_saisie">
                 <template>$formulaireHtml</template>
             </turbo-stream>
@@ -150,12 +188,10 @@ class TempsController extends AbstractController
         return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
     }
 
-
-
     #[Route('/temps/soumission-formulaire/{typeId}', name: 'soumission_formulaire')]
-    public function soumettreFormulaireParType(int $typeId, Request $request, TypeHeuresRepository $typeRepo, EntityManagerInterface $entityManager, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response 
+    public function soumettreFormulaireParType(int $typeId, Request $request, EntityManagerInterface $entityManager): Response 
     {
-        $type = $typeRepo->find($typeId);
+        $type = $this->typeHeuresRepo->find($typeId);
 
         if (!$type) {
             $this->addFlash('error', 'Type d\'heure invalide.');
@@ -190,18 +226,44 @@ class TempsController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
-            $heuresSaisies = $heure->getTempsMainOeuvre();
+        $nbHeuresAvant = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
+        $heuresSaisies = $heure->getTempsMainOeuvre() ?? 0;
+        $nbHeuresTotal = $nbHeuresAvant + $heuresSaisies;
 
-            if (($nbHeures + $heuresSaisies) > 12) {
-                $this->addFlash('warning', 'Impossible d’ajouter cette saisie : vous dépasseriez les 12 heures autorisées par jour.');
+        $nbHeuresHtml = $this->renderView('temps/_nbHeures.html.twig', [
+            'nbHeures' => min($nbHeuresTotal, 12), // pour affichage à jour
+        ]);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($nbHeuresTotal > 12) {
+                $this->addFlash('warning', 'Vous avez dépassé le maximum de 12 heures autorisées.');
+
+                $formHeures = $this->createForm($formTypeClass, $heure, [
+                    'site' => $centreDeChargeEmploye ? substr($centreDeChargeEmploye->getId(), 0, 3) : null,
+                ]);
+
+                $formulaireHtml = $this->renderView('temps/_' . strtolower((new AsciiSlugger())->slug($type->getNomType())) . '.html.twig', [
+                    'type' => $type,
+                    'nbHeures' => $nbHeuresAvant,
+                    'formHeures' => $formHeures->createView(),
+                    'taches' => $this->tacheRepository->findBy(['typeHeures' => $type]),
+                    'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
+                    'CDG' => $this->CDGRepository->findAll(),
+                    'site' => substr((string) $user->getUserIdentifier(), 0, 2),
+                ]);
+
                 $alertsHtml = $this->renderView('alert.html.twig');
 
                 if ($request->headers->get('Turbo-Frame')) {
                     return new Response(<<<HTML
                         <turbo-stream action="update" target="flash-messages">
                             <template>$alertsHtml</template>
+                        </turbo-stream>
+                        <turbo-stream action="replace" target="formulaire_saisie">
+                            <template>$formulaireHtml</template>
+                        </turbo-stream>
+                        <turbo-stream action="update" target="frameNbHeures">
+                            <template>$nbHeuresHtml</template>
                         </turbo-stream>
                     HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
                 }
@@ -218,36 +280,46 @@ class TempsController extends AbstractController
             $entityManager->persist($heure);
             $entityManager->flush();
 
+            if ($nbHeuresTotal == 12) {
+                $this->addFlash('success', 'Heure enregistrée avec succès.');
+                $this->addFlash('warning', 'Vous avez atteint le maximum de 12 heures autorisées.');
+
+                if ($request->headers->get('Turbo-Frame')) {
+                    $formulaireHtml = $this->renderView('temps/_default.html.twig', [
+                        'nbHeures' => 12,
+                        'limiteAtteinte' => true,
+                    ]);
+                    $alertsHtml = $this->renderView('alert.html.twig');
+
+                    return new Response(<<<HTML
+                        <turbo-stream action="update" target="flash-messages">
+                            <template>$alertsHtml</template>
+                        </turbo-stream>
+                        <turbo-stream action="replace" target="formulaire_saisie">
+                            <template>$formulaireHtml</template>
+                        </turbo-stream>
+                        <turbo-stream action="update" target="frameNbHeures">
+                            <template>$nbHeuresHtml</template>
+                        </turbo-stream>
+                    HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+                }
+
+                return $this->redirectToRoute('temps');
+            }
+
             $this->addFlash('success', 'Heure enregistrée avec succès.');
-
-            $action = $request->request->get('action');
-            if ($action === 'quitter') {
-                return $this->redirectToRoute('deconnexion');
-            }
-
-            if ($request->headers->get('Turbo-Frame')) {
-                $alertsHtml = $this->renderView('alert.html.twig');
-
-                return new Response(<<<HTML
-                    <turbo-stream action="update" target="flash-messages">
-                        <template>$alertsHtml</template>
-                    </turbo-stream>
-                    <turbo-stream action="reload" target="formulaire_saisie"></turbo-stream>
-                    <turbo-stream action="reload" target="frameNbHeures"></turbo-stream>
-                HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
-            }
-
-            return $this->redirectToRoute('chargement_formulaire', ['typeId' => $typeId]);
         }
+
+        $alertsHtml = $this->renderView('alert.html.twig');
 
         $template = sprintf('temps/_%s.html.twig', strtolower((new AsciiSlugger())->slug($type->getNomType())));
         $context = [
             'formHeures' => $form->createView(),
             'type' => $type,
-            'nbHeures' => $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier()),
-            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+            'nbHeures' => $nbHeuresTotal,
+            'taches' => $this->tacheRepository->findBy(['typeHeures' => $type]),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $cdgRepo->findAll(),
+            'CDG' => $this->CDGRepository->findAll(),
             'site' => substr($user->getUserIdentifier(), 0, 2),
         ];
 
@@ -255,8 +327,14 @@ class TempsController extends AbstractController
             $formHtml = $this->renderView($template, $context);
 
             return new Response(<<<HTML
+                <turbo-stream action="update" target="flash-messages">
+                    <template>$alertsHtml</template>
+                </turbo-stream>
                 <turbo-stream action="replace" target="formulaire_saisie">
                     <template>$formHtml</template>
+                </turbo-stream>
+                <turbo-stream action="update" target="frameNbHeures">
+                    <template>$nbHeuresHtml</template>
                 </turbo-stream>
             HTML, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
@@ -266,11 +344,11 @@ class TempsController extends AbstractController
 
 
     #[Route('/type-select', name: 'type_select', methods: ['GET'])]
-    public function typeSelectRedirect(Request $request, FavoriTypeHeureRepository $favoriRepo, Security $security, TypeHeuresRepository $typeRepo, TacheRepository $tacheRepo, CentreDeChargeRepository $cdgRepo): Response 
+    public function typeSelectRedirect(Request $request, FavoriTypeHeureRepository $favoriRepo): Response 
     {
         $typeId = (int) $request->query->get('type', 0);
-        $user = $security->getUser();
-        $type = $typeRepo->find($typeId);
+        $user = $this->security->getUser();
+        $type = $this->typeHeuresRepo->find($typeId);
 
         // Sécurité minimale
         if (!$type) {
@@ -292,9 +370,9 @@ class TempsController extends AbstractController
             'type' => $type,
             'nbHeures' => $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier()),
             'formHeures' => $formHeures->createView(),
-            'taches' => $tacheRepo->findBy(['typeHeures' => $type]),
+            'taches' => $this->tacheRepository->findBy(['typeHeures' => $type]),
             'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-            'CDG' => $cdgRepo->findAll(),
+            'CDG' => $this->CDGRepository->findAll(),
             'site' => substr((string) $user->getUserIdentifier(), 0, 2),
         ]);
 

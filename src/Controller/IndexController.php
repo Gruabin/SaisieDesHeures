@@ -85,15 +85,14 @@ class IndexController extends AbstractController
     public function setFavoriTypeHeure(Request $request, Security $security, EntityManagerInterface $em, TypeHeuresRepository $typeHeuresRepo, FavoriTypeHeureRepository $favoriRepo): Response
     {
         $employe = $security->getUser();
-
         $typeId = $request->request->get('type_heure_id');
-
         $typeHeure = $typeHeuresRepo->find($typeId);
 
         $ancienFavori = $favoriRepo->findOneBy(['employe' => $employe]);
 
         if ($ancienFavori) {
             $ancienFavori->setTypeHeure($typeHeure);
+            $favori = $ancienFavori;
         } else {
             $favori = new FavoriTypeHeure();
             $favori->setEmploye($employe);
@@ -102,12 +101,24 @@ class IndexController extends AbstractController
         }
         $em->flush();
 
-
-        $this->addFlash('success', 'Type d\'heure favori enregistré !');
+        $this->addFlash('success', 'Le type d\'heure favori a bien été mis à jour.');
         if (str_contains($request->headers->get('Accept'), 'text/vnd.turbo-stream.html')) {
             $alertsHtml = $this->renderView('alert.html.twig');
-            return new Response($alertsHtml, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+            $favoriHtml = $this->renderView('temps/_btnFavoris.html.twig', [
+                'selectedTypeId' => $typeId,
+                'favoriTypeHeure' => $favori,
+            ]);
+
+            $turboStreams = <<<HTML
+                $alertsHtml
+                <turbo-stream action="replace" target="frame-favori-btn">
+                    <template>$favoriHtml</template>
+                </turbo-stream>
+            HTML;
+
+            return new Response($turboStreams, 200, ['Content-Type' => 'text/vnd.turbo-stream.html']);
         }
+
 
         return new Response('', 204);
     }

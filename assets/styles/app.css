@@ -35,7 +35,7 @@
   --noise: 1;
 }
 
-@keyframes spin {
+/* @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
@@ -50,5 +50,5 @@ button.btn-primary:disabled::after {
   height: 16px;
   animation: spin 1s linear infinite;
   vertical-align: middle;
-}
+} */
 
