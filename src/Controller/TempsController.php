@@ -193,21 +193,6 @@ class TempsController extends AbstractController
     {
         $type = $this->typeHeuresRepo->find($typeId);
 
-        if (!$type) {
-            $this->addFlash('error', 'Type d\'heure invalide.');
-            $alertsHtml = $this->renderView('alert.html.twig');
-
-            if ($request->headers->get('Turbo-Frame')) {
-                return new Response(<<<HTML
-                    <turbo-stream action="update" target="flash-messages">
-                        <template>$alertsHtml</template>
-                    </turbo-stream>
-                HTML, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
-            }
-
-            return $this->redirectToRoute('temps');
-        }
-
         /** @var Employe $user */
         $user = $this->getUser();
         $centreDeChargeEmploye = $user instanceof Employe ? $user->getCentreDeCharge() : null;
@@ -231,7 +216,7 @@ class TempsController extends AbstractController
         $nbHeuresTotal = $nbHeuresAvant + $heuresSaisies;
 
         $nbHeuresHtml = $this->renderView('temps/_nbHeures.html.twig', [
-            'nbHeures' => min($nbHeuresTotal, 12), // pour affichage à jour
+            'nbHeures' => min($nbHeuresTotal, 12),
         ]);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -349,12 +334,6 @@ class TempsController extends AbstractController
         $typeId = (int) $request->query->get('type', 0);
         $user = $this->security->getUser();
         $type = $this->typeHeuresRepo->find($typeId);
-
-        // Sécurité minimale
-        if (!$type) {
-            $template = $this->renderView('temps/_default.html.twig');
-            return new Response($template, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/html']);
-        }
 
         $heure = new DetailHeures();
         $heure->setTypeHeures($type);

@@ -3,6 +3,12 @@
 namespace App\Tests\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\DetailHeures;
+use App\Entity\Employe;
+use App\Entity\TypeHeures;
+use App\Repository\EmployeRepository;
+use App\Repository\TypeHeuresRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ErrorFormTest extends WebTestCase
 {
@@ -299,4 +305,55 @@ class ErrorFormTest extends WebTestCase
         // Vérifier si les erreurs sont affichées
         $this->assertStringContainsString('La partie numérique doit contenir exactement 5 chiffres.', $content);
     }
+
+    public function testAffichageHeuresMaxDepasse(): void
+    {
+        $client = static::createClient();
+
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000002');
+        $client->submit($form);
+
+        // Récupérer les services
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $user = $em->getRepository(Employe::class)->findOneBy(['id' => 'LV0000002']);
+        $type = $em->getRepository(TypeHeures::class)->findOneBy(['nom_type' => 'Générale']);
+        $repo = $em->getRepository(DetailHeures::class);
+
+        // Supprimer les heures existantes pour l'utilisateur
+        foreach ($repo->findBy(['employe' => $user]) as $ancienneHeure) {
+            $em->remove($ancienneHeure);
+        }
+        $em->flush();
+
+        // Ajouter une saisie de 11h
+        $heure = new DetailHeures();
+        $heure->setEmploye($user);
+        $heure->setTypeHeures($type);
+        $heure->setCentreDeCharge($user->getCentreDeCharge());
+        $heure->setTempsMainOeuvre(11.0);
+        $heure->setDate(new \DateTime());
+        $em->persist($heure);
+        $em->flush();
+
+        // Charger le formulaire
+        $crawler = $client->request('GET', '/type-select', ['type' => $type->getId()]);
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($client->getResponse()->getContent(), $client->getRequest()->getUri());
+
+        $form = $crawler->filter('form')->form();
+        $form['ajout_generale[tache]']->setValue(100);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.0);
+
+        $client->submit($form, [], ['HTTP_Turbo-Frame' => 'formulaire_saisie']);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        $content = $client->getResponse()->getContent();
+        $this->assertStringContainsString('Vous avez dépassé le maximum de 12 heures autorisées.', $content);
+    }
+
 }

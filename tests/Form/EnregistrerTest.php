@@ -4,6 +4,11 @@ namespace App\Tests\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\DetailHeuresRepository;
+use App\Entity\DetailHeures;
+use App\Entity\Activite;
+use App\Repository\EmployeRepository;
+use App\Repository\TypeHeuresRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EnregistrerTest extends WebTestCase
 {
@@ -46,11 +51,13 @@ class EnregistrerTest extends WebTestCase
 
         // Vérification de l'enregistrement en base
         $ajoutHeuresRepo = static::getContainer()->get(DetailHeuresRepository::class);
-        $ajoutHeuresRepo->findOneBy([
+        $ajout = $ajoutHeuresRepo->findOneBy([
             'tache' => 100,
             'centre_de_charge' => 'LV0002000',
             'temps_main_oeuvre' => 2.5,
         ]);
+        
+        $this->assertEquals('LV0000002', $ajout->getEmploye()->getUserIdentifier());
     }
 
     public function testSoumissionFormulaireValideGeneralEmploye(): void
@@ -790,4 +797,117 @@ class EnregistrerTest extends WebTestCase
             'temps_main_oeuvre' => 2.5,
         ]);
     }
+
+    public function testAffichageHeuresMaxAtteint(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        // Connexion
+        $crawler = $client->request('GET', '/_connexion');
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000001');
+        $client->submit($form);
+
+        // Accès page principale
+        $crawler = $client->request('GET', '/temps');
+        $this->assertResponseIsSuccessful();
+
+        // Ajoute une entrée pour simuler 12h déjà saisies
+        $container = static::getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $employe = $container->get(EmployeRepository::class)->findOneBy(['id' => 'LV0000001']);
+        $typeHeure = $container->get(TypeHeuresRepository::class)->find(4);
+
+        $detailHeure = new DetailHeures();
+        $detailHeure->setEmploye($employe);
+        $detailHeure->setTypeHeures($typeHeure);
+        $detailHeure->setTempsMainOeuvre(12);
+        $detailHeure->setDate(new \DateTime());
+
+        $entityManager->persist($detailHeure);
+        $entityManager->flush();
+
+        // Requête vers le contrôleur qui retourne le formulaire
+        $client->request('GET', '/chargement-formulaire/4');
+
+        // Vérifie qu’on reçoit bien un turbo stream
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        $content = $client->getResponse()->getContent();
+
+        // Vérifie qu’on affiche bien le fallback
+        $this->assertStringContainsString('<turbo-stream action="replace" target="formulaire_saisie">', $content);
+        $this->assertStringContainsString('Vous avez atteint le maximum de 12 heures autorisées', $content);
+    }
+
+    public function testReponseTurboStreamAvecHeader(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        // Connexion utilisateur
+        $crawler = $client->request('GET', '/_connexion');
+        $form = $crawler->selectButton('Connexion')->form();
+        $form['connexion[id]']->setValue('LV0000002');
+        $client->submit($form);
+
+        // Requête GET formulaire avec type
+        $crawler = $client->request('GET', '/type-select?type=1');
+        $html = $client->getResponse()->getContent();
+        $crawler = new \Symfony\Component\DomCrawler\Crawler($html, 'http://localhost/type-select?type=1');
+
+        $form = $crawler->filter('form')->form();
+        $form['ajout_generale[tache]']->setValue(100);
+        $form['ajout_generale[centre_de_charge]']->setValue('LV0002000');
+        $form['ajout_generale[temps_main_oeuvre]']->setValue(2.5);
+
+        // On simule le Turbo-Frame
+        $client->request(
+            'POST',
+            $form->getUri(),
+            $form->getPhpValues(),
+            [],
+            ['HTTP_Turbo-Frame' => 'formulaire_saisie']
+        );
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('Content-Type', 'text/vnd.turbo-stream.html; charset=UTF-8');
+
+        // Vérifie les turbo-streams
+        $this->assertSelectorExists('turbo-stream[action="update"][target="flash-messages"]');
+        $this->assertSelectorExists('turbo-stream[action="replace"][target="formulaire_saisie"]');
+        $this->assertSelectorExists('turbo-stream[action="update"][target="frameNbHeures"]');
+    }
+
+    public function testVerifierActiviteExistante(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/verifier-activite/100');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseFormatSame('json');
+
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue($data['trouve']);
+        $this->assertEquals('100 - ETUDES', $data['nom']);
+    }
+
+    public function testVerifierActiviteInexistante(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/verifier-activite/999999');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseFormatSame('json');
+
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertFalse($data['trouve']);
+        $this->assertEquals('Aucune activité trouvée avec cet ID.', $data['message']);
+    }
+
 }
