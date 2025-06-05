@@ -27,7 +27,6 @@ class AjoutFabricationType extends AbstractType
                 'attr' => [
                     'maxlength' => 5,
                     'pattern' => '\d{5}',
-                    'placeholder' => '12345',
                     'class' => 'w-20',
                 ],
                 'constraints' => [
@@ -58,9 +57,9 @@ class AjoutFabricationType extends AbstractType
                 'query_builder' => function (TacheSpecifiqueRepository $repo) use ($options) {
                     $prefix = substr($options['site'] ?? '', 0, 2);
                     return $repo->createQueryBuilder('t')
-                                ->where('t.id LIKE :prefix')
-                                ->setParameter('prefix', $prefix . '%')
-                                ->orderBy('t.id', 'ASC');
+                        ->where('t.id LIKE :prefix')
+                        ->setParameter('prefix', $prefix . '%')
+                        ->orderBy('t.id', 'ASC');
                 },
             ])
             ->add('temps_main_oeuvre', NumberType::class, [

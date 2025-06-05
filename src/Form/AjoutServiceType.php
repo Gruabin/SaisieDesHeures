@@ -24,7 +24,6 @@ class AjoutServiceType extends AbstractType
                 'attr' => [
                     'maxlength' => 5,
                     'pattern' => '\d{5}',
-                    'placeholder' => '12345',
                     'class' => 'w-20',
                 ],
                 'constraints' => [

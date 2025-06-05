@@ -29,7 +29,6 @@ class AjoutProjetType extends AbstractType
                 'attr' => [
                     'maxlength' => 5,
                     'pattern' => '\d{5}',
-                    'placeholder' => '12345',
                     'class' => 'w-20',
                 ],
                 'constraints' => [
@@ -41,7 +40,8 @@ class AjoutProjetType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('tache', EntityType::class, ['class' => Tache::class,
+            ->add('tache', EntityType::class, [
+                'class' => Tache::class,
                 'choice_label' => 'name',
                 'placeholder' => '-- Sélectionner une tâche --',
                 'required' => true,
@@ -50,7 +50,7 @@ class AjoutProjetType extends AbstractType
                     new NotBlank(['message' => 'Veuillez sélectionner une tâche.']),
                 ],
                 'query_builder' => fn(TacheRepository $repo) => $repo->createQueryBuilder('t')
-                            ->where('t.id < 100'),
+                    ->where('t.id < 100'),
             ])
             ->add('activite', TextType::class, [
                 'mapped' => false,

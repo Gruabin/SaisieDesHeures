@@ -1,52 +1,47 @@
 <turbo-frame id="formulaire_saisie">
     {{ form_start(formHeures, {action: path('soumission_formulaire', {typeId: type.id})}, {attr: {'data-turbo-disable': 'true'}}) }}
 
-        <div class="flex" id="divOrdre">
+        <div class="flex md:flex-row flex-col max-sm:items-center" id="divOrdre">
             <div class="flex-1 md:text-right md:self-center m-3">
                 {{ form_label(formHeures.ordre, '<b>Ordre</b>', {label_html: true}) }}
             </div>
             <div class="flex-1 text-left md:self-center items-center">
-                <div class="mx-3">
-                    <div class="flex items-center gap-2 max-w-40 border border-gray-300 rounded-lg px-1 bg-white">
-                        <span class="px-2" style="pointer-events: none;">{{ site }}</span>
-                        {{ form_widget(formHeures.ordre, {attr: {class: 'input w-24 border-none p-1', placeholder: '12345'}}) }}
-                        {% if formHeures.ordre.vars.errors|length > 0 %}
-                            <div class="text-red-600 text-sm mt-1 font-bold">
-                                {{ form_errors(formHeures.ordre) }}
-                            </div>
-                        {% endif %}
-                    </div>
+                 <label class="input flex items-center gap-1 mx-3 max-w-40 dark:border-primary">
+                    <span class="labelOrdre">{{ site }}</span>
+                    {{ form_widget(formHeures.ordre) }}
+                    {% if formHeures.ordre.vars.errors|length > 0 %}
+                        <div class="text-red-600 text-sm mt-1 font-bold">
+                            {{ form_errors(formHeures.ordre) }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="flex" id="divActivite">
-            <div class="flex-1 md:text-right md:self-center m-3">
+        <div class="flex md:flex-row flex-col max-sm:items-center" id="divActivite">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
                 {{ form_label(formHeures.activite, '<b>Activité</b>', {label_html: true}) }}
             </div>
-            <div class="flex-1 text-left md:self-center items-center">
-                <div class="flex-1 text-left md:self-center items-center">
-                    <div class="w-full mx-3">
-                        {{ form_widget(formHeures.activite, {attr: {class: 'input input-bordered dark:border-primary', id: 'ajout_projet_activite'}}) }}
-                        {% if formHeures.activite.vars.errors|length > 0 %}
-                            <div class="text-red-600 text-sm mt-1 font-bold">
-                                {{ form_errors(formHeures.activite) }}
-                            </div>
-                        {% endif %}
-                    </div>
+            <div class="flex-1 text-left md:flex md:self-center items-center">
+                <div class="md:self-center">
+                    {{ form_widget(formHeures.activite, {attr: {class: 'input mx-3 dark:border-primary', id: 'ajout_projet_activite'}}) }}
+                    {% if formHeures.activite.vars.errors|length > 0 %}
+                        <div class="text-red-600 text-sm mt-1 font-bold">
+                            {{ form_errors(formHeures.activite) }}
+                        </div>
+                    {% endif %}
+                    <p class="mx-3" id="infoActivite"></p>
                 </div>
-
-                <p class="mx-3" id="infoActivite"></p>
             </div>
         </div>
 
-        <div class="flex max-sm:items-center" id="divTache">
-            <div class="flex-1 md:text-right md:self-center m-3">
+        <div class="flex md:flex-row flex-col max-sm:items-center" id="divTache">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
                 {{ form_label(formHeures.tache, '<b>Tâche</b>', {label_html: true}) }}
             </div>
             <div class="flex-1 text-left md:flex md:self-center items-center">
-                <div class="md:self-center w-full mx-3">
-                    {{ form_widget(formHeures.tache, {attr: {class: 'select dark:border-primary', required: true}, placeholder: '-- Sélectionner une tâche --'}) }}
+                <div class="md:self-center">
+                    {{ form_widget(formHeures.tache, {attr: {class: 'select mx-3 dark:border-primary', required: true}, placeholder: '-- Sélectionner une tâche --'}) }}
                     {% if formHeures.tache.vars.errors|length > 0 %}
                         <div class="text-red-600 text-sm mt-1 font-bold">
                             {{ form_errors(formHeures.tache) }}
@@ -56,19 +51,17 @@
             </div>
         </div>
 
-        <div class="flex" id="divSaisieTemps">
-            <div class="flex-1 md:text-right md:self-center m-3">
+        <div class="flex md:flex-row flex-col" id="divSaisieTemps">
+            <div class="flex-1 text-center md:text-right md:self-center m-3">
                 {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", {label_html: true}) }}
             </div>
             <div class="flex-1 md:flex md:self-center items-center">
-                <div class="mx-3">
-                    {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input dark:border-primary max-w-24', type: 'number', max: 12, min: 0.1, step: 0.1}}) }}
-                    {% if formHeures.temps_main_oeuvre.vars.errors|length > 0 %}
-                        <div class="text-red-600 text-sm mt-1 font-bold">
-                            {{ form_errors(formHeures.temps_main_oeuvre) }}
-                        </div>
-                    {% endif %}
-                </div>
+                {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input mx-3 dark:border-primary max-w-24', max: 12, min: 0.1, step: 0.1}}) }}
+                {% if formHeures.temps_main_oeuvre.vars.errors|length > 0 %}
+                    <div class="text-red-600 text-sm mt-1 font-bold">
+                        {{ form_errors(formHeures.temps_main_oeuvre) }}
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -76,10 +69,10 @@
             <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
                 Quitter
             </a>
-            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter btnLoading">
+            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter btnLoading">
                 Enregistrer et quitter
             </button>
-            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue btnLoading">
+            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5 {% if nbHeures >= 12 %}btn-disabled{% endif %}" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue btnLoading">
                 Enregistrer
             </button>
         </div>
