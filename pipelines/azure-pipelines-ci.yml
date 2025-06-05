@@ -105,7 +105,9 @@ stages:
 
         # Démarrage du conteneur pour la bdd de test
         - script: |
+            cd pipelines/
             docker compose up -d
+            cd ..
           workingDirectory: $(rootFolder)
           displayName: 'Exécuter docker-compose up'
 
