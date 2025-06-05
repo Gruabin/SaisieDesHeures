@@ -1,5 +1,6 @@
 {
-    "type": "project",
+    "name": "gguerin/saisie-heures",
+    "type": "library",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -80,7 +81,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Gguerin\\SaisieHeures\\": "src/"
         }
     },
     "autoload-dev": {

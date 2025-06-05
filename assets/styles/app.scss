@@ -1,4 +1,9 @@
 @use "loading.scss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// @import "daisyui";
 
 $gruau-red: #e83a38;
 $gruau-dark-blue: #005179;

@@ -1,0 +1,74 @@
+<turbo-frame id="formulaire_saisie">
+    {{ form_start(formHeures, {action: path('soumission_formulaire', {typeId: type.id})}, {attr: {'data-turbo-disable': 'true'}}) }}
+
+        <div class="flex max-sm:items-center" id="divTache">
+            <div class="flex-1 md:text-right md:self-center m-3">
+                {{ form_label(formHeures.tache, '<b>Tâche</b>', {label_html: true}) }}
+            </div>
+            <div class="flex-1 text-left md:self-center items-center">
+                <div class="md:self-center w-full mx-3">
+                    {{ form_widget(formHeures.tache, {attr: {class: 'select dark:border-primary'}}) }}
+                    {% if formHeures.tache.vars.errors|length > 0 %}
+                        <div class="text-red-600 text-sm mt-1 font-bold">
+                            {{ form_errors(formHeures.tache) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex" id="divCentreCharge">
+            <div class="flex-1 md:text-right md:self-center m-3">
+                {{ form_label(formHeures.centre_de_charge, '<b>Centre de charge</b>', {label_html: true}) }}
+            </div>
+            <div class="flex-1 text-left md:self-center items-center">
+                <div class="w-full mx-3">
+                    {{ form_widget(formHeures.centre_de_charge, {attr: {class: 'select dark:border-primary'}}) }}
+                    {% if formHeures.centre_de_charge.vars.errors|length > 0 %}
+                        <div class="text-red-600 text-sm mt-1 font-bold">
+                            {{ form_errors(formHeures.centre_de_charge) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex" id="divSaisieTemps">
+            <div class="flex-1 md:text-right md:self-center m-3">
+                {{ form_label(formHeures.temps_main_oeuvre, "<b>Temps main d'oeuvre (en h)</b>", {label_html: true}) }}
+            </div>
+            <div class="flex-1 md:flex md:self-center items-center">
+                <div class="mx-3">
+                    {{ form_widget(formHeures.temps_main_oeuvre, {attr: {class: 'input dark:border-primary max-w-24', max: 12, min: 0.1, step: 0.1}}) }}
+                    {% if formHeures.temps_main_oeuvre.vars.errors|length > 0 %}
+                        <div class="text-red-600 text-sm mt-1 font-bold">
+                            {{ form_errors(formHeures.temps_main_oeuvre) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {{ form_widget(formHeures._token) }}
+
+        <div class="flex flex-row justify-center items-center p-2 gap-2">
+            <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
+                Quitter
+            </a>
+            <button type="submit" name="action" value="quitter" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerQuitter btnLoading">
+                Enregistrer et quitter
+            </button>
+            <button type="submit" name="action" value="continuer" class="btn btn-primary mt-5" {% if nbHeures >= 12 %}disabled{% endif %} id="btnEnregistrerContinue btnLoading">
+                Enregistrer
+            </button>
+        </div>
+
+        {% for error in formHeures.vars.errors %}
+            <div class="text-red-600">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error.message }}
+            </div>
+        {% endfor %}
+
+    {{ form_end(formHeures, {render_rest: false}) }}
+</turbo-frame>

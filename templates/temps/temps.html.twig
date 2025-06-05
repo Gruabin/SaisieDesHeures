@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Saisie des heures
+{% endblock %}
+{% block body %}
+    <section class="card mx-24 my-4 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 bg-base-100 border-b-[5px] border-accent text-lg max-sm:text-base" id="temps">
+        <div class="card-body">
+            <div class="flex flex-row items-center max-sm:text-center">
+                <div class="m-2 flex-1">
+                    <div class="m-2">
+                        <b>Employé</b>
+                    </div>
+                    <div id="codeEmploye" class="m-2">{{ app.user.id }}
+                        {{ app.user.nomEmploye }}
+                    </div>
+                </div>
+                <div class="m-2 flex-1 md:block">
+                    <div class="m-2">
+                        <b>Centre de charge</b>
+                    </div>
+                    <div class="m-2" id="CDGUser">
+                        {{ app.user.centreDeCharge.id }}
+                    </div>
+                </div>
+                <div class="m-2 flex-1 md:block">
+                    <div class="m-2">
+                        <b>Date</b>
+                    </div>
+                    <div class="m-2">
+                        {{ 'now'|date('d/m/Y', 'Europe/Paris') }}
+                    </div>
+                </div>
+                <div class="m-2 flex-1">
+                    <div class="m-2">
+                        <b>Temps journalier</b>
+                    </div>
+                    <turbo-frame id="frameNbHeures">
+                        {{ include('temps/_nbHeures.html.twig', {nbHeures: nbHeures}) }}
+                    </turbo-frame>
+                </div>
+                <div class="m-2 flex-1 md:block">
+                    <div class="m-2">
+                        <a target="_self" class="btn btn-primary mt-5" id="btnConsulterDetails" href="{{ path('historique') }}">
+                            Consulter le détail
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="card mx-24 my-4 max-2xl:mx-8 max-lg:mx-4 max-sm:mx-1 bg-base-100 border-b-[5px] border-accent text-lg max-sm:text-base">
+        <div class="card-body">
+            <div class="flex flex-col flex-wrap max-sm:items-center text-center">
+                <div class="w-fit self-center">
+                    <div id="alertSuccess" role="alert" class="alert alert-success hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span></span>
+                    </div>
+                    <div id="alertError" role="alert" class="alert alert-error hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>Une erreur est survenue. Veuillez contacter le <a href="https://supportinfo.gruau.com/glpi/plugins/formcreator/front/wizard.php" class="underline noLoading" target="_blank">Support informatique</a>.</span>
+                    </div>
+                </div>
+                <div class="flex" id="divType">
+                    <div class="flex-1 md:text-right md:self-center m-3">
+                        <label for="type">
+                            <b>Type d'heures</b>
+                        </label>
+                    </div>
+                    <div class="flex-1 flex">
+                        <div class="flex flex-row items-center gap-2 mx-3">
+                            <form method="GET" action="{{ path('chargement_formulaire_redirect') }}" data-turbo-frame="formulaire_saisie" class="noLoading" id="formType">
+                                <select class="select w-auto dark:border-primary" {% if nbHeures >= 12 %}disabled{% endif %} name="typeId" id="type" onchange="this.form.requestSubmit();">
+                                    <option value="-1" {% if favoriTypeHeure is null %}selected{% endif %}>
+                                        -- Sélectionner un type d'heure --
+                                    </option>
+                                    {% set favoriTypeId = favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null ? favoriTypeHeure.typeHeure.id : null %}
+                                    {% for type in types %}
+                                        <option value="{{ type.id }}"
+                                                {% if favoriTypeId == type.id %}selected{% endif %}>
+                                            {{ type.nomType }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+
+                            <turbo-frame id="frame-favori-btn">
+                                {{ include('temps/_btnFavoris.html.twig', {
+                                    selectedTypeId: selectedTypeId,
+                                    favoriTypeHeure: favoriTypeHeure,
+                                }) }}
+                            </turbo-frame>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% if favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure is not null and selectedTypeId == favoriTypeHeure.typeHeure.id %}
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: favoriTypeHeure.typeHeure.id}) }}">
+                {% else %}
+                    <turbo-frame id="formulaire_saisie" src="{{ path('chargement_formulaire', {typeId: 0}) }}">
+                {% endif %}
+                    <div class="flex justify-center items-center min-h-[200px]">
+                        <div class="w-1/5 flex flex-col gap-4">
+                            <div class="skeleton h-8 rounded w-full"></div>
+                            <div class="skeleton h-8 rounded w-full"></div>
+                            <div class="skeleton h-8 rounded w-full"></div>
+                            <div class="skeleton h-8 rounded w-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row justify-center items-center">
+                        <a target="_self" class="btn btn-accent btn-outline mt-5" id="btnReturn" href="{{ path('deconnexion') }}">
+                            Quitter
+                        </a>
+                    </div>
+                </turbo-frame>
+
+                <div class="flex flex-row flex-wrap justify-center items-center p-2">
+                    <div id="informationSaisiHeures"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
