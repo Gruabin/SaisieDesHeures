@@ -1,0 +1,8 @@
+<span id="tempsJournalier">
+    {% if nbHeures > 0 %}
+        {{ nbHeures|number_format(2, '.', ' ') }}
+        {{ nbHeures < 2 ? 'heure' : 'heures' }}
+    {% else %}
+        0 heure
+    {% endif %}
+</span>

@@ -17,7 +17,7 @@ class DetailHeures
     private UuidInterface $id;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private \DateTimeInterface $date;    
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $temps_main_oeuvre = null;
@@ -97,7 +97,7 @@ class DetailHeures
     public function setDate(\DateTimeInterface $date): static
     {
         $this->date = $date;
-
+    
         return $this;
     }
 
