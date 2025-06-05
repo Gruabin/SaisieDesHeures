@@ -322,12 +322,6 @@ class ErrorFormTest extends WebTestCase
         $type = $em->getRepository(TypeHeures::class)->findOneBy(['nom_type' => 'Générale']);
         $repo = $em->getRepository(DetailHeures::class);
 
-        // Supprimer les heures existantes pour l'utilisateur
-        foreach ($repo->findBy(['employe' => $user]) as $ancienneHeure) {
-            $em->remove($ancienneHeure);
-        }
-        $em->flush();
-
         // Ajouter une saisie de 11h
         $heure = new DetailHeures();
         $heure->setEmploye($user);
