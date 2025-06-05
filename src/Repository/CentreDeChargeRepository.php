@@ -48,4 +48,15 @@ class CentreDeChargeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySitePrefix(string $prefix): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.id LIKE :prefix')
+            ->setParameter('prefix', $prefix . '%')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

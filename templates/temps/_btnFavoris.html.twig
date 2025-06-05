@@ -1,0 +1,12 @@
+<turbo-frame id="frame-favori-btn">
+    <form method="POST" action="{{ path('favori_type_heure') }}" data-turbo-frame="flash-messages" id="favoriForm">
+        <input type="hidden" name="type_heure_id" id="hiddenTypeId" value="{{ selectedTypeId }}">
+        <button type="submit" class="btn btn-sm bg-success tooltip tooltip-top" id="btnEnregistrerParDefaut" data-tip="Enregistrer par défaut">
+            {% if favoriTypeHeure is defined and favoriTypeHeure is not null and favoriTypeHeure.typeHeure.id == selectedTypeId %}
+                <i class="fa-solid fa-floppy-disk text-black"></i>
+            {% else %}
+                <i class="fa-regular fa-floppy-disk"></i>
+            {% endif %}
+        </button>
+    </form>
+</turbo-frame>

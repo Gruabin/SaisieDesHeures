@@ -12,6 +12,7 @@
         <link rel="manifest" href="{{ asset('manifest/manifest.webmanifest') }}">
         <link rel="icon" href="images/favicon_light.ico" media="(prefers-color-scheme: light)">
         <link rel="icon" href="images/favicon_dark.ico"  media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -41,23 +42,16 @@
         <!-- End Matomo Code -->
     </head>
     <body class="flex flex-col min-h-[100vh] bg-base-200">
-        <header class="invisible">
+        <header>
             {% block navbar %}
                 {{ include('navbar.html.twig') }}
             {% endblock %}
         </header>
-        <section id="boxAlertMessage" class="invisible">
-            {{ include('alert.html.twig') }}
-        </section>
-        <div id="loader">
-            <img class="scale-down-tl" src="{{ asset('images/logo-symbole-haut.svg') }}">
-            Chargement
-            <img class="scale-down-br" src="{{ asset('images/gruau-symbole-bas.svg') }}">
-        </div>
-        <main class="invisible">
+        <div id="flash-messages"></div>
+        <main>
             {% block body %}{% endblock %}
         </main>
-        <footer class="mt-auto invisible">
+        <footer class="mt-auto">
             {{ include('footer.html.twig') }}
         </footer>
     </body>

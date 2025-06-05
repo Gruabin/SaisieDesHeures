@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 use App\Entity\DetailHeures;
 use App\Entity\Employe;
+use App\Entity\FavoriTypeHeure;
 use App\Form\FiltreDateType;
 use App\Form\FiltreResponsableType;
 use App\Repository\CentreDeChargeRepository;
@@ -78,36 +81,46 @@ class IndexController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
-    // Affiche la page de saisie des temps
-    #[Route('/temps', name: 'temps')]
-    public function temps(FavoriTypeHeureRepository $favoriTypeHeureRepository): Response
+    #[Route('/favori/type-heure', name: 'favori_type_heure', methods: ['POST'])]
+    public function setFavoriTypeHeure(Request $request, Security $security, EntityManagerInterface $em, TypeHeuresRepository $typeHeuresRepo, FavoriTypeHeureRepository $favoriRepo): Response
     {
-        /** @var Employe $user */
-        $user = $this->getUser();
+        $employe = $security->getUser();
+        $typeId = $request->request->get('type_heure_id');
+        $typeHeure = $typeHeuresRepo->find($typeId);
 
-        $nbHeures = $this->detailHeuresRepository->getNbHeures($user->getUserIdentifier());
-        if ($nbHeures >= 12) {
-            $message = "Votre avez atteint votre limite d'heures journalières";
-            $this->addFlash('warning', $message);
+        $ancienFavori = $favoriRepo->findOneBy(['employe' => $employe]);
+
+        if ($ancienFavori) {
+            $ancienFavori->setTypeHeure($typeHeure);
+            $favori = $ancienFavori;
+        } else {
+            $favori = new FavoriTypeHeure();
+            $favori->setEmploye($employe);
+            $favori->setTypeHeure($typeHeure);
+            $em->persist($favori);
         }
-        $this->detailHeureService->cleanLastWeek();
+        $em->flush();
 
-        $favoriTypeHeure = $favoriTypeHeureRepository->findOneBy(['employe' => $user]);
+        $this->addFlash('success', 'Le type d\'heure favori a bien été mis à jour.');
+        if (str_contains((string) $request->headers->get('Accept'), 'text/vnd.turbo-stream.html')) {
+            $alertsHtml = $this->renderView('alert.html.twig');
+            $favoriHtml = $this->renderView('temps/_btnFavoris.html.twig', [
+                'selectedTypeId' => $typeId,
+                'favoriTypeHeure' => $favori,
+            ]);
 
-        // Rendre la vue 'temps/temps.html.twig' en passant les variables
-        return $this->render(
-            'temps.html.twig',
-            [
-                'details' => $this->detailHeuresRepository->findAllTodayUser(),
-                'types' => $this->typeHeuresRepo->findAll(),
-                'taches' => $this->tacheRepository->findAll(),
-                'tachesSpe' => $this->tacheSpecifiqueRepository->findAllSite(),
-                'CDG' => $this->CDGRepository->findAllUser(),
-                'nbHeures' => $nbHeures,
-                'favoriTypeHeure' => $favoriTypeHeure,
-                'site' => substr((string) $user->getUserIdentifier(), 0, 2),
-            ]
-        );
+            $turboStreams = <<<HTML
+                $alertsHtml
+                <turbo-stream action="replace" target="frame-favori-btn">
+                    <template>$favoriHtml</template>
+                </turbo-stream>
+            HTML;
+
+            return new Response($turboStreams, \Symfony\Component\HttpFoundation\Response::HTTP_OK, ['Content-Type' => 'text/vnd.turbo-stream.html']);
+        }
+
+
+        return new Response('', \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 
     // Affiche la page d'historique
